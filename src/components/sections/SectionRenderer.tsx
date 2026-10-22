@@ -1,5 +1,11 @@
-import React, { useEffect, useRef } from 'react';
-import { View, StyleSheet, Animated, ImageBackground } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, StyleSheet, ImageBackground } from 'react-native';
+import Animated, {
+  SharedValue,
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+} from 'react-native-reanimated';
 import { BaseSectionConfig, Doctor, HeroBannerItem, CategoryItem, QuickActionItem, ServiceItem, OfferStripItem } from '../../types';
 import { HeroBanner } from './HeroBanner';
 import { CategoryChips } from './CategoryChips';
@@ -11,7 +17,7 @@ import { OfferStrip } from './OfferStrip';
 export interface SectionRendererProps {
   section: BaseSectionConfig;
   doctors?: Doctor[];
-  scrollY?: Animated.Value;
+  scrollY?: SharedValue<number>;
   onSearchPress?: () => void;
   onBookPress?: (doctor?: Doctor, service?: ServiceItem) => void;
   onSelectCategory?: (category: CategoryItem) => void;
@@ -37,23 +43,18 @@ export const SectionRenderer: React.FC<SectionRendererProps> = ({
   onAdminPress,
   onNotificationPress,
 }) => {
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const slideAnim = useRef(new Animated.Value(14)).current;
+  const opacity = useSharedValue(0);
+  const translateY = useSharedValue(14);
 
   useEffect(() => {
-    Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 350,
-        useNativeDriver: true,
-      }),
-      Animated.timing(slideAnim, {
-        toValue: 0,
-        duration: 350,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }, [fadeAnim, slideAnim]);
+    opacity.value = withTiming(1, { duration: 350 });
+    translateY.value = withTiming(0, { duration: 350 });
+  }, [opacity, translateY]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+    transform: [{ translateY: translateY.value }],
+  }));
 
   const renderSectionContent = () => {
     switch (section.type) {
@@ -142,15 +143,7 @@ export const SectionRenderer: React.FC<SectionRendererProps> = ({
 
   if (kind === 'image' && value) {
     return (
-      <Animated.View
-        style={[
-          styles.sectionBand,
-          {
-            opacity: fadeAnim,
-            transform: [{ translateY: slideAnim }],
-          },
-        ]}
-      >
+      <Animated.View style={[styles.sectionBand, animatedStyle]}>
         <ImageBackground source={{ uri: value }} resizeMode="cover" style={styles.imageBackground}>
           {content}
         </ImageBackground>
@@ -165,11 +158,8 @@ export const SectionRenderer: React.FC<SectionRendererProps> = ({
       <Animated.View
         style={[
           styles.sectionBand,
-          {
-            backgroundColor: primaryColor,
-            opacity: fadeAnim,
-            transform: [{ translateY: slideAnim }],
-          },
+          { backgroundColor: primaryColor },
+          animatedStyle,
         ]}
       >
         {content}
@@ -181,11 +171,8 @@ export const SectionRenderer: React.FC<SectionRendererProps> = ({
     <Animated.View
       style={[
         styles.sectionBand,
-        {
-          backgroundColor: value || 'transparent',
-          opacity: fadeAnim,
-          transform: [{ translateY: slideAnim }],
-        },
+        { backgroundColor: value || 'transparent' },
+        animatedStyle,
       ]}
     >
       {content}

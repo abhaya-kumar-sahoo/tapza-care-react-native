@@ -1,13 +1,15 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   StyleSheet,
-  ScrollView,
   RefreshControl,
-  Animated,
   Text,
   TouchableOpacity,
 } from 'react-native';
+import Animated, {
+  useSharedValue,
+  useAnimatedScrollHandler,
+} from 'react-native-reanimated';
 import { useTheme } from '../theme';
 import { useI18n } from '../i18n';
 import { LayoutConfig, Doctor, ServiceItem, CategoryItem, QuickActionItem, OfferStripItem } from '../types';
@@ -49,7 +51,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   const [errorBannerMsg, setErrorBannerMsg] = useState<string | null>(null);
   const [isAdminVisible, setIsAdminVisible] = useState(false);
 
-  const scrollY = useRef(new Animated.Value(0)).current;
+  const scrollY = useSharedValue(0);
+  const scrollHandler = useAnimatedScrollHandler(event => {
+    scrollY.value = event.contentOffset.y;
+  });
 
   const loadData = useCallback(async (isRefresh = false) => {
     if (isRefresh) {
@@ -130,10 +135,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       <Animated.ScrollView
         showsVerticalScrollIndicator={false}
-        onScroll={Animated.event(
-          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-          { useNativeDriver: true }
-        )}
+        onScroll={scrollHandler}
         scrollEventThrottle={16}
         refreshControl={
           <RefreshControl

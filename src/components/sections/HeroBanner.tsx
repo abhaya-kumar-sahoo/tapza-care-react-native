@@ -6,8 +6,13 @@ import {
   TextInput,
   TouchableOpacity,
   Image,
-  Animated,
 } from 'react-native';
+import Animated, {
+  SharedValue,
+  useAnimatedStyle,
+  interpolate,
+  Extrapolation,
+} from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../theme';
 import { useI18n } from '../../i18n';
@@ -21,7 +26,7 @@ export interface HeroBannerProps {
   onLocationPress?: () => void;
   onNotificationPress?: () => void;
   onAdminPress?: () => void;
-  scrollY?: Animated.Value;
+  scrollY?: SharedValue<number>;
 }
 
 export const HeroBanner: React.FC<HeroBannerProps> = ({
@@ -37,30 +42,33 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
   const { theme, spacing, radii, typography, isFestival } = useTheme();
   const { t, language } = useI18n();
 
-  // Parallax / shrinkage on scroll
-  const headerScale = scrollY
-    ? scrollY.interpolate({
-        inputRange: [-100, 0, 100],
-        outputRange: [1.1, 1, 0.95],
-        extrapolate: 'clamp',
-      })
-    : 1;
-
-  const headerTranslateY = scrollY
-    ? scrollY.interpolate({
-        inputRange: [-100, 0, 100],
-        outputRange: [-10, 0, 10],
-        extrapolate: 'clamp',
-      })
-    : 0;
+  // Parallax / shrinkage on scroll running 100% on the UI thread
+  const animatedHeroStyle = useAnimatedStyle(() => {
+    if (!scrollY) {
+      return {};
+    }
+    const scale = interpolate(
+      scrollY.value,
+      [-100, 0, 100],
+      [1.1, 1, 0.95],
+      Extrapolation.CLAMP
+    );
+    const translateY = interpolate(
+      scrollY.value,
+      [-100, 0, 100],
+      [-10, 0, 10],
+      Extrapolation.CLAMP
+    );
+    return {
+      transform: [{ scale }, { translateY }],
+    };
+  });
 
   return (
     <Animated.View
       style={[
         styles.container,
-        {
-          transform: [{ scale: headerScale as any }, { translateY: headerTranslateY as any }],
-        },
+        animatedHeroStyle,
       ]}
     >
       {/* Top Bar: Brand, Location, Admin / Notifications */}

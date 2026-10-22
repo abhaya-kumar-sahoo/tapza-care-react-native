@@ -1,5 +1,12 @@
 import React, { useEffect, useRef } from 'react';
-import { View, StyleSheet, Animated } from 'react-native';
+import { View, StyleSheet } from 'react-native';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  withTiming,
+  withDelay,
+} from 'react-native-reanimated';
 
 const CONFETTI_COLORS = [
   '#10B981',
@@ -21,8 +28,8 @@ interface Particle {
 }
 
 export const ConfettiBurst: React.FC = () => {
-  const scaleAnim = useRef(new Animated.Value(0)).current;
-  const opacityAnim = useRef(new Animated.Value(1)).current;
+  const scale = useSharedValue(0);
+  const opacity = useSharedValue(1);
 
   const particles: Particle[] = useRef(
     Array.from({ length: 28 }).map((_, i) => {
@@ -40,35 +47,17 @@ export const ConfettiBurst: React.FC = () => {
   ).current;
 
   useEffect(() => {
-    Animated.parallel([
-      Animated.spring(scaleAnim, {
-        toValue: 1,
-        tension: 40,
-        friction: 6,
-        useNativeDriver: true,
-      }),
-      Animated.sequence([
-        Animated.delay(500),
-        Animated.timing(opacityAnim, {
-          toValue: 0.9,
-          duration: 400,
-          useNativeDriver: true,
-        }),
-      ]),
-    ]).start();
-  }, [scaleAnim, opacityAnim]);
+    scale.value = withSpring(1, { damping: 12, stiffness: 100 });
+    opacity.value = withDelay(500, withTiming(0.9, { duration: 400 }));
+  }, [scale, opacity]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+    transform: [{ scale: scale.value }],
+  }));
 
   return (
-    <Animated.View
-      pointerEvents="none"
-      style={[
-        styles.container,
-        {
-          opacity: opacityAnim,
-          transform: [{ scale: scaleAnim }],
-        },
-      ]}
-    >
+    <Animated.View pointerEvents="none" style={[styles.container, animatedStyle]}>
       {particles.map(p => (
         <View
           key={p.id}
