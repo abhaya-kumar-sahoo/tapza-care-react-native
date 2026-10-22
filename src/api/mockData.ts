@@ -208,54 +208,13 @@ export const diwaliLayoutConfig: LayoutConfig = {
           greeting: 'Happy Diwali!',
           userName: 'Abhaya',
           subGreeting: "Here's to brighter health and happier days",
+          promoTag: 'DIWALI SPECIAL',
+          promoTitle: 'Flat 20% off',
+          promoSubtitle: 'on selected lab tests',
+          promoCta: 'Book Now',
           illustrationType: 'festival',
         },
       ],
-    },
-    {
-      id: 'sec_categories_diwali',
-      type: 'category_chips',
-      background: {
-        kind: 'color',
-        value: '#FFFFFF',
-      },
-      title: 'Explore by category',
-      items: [
-        { id: 'cat_consult', name: 'Consult', icon: 'stethoscope', tintColor: '#D97706' },
-        { id: 'cat_lab', name: 'Lab Tests', icon: 'flask', tintColor: '#DC2626' },
-        { id: 'cat_pharmacy', name: 'Pharmacy', icon: 'pill', tintColor: '#EA580C' },
-        { id: 'cat_vaccine', name: 'Vaccines', icon: 'syringe', tintColor: '#CA8A04' },
-        { id: 'cat_health', name: 'Health Packages', icon: 'heart', tintColor: '#B91C1C' },
-      ],
-    },
-    {
-      id: 'sec_offer_strip_diwali',
-      type: 'offer_strip',
-      background: {
-        kind: 'gradient',
-        value: '#7F1D1D,#991B1B',
-      },
-      items: [
-        {
-          id: 'offer_diwali_20',
-          tag: 'Diwali Special',
-          headline: 'Flat 20% off',
-          subline: 'on selected lab tests',
-          ctaText: 'Book Now',
-          bgGradient: ['#7F1D1D', '#991B1B'],
-          illustration: 'diya',
-        },
-      ],
-    },
-    {
-      id: 'sec_doctors_diwali',
-      type: 'doctor_carousel',
-      background: {
-        kind: 'color',
-        value: '#FFF8F0',
-      },
-      title: 'Top doctors near you',
-      items: [],
     },
     {
       id: 'sec_quick_actions_diwali',
@@ -264,7 +223,7 @@ export const diwaliLayoutConfig: LayoutConfig = {
         kind: 'color',
         value: '#FFFFFF',
       },
-      title: 'Quick actions',
+      title: 'Quick Actions',
       items: [
         {
           id: 'qa_book',
@@ -291,10 +250,36 @@ export const diwaliLayoutConfig: LayoutConfig = {
           id: 'qa_family',
           title: 'Family',
           icon: 'users',
-          bgColor: '#FEF9C3',
+          bgColor: '#FEF3C7',
           screenTarget: 'profile',
         },
       ],
+    },
+    {
+      id: 'sec_categories_diwali',
+      type: 'category_chips',
+      background: {
+        kind: 'color',
+        value: '#FFFFFF',
+      },
+      title: 'Explore by category',
+      items: [
+        { id: 'cat_consult', name: 'Consult', icon: 'stethoscope', tintColor: '#D97706' },
+        { id: 'cat_lab', name: 'Lab Tests', icon: 'flask', tintColor: '#DC2626' },
+        { id: 'cat_pharmacy', name: 'Pharmacy', icon: 'pill', tintColor: '#EA580C' },
+        { id: 'cat_vaccine', name: 'Vaccines', icon: 'syringe', tintColor: '#CA8A04' },
+        { id: 'cat_health', name: 'Health Packages', icon: 'heart', tintColor: '#B91C1C' },
+      ],
+    },
+    {
+      id: 'sec_doctors_diwali',
+      type: 'doctor_carousel',
+      background: {
+        kind: 'color',
+        value: '#FFF8F0',
+      },
+      title: 'Top doctors near you',
+      items: [],
     },
   ],
 };

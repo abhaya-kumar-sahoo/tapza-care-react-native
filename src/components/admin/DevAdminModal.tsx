@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Modal,
   View,
@@ -36,6 +36,12 @@ export const DevAdminModal: React.FC<DevAdminModalProps> = ({
   );
   const [jsonText, setJsonText] = useState('');
   const [isJsonExpanded, setIsJsonExpanded] = useState(false);
+
+  useEffect(() => {
+    if (visible) {
+      setResilience(MockApiClient.getResilienceConfig());
+    }
+  }, [visible]);
 
   const handleToggleTheme = (mode: 'normal' | 'festival') => {
     const updated = MockApiClient.updateResilienceConfig({ themeMode: mode });

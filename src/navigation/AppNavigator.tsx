@@ -69,7 +69,7 @@ export const AppNavigator: React.FC = () => {
       <View style={styles.main}>
         <View style={[styles.tabPane, activeTab === 'home' ? styles.visiblePane : styles.hiddenPane]}>
           <HomeScreen
-            key={`home_cfg_${configVersion}`}
+            configVersion={configVersion}
             onNavigateToDoctor={doctor => pushRoute({ type: 'doctor_detail', doctor })}
             onNavigateToDoctorList={(service, filterSpecialty) =>
               pushRoute({ type: 'doctor_list', service, filterSpecialty })

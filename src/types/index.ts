@@ -44,6 +44,7 @@ export interface HeroBannerItem {
   promoTitle?: string;
   promoSubtitle?: string;
   promoCta?: string;
+  promoTag?: string;
   illustrationType?: 'doctor' | 'festival';
 }
 

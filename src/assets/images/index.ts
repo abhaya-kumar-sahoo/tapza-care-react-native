@@ -9,7 +9,7 @@ export const Images = {
   smilingDoctor: require('./SmilingDoctor.webp'),
   vaccineProtection: require('./VaccineProtection.webp'),
   dermatology: require('./dermatology.webp'),
-  diwaliBanner: require('./diwali-banner.webp'),
+  diwaliBanner: require('./DiwaliBanner.webp'),
   healthBanner: require('./health-banner.webp'),
   doctorConsultBanner: require('./DoctorConsultBanner.webp'),
 } as const;

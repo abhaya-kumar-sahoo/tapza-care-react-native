@@ -33,7 +33,9 @@ describe('LayoutConfig Remote Config Validation', () => {
     validateConfig(diwaliLayoutConfig);
     expect(diwaliLayoutConfig.theme.festival?.name).toBe('Diwali');
     expect(diwaliLayoutConfig.theme.primary).toBe('#C83214');
-    const offer = diwaliLayoutConfig.sections.find(s => s.type === 'offer_strip');
-    expect(offer).toBeDefined();
+    const hero = diwaliLayoutConfig.sections.find(s => s.type === 'hero_banner');
+    expect(hero).toBeDefined();
+    const heroItem = (hero?.items as any[])?.[0];
+    expect(heroItem?.promoTitle).toBe('Flat 20% off');
   });
 });

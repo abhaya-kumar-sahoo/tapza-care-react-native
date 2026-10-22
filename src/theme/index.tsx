@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useMemo } from 'react';
+import React, { createContext, useContext, useState, useMemo, useCallback } from 'react';
 import { ThemeConfig } from '../types';
 import { normalTheme, spacing, radii, typography, minTouchTarget } from './tokens';
 
@@ -30,17 +30,32 @@ export const ThemeProvider: React.FC<{
 
   const isFestival = Boolean(theme.festival && theme.festival.name);
 
+  const updateTheme = useCallback((newTheme: ThemeConfig) => {
+    setTheme(prev => {
+      if (
+        prev.primary === newTheme.primary &&
+        prev.background === newTheme.background &&
+        prev.surface === newTheme.surface &&
+        prev.textPrimary === newTheme.textPrimary &&
+        prev.festival?.name === newTheme.festival?.name
+      ) {
+        return prev;
+      }
+      return newTheme;
+    });
+  }, []);
+
   const value = useMemo(
     () => ({
       theme,
-      updateTheme: (newTheme: ThemeConfig) => setTheme(newTheme),
+      updateTheme,
       spacing,
       radii,
       typography,
       minTouchTarget,
       isFestival,
     }),
-    [theme, isFestival]
+    [theme, updateTheme, isFestival]
   );
 
   return (

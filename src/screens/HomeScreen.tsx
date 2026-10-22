@@ -15,6 +15,7 @@ import { useI18n } from '../i18n';
 import { LayoutConfig, Doctor, ServiceItem, CategoryItem, QuickActionItem, OfferStripItem } from '../types';
 import { MockApiClient } from '../api/mockClient';
 import { StorageService } from '../api/storage';
+import { normalLayoutConfig } from '../api/mockData';
 import { SectionRenderer } from '../components/sections/SectionRenderer';
 import {
   HeroBannerSkeleton,
@@ -24,9 +25,9 @@ import {
   DoctorCarouselSkeleton,
 } from '../components/common/Skeleton';
 import { ErrorBanner } from '../components/common/ErrorBanner';
-import { DevAdminModal } from '../components/admin/DevAdminModal';
 
 export interface HomeScreenProps {
+  configVersion?: number;
   onNavigateToDoctor: (doctor: Doctor) => void;
   onNavigateToDoctorList?: (service?: ServiceItem, filterSpecialty?: string) => void;
   onNavigateToBooking: (doctor?: Doctor, service?: ServiceItem) => void;
@@ -36,6 +37,7 @@ export interface HomeScreenProps {
 }
 
 export const HomeScreen: React.FC<HomeScreenProps> = ({
+  configVersion = 0,
   onNavigateToDoctor,
   onNavigateToDoctorList,
   onNavigateToBooking,
@@ -51,7 +53,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [errorBannerMsg, setErrorBannerMsg] = useState<string | null>(null);
-  const [isAdminVisible, setIsAdminVisible] = useState(false);
 
   const scrollY = useSharedValue(0);
   const scrollHandler = useAnimatedScrollHandler(event => {
@@ -64,7 +65,6 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
     } else {
       setLoading(true);
     }
-    setErrorBannerMsg(null);
 
     let loadedConfig: LayoutConfig | null = null;
 
@@ -73,18 +73,15 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
       loadedConfig = await MockApiClient.getConfig();
       setConfig(loadedConfig);
       updateTheme(loadedConfig.theme);
+      setErrorBannerMsg(null);
     } catch (err: any) {
       console.warn('HomeScreen: Failed to fetch remote config, checking cache...', err);
       // Resilience fallback: retrieve cached layout config
-      const cached = await StorageService.getCachedConfig();
-      if (cached) {
-        loadedConfig = cached;
-        setConfig(cached);
-        updateTheme(cached.theme);
-        setErrorBannerMsg(`${t.configLoadError} ${t.usingCachedConfig}`);
-      } else {
-        setErrorBannerMsg(t.configLoadError);
-      }
+      const cached = (await StorageService.getCachedConfig()) || normalLayoutConfig;
+      loadedConfig = cached;
+      setConfig(cached);
+      updateTheme(cached.theme);
+      setErrorBannerMsg(t.configLoadError);
     }
 
     try {
@@ -100,8 +97,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   }, [updateTheme, t]);
 
   useEffect(() => {
-    loadData();
-  }, [loadData]);
+    loadData(Boolean(config));
+  }, [configVersion]);
 
   const handleSelectAction = (action: QuickActionItem) => {
     if (action.screenTarget === 'booking') {
@@ -176,8 +173,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         {/* Error / Resilience Banner */}
         {errorBannerMsg && (
           <ErrorBanner
+            title={t.offlineTitle}
             message={errorBannerMsg}
             onRetry={() => loadData(true)}
+            retryText={t.retry}
             variant="warning"
           />
         )}

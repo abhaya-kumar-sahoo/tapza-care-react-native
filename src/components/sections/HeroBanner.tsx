@@ -43,6 +43,18 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
   const { theme, spacing, radii, typography, isFestival } = useTheme();
   const { t, language } = useI18n();
 
+  // Dynamic greeting based on current time of day
+  const getTimeGreeting = (): string => {
+    const hours = new Date().getHours();
+    if (hours >= 4 && hours < 12) {
+      return t.greetingMorning;
+    } else if (hours >= 12 && hours < 17) {
+      return t.greetingAfternoon;
+    } else {
+      return t.greetingEvening;
+    }
+  };
+
   // Parallax / shrinkage on scroll running 100% on the UI thread
   const animatedHeroStyle = useAnimatedStyle(() => {
     if (!scrollY) {
@@ -178,7 +190,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
               },
             ]}
           >
-            {isFestival ? t.greetingDiwali : `${t.greetingMorning},`}
+            {`${getTimeGreeting()},`}
           </Text>
           <Text
             allowFontScaling={true}
@@ -263,64 +275,73 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
         </TouchableOpacity>
       </View>
 
-      {/* Normal Day Promo Banner (Full image background with text overlay) */}
-      {!isFestival && (
-        <View style={[styles.promoContainer, { paddingHorizontal: spacing.lg, marginTop: spacing.md }]}>
-          <TouchableOpacity
-            onPress={onBookPress}
-            activeOpacity={0.92}
-            accessibilityRole="button"
-            accessibilityLabel={`${t.consultDoctorOnline}. ${t.bookNow}`}
-            style={styles.promoCard}
-          >
-            {/* Full Background Image */}
-            <Image
-              source={Images.doctorConsultBanner}
-              style={styles.bannerBackgroundImage}
-              resizeMode="cover"
-            />
+      {/* Promo Banner Card (Normal Day or Diwali Festival Mode) */}
+      <View style={[styles.promoContainer, { paddingHorizontal: spacing.lg, marginTop: spacing.md }]}>
+        <TouchableOpacity
+          onPress={onBookPress}
+          activeOpacity={0.92}
+          accessibilityRole="button"
+          accessibilityLabel={`${isFestival ? (item.promoTitle || 'Diwali Health Care') : t.consultDoctorOnline}. ${t.bookNow}`}
+          style={[styles.promoCard, isFestival && styles.promoCardDiwali]}
+        >
+          {/* Full Background Image: Diwali Banner or Normal Doctor Consult Banner */}
+          <Image
+            source={isFestival ? Images.diwaliBanner : Images.doctorConsultBanner}
+            style={styles.bannerBackgroundImage}
+            resizeMode="cover"
+          />
 
-            {/* Left Content Column */}
-            <View style={styles.promoTextCol}>
-              {/* 24/7 Care Pill Badge */}
-              <View style={styles.careBadge}>
-                <Text allowFontScaling={true} style={styles.careBadgeText}>
-                  {t.care247 || '24/7 Care'}
-                </Text>
-              </View>
-
-              {/* Title: Consult a Doctor Online */}
-              <Text
-                allowFontScaling={true}
-                style={styles.consultTitle}
-              >
-                {t.consultDoctorOnline}
+          {/* Left Content Column */}
+          <View style={[styles.promoTextCol, isFestival && styles.promoTextColDiwali]}>
+            {/* 24/7 Care or Diwali Special Pill Badge */}
+            <View style={[styles.careBadge, isFestival && styles.diwaliCareBadge]}>
+              <Text allowFontScaling={true} style={[styles.careBadgeText, isFestival && styles.diwaliCareBadgeText]}>
+                {isFestival ? (item.promoTag || t.diwaliSpecial || 'DIWALI SPECIAL') : (t.care247 || '24/7 Care')}
               </Text>
-
-              {/* Subtitle */}
-              <Text
-                allowFontScaling={true}
-                style={styles.consultSubtext}
-              >
-                {t.consultDoctorSubtext}
-              </Text>
-
-              {/* Book Now -> CTA Pill Button */}
-              <View style={styles.bookNowButton}>
-                <Text allowFontScaling={true} style={styles.bookNowText}>
-                  {t.bookNow}
-                </Text>
-                <Icon name="arrow-right" size={13} color="#FFFFFF" strokeWidth={2.4} />
-              </View>
             </View>
 
-            {/* Floating Plus Badge on Doctor */}
+            {/* Title / Offer Headline */}
+            <Text
+              allowFontScaling={true}
+              style={[styles.consultTitle, isFestival && styles.diwaliConsultTitle]}
+            >
+              {isFestival
+                ? (item.promoTitle || t.diwaliOfferHeadline || 'Flat 20% off')
+                : t.consultDoctorOnline}
+            </Text>
+
+            {/* Subtitle / Offer Details */}
+            <Text
+              allowFontScaling={true}
+              style={[styles.consultSubtext, isFestival && styles.diwaliConsultSubtext]}
+            >
+              {isFestival
+                ? (item.promoSubtitle || 'on selected lab tests')
+                : t.consultDoctorSubtext}
+            </Text>
+
+            {/* Book Now -> CTA Pill Button */}
+            <View style={[styles.bookNowButton, isFestival && styles.diwaliBookNowButton]}>
+              <Text allowFontScaling={true} style={[styles.bookNowText, isFestival && styles.diwaliBookNowText]}>
+                {isFestival ? (item.promoCta || t.bookNow) : t.bookNow}
+              </Text>
+              <Icon
+                name="arrow-right"
+                size={13}
+                color={isFestival ? '#78350F' : '#FFFFFF'}
+                strokeWidth={2.4}
+              />
+            </View>
+          </View>
+
+          {/* Floating Plus Badge on Doctor (normal day only) */}
+          {!isFestival && (
             <View style={styles.floatingPlusBadge} pointerEvents="none">
               <Icon name="plus" size={16} color="#008653" strokeWidth={3.4} />
             </View>
-          </TouchableOpacity>
-        </View>
-      )}
+          )}
+        </TouchableOpacity>
+      </View>
     </Animated.View>
   );
 };
@@ -503,5 +524,54 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
     zIndex: 2,
+  },
+  promoCardDiwali: {
+    backgroundColor: '#881337',
+    shadowColor: '#4C0519',
+  },
+  promoTextColDiwali: {
+    width: '60%',
+    paddingVertical: 18,
+    paddingLeft: 20,
+    justifyContent: 'space-between',
+  },
+  diwaliCareBadge: {
+    backgroundColor: 'rgba(251, 191, 36, 0.2)',
+    borderColor: '#F59E0B',
+    borderWidth: 1.2,
+    borderRadius: 16,
+    paddingHorizontal: 10,
+    paddingVertical: 3.5,
+  },
+  diwaliCareBadgeText: {
+    color: '#FDE68A',
+    fontWeight: '800',
+    fontSize: 10.5,
+    letterSpacing: 0.6,
+  },
+  diwaliConsultTitle: {
+    color: '#FFFFFF',
+    fontSize: 22,
+    fontWeight: '800',
+    letterSpacing: -0.3,
+    marginTop: 6,
+  },
+  diwaliConsultSubtext: {
+    color: '#FECDD3',
+    fontSize: 12.5,
+    marginTop: 4,
+    marginBottom: 12,
+  },
+  diwaliBookNowButton: {
+    backgroundColor: '#F59E0B',
+    shadowColor: '#D97706',
+    borderRadius: 22,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+  },
+  diwaliBookNowText: {
+    color: '#78350F',
+    fontWeight: '800',
+    fontSize: 13,
   },
 });

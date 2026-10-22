@@ -4,6 +4,8 @@ export interface Translations {
   appName: string;
   locationDefault: string;
   greetingMorning: string;
+  greetingAfternoon: string;
+  greetingEvening: string;
   greetingDiwali: string;
   greetingDiwaliSub: string;
   healthOurCare: string;
@@ -59,6 +61,8 @@ export interface Translations {
   emptySlots: string;
   emptyPrescriptions: string;
   slotTakenError: string;
+  offlineTitle: string;
+  offlineSubtitle: string;
   configLoadError: string;
   usingCachedConfig: string;
   diwaliSpecial: string;
@@ -74,6 +78,8 @@ export const translations: Record<SupportedLanguage, Translations> = {
     appName: 'Tapza Care',
     locationDefault: 'Hyderabad',
     greetingMorning: 'Good morning',
+    greetingAfternoon: 'Good afternoon',
+    greetingEvening: 'Good evening',
     greetingDiwali: 'Happy Diwali!',
     greetingDiwaliSub: "Here's to brighter health and happier days",
     healthOurCare: 'Your health, our care',
@@ -129,8 +135,10 @@ export const translations: Record<SupportedLanguage, Translations> = {
     emptySlots: 'No slots available for this date',
     emptyPrescriptions: 'No prescriptions found',
     slotTakenError: 'This slot was just taken by another patient. Please pick another slot.',
-    configLoadError: 'Unable to reach remote config server. Showing cached layout.',
-    usingCachedConfig: 'Using cached layout offline.',
+    offlineTitle: "You're browsing offline",
+    offlineSubtitle: 'Showing saved clinic details & services. Reconnect for real-time doctor availability.',
+    configLoadError: 'Showing saved clinic details & services. Reconnect for real-time doctor availability.',
+    usingCachedConfig: 'Using saved layout offline.',
     diwaliSpecial: 'Diwali Special',
     diwaliOfferHeadline: 'Flat 20% off on selected lab tests',
     bookNow: 'Book Now',
@@ -142,6 +150,8 @@ export const translations: Record<SupportedLanguage, Translations> = {
     appName: 'ताप्ज़ा केयर',
     locationDefault: 'हैदराबाद',
     greetingMorning: 'शुभ प्रभात',
+    greetingAfternoon: 'शुभ दोपहर',
+    greetingEvening: 'शुभ संध्या',
     greetingDiwali: 'दीपावली की शुभकामनाएं!',
     greetingDiwaliSub: 'स्वस्थ और उज्ज्वल जीवन की मंगलकामनाएं',
     healthOurCare: 'आपका स्वास्थ्य, हमारा संकल्प',
@@ -197,8 +207,10 @@ export const translations: Record<SupportedLanguage, Translations> = {
     emptySlots: 'इस तिथि के लिए कोई समय स्लॉट उपलब्ध नहीं है',
     emptyPrescriptions: 'कोई पर्चा नहीं मिला',
     slotTakenError: 'यह स्लॉट किसी अन्य मरीज़ द्वारा ले लिया गया है। कृपया दूसरा स्लॉट चुनें।',
-    configLoadError: 'सर्वर से कनेक्ट नहीं हो सका। सहेजा हुआ लेआउट दिखा रहे हैं।',
-    usingCachedConfig: 'ऑफ़लाइन सहेजे गए लेआउट का उपयोग कर रहे हैं।',
+    offlineTitle: 'आप ऑफ़लाइन हैं',
+    offlineSubtitle: 'सहेजे गए क्लिनिक और सेवाएं दिखाई जा रही हैं। लाइव उपलब्धता के लिए पुनः प्रयास करें।',
+    configLoadError: 'सहेजे गए क्लिनिक और सेवाएं दिखाई जा रही हैं। लाइव उपलब्धता के लिए पुनः प्रयास करें।',
+    usingCachedConfig: 'सहेजा हुआ लेआउट दिखाया जा रहा है।',
     diwaliSpecial: 'दीपावली स्पेशल',
     diwaliOfferHeadline: 'चुनिंदा लैब टेस्ट पर 20% की छूट',
     bookNow: 'अभी बुक करें',
@@ -210,6 +222,8 @@ export const translations: Record<SupportedLanguage, Translations> = {
     appName: 'తాప్జా కేర్',
     locationDefault: 'హైదరాబాద్',
     greetingMorning: 'శుభోదయం',
+    greetingAfternoon: 'శుభ మధ్యాహ్నం',
+    greetingEvening: 'శుభ సాయంత్రం',
     greetingDiwali: 'దీపావళి శుభాకాంక్షలు!',
     greetingDiwaliSub: 'మీ ఆయురారోగ్యాల కొరకు మా నిరంతర సంరక్షణ',
     healthOurCare: 'మీ ఆరోగ్యం, మా బాధ్యత',
@@ -265,8 +279,10 @@ export const translations: Record<SupportedLanguage, Translations> = {
     emptySlots: 'ఈ తేదీకి స్లాట్లు అందుబాటులో లేవు',
     emptyPrescriptions: 'ప్రిస్క్రిప్షన్లు లేవు',
     slotTakenError: 'ఈ సమయ స్లాట్ మరొకరు బుక్ చేసుకున్నారు. దయచేసి వేరొక సమయాన్ని ఎంచుకోండి.',
-    configLoadError: 'సర్వర్ అందుబాటులో లేదు. కాష్ చేయబడిన లేఅవుట్ చూపుతున్నాము.',
-    usingCachedConfig: 'ఆఫ్‌లైన్ కాష్ లేఅవుట్ వాడుతున్నారు.',
+    offlineTitle: 'మీరు ఆఫ్‌లైన్‌లో ఉన్నారు',
+    offlineSubtitle: 'సేవ్ చేసిన క్లినిక్ వివరాలు & సేవలు చూపుతున్నాము. లైవ్ స్లాట్‌ల కోసం రీకనెక్ట్ చేయండి.',
+    configLoadError: 'సేవ్ చేసిన క్లినిక్ వివరాలు & సేవలు చూపుతున్నాము. లైవ్ స్లాట్‌ల కోసం రీకనెక్ట్ చేయండి.',
+    usingCachedConfig: 'సేవ్ చేయబడిన లేఅవుట్ చూపుతున్నాము.',
     diwaliSpecial: 'దీపావళి స్పెషల్',
     diwaliOfferHeadline: 'ఎంపిక చేసిన ల్యాబ్ పరీక్షలపై 20% రాయితీ',
     bookNow: 'ఇప్పుడే బుక్ చేయండి',
