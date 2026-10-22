@@ -34,7 +34,7 @@ export const ConfettiBurst: React.FC = () => {
         y: Math.sin(angle) * distance,
         color: CONFETTI_COLORS[i % CONFETTI_COLORS.length],
         size: Math.random() > 0.5 ? 8 : 6,
-        shape: Math.random() > 0.5 ? 'circle' : 'square',
+        shape: (Math.random() > 0.5 ? 'circle' : 'square') as 'circle' | 'square',
       };
     })
   ).current;

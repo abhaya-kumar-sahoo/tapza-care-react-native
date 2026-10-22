@@ -183,5 +183,54 @@ Time:        0.772 s
 
 ---
 
+## ⚖️ What Was Left Out & Why (Trade-Offs)
+
+As emphasized in the assignment prompt (*"A polished three-screen app beats an unfinished six-screen one. Tell us what you left out"*), several potential features were consciously scoped out to prioritize rock-solid stability, zero-crash resilience, and 60 FPS performance on mid-range Android devices:
+
+1. **System-Level Push Notifications / Background Alarms**:
+   - *Why Left Out*: Android 13+ (API 33+) requires runtime `POST_NOTIFICATIONS` permissions, foreground service exemptions, and OEM battery-saver workarounds (especially aggressive on Xiaomi, Vivo, and Samsung mid-range phones).
+   - *Alternative Chosen*: Built an instant, interactive in-app medicine reminder checklist with morning/afternoon/night buckets and local `AsyncStorage` persistence that updates immediately and never desynchronizes.
+2. **Deep Linking with Android Intent-Filters**:
+   - *Why Left Out*: Managing scheme collisions and cold-start backstack reconstruction within a 48h limit can lead to edge-case crashes on varied Android launchers.
+   - *Alternative Chosen*: Built robust in-app modal and tab navigation handling nested doctor profiles, slot selection, and prescription timelines smoothly.
+3. **Third-Party Payment Gateway (Razorpay/PayTM SDK)**:
+   - *Why Left Out*: Clinic consultations at Tapza are either pay-at-clinic or billed after doctor review. Mocking the instant booking confirmation with optimistic locking provides a faster, clean booking flow without native payment binary bloat.
+4. **Third-Party Heavy UI / Vector Icon Libraries**:
+   - *Why Left Out*: Avoided font linking bugs and binary bloat by hand-crafting lightweight, crisp SVG icon components tailored for Indian healthcare.
+
+---
+
+## ⏱️ Honest Time Spent Breakdown
+
+| Milestone / Task | Time Spent | Key Deliverables |
+| :--- | :---: | :--- |
+| **Requirements Analysis & Architecture Plan** | ~2.5 hrs | Schema contracts (`LayoutConfig`, `Doctor`, `Slot`, `Prescription`), theme token architecture |
+| **Mock Backend, Storage & Chaos Engine** | ~3.0 hrs | `MockApiClient` with realistic Hyderabad data, latency simulator, 500/409 chaos switches |
+| **Zepto Dynamic Layout & Festival Engine** | ~4.5 hrs | `SectionRenderer`, Parallax `HeroBanner`, Diwali Diya glow motifs, scroll animations |
+| **Booking Flow & 409 Conflict Rollback** | ~4.0 hrs | Date picker, slot grid, gesture bottom sheet, optimistic locking, and conflict rollback |
+| **Prescriptions & Medicine Reminders** | ~3.5 hrs | Filtered prescription cards, dosage schedule timeline, dose completion checklist |
+| **In-App Dev Admin Drawer & i18n (EN/HI/TE)** | ~3.5 hrs | Live JSON editor, language switcher, failure injection toggles, translation dictionaries |
+| **Android Tuning & Accessibility** | ~3.0 hrs | 44pt touch targets, WCAG AA contrast, edge-to-edge Android 15 testing |
+| **Unit Test Suites & Jest Mocking** | ~2.0 hrs | Config schema, dynamic section skip, booking 409 resilience, and App root tests |
+| **Android Build, APK & Documentation** | ~3.0 hrs | 140MB Debug APK, screen recording (`demo.mp4`), `AI_LOG.md`, screenshots, and README |
+| **Total Time Invested** | **~29.0 hrs** | *Within the 48-hour assignment window* |
+
+---
+
+## 🎬 3-Minute Video Walkthrough
+
+The demo video is located at:
+- [`docs/demo.mp4`](docs/demo.mp4)
+
+It demonstrates:
+1. **Normal Day Home Feed**: Smooth Zepto-style band scrolling, emerald theme, doctor promo banner.
+2. **Festival Remote Config Change**: Toggling to Diwali Festival live in-app without a release (saffron theme, glowing diyas, offer strip).
+3. **Doctor Profile & Booking**: Navigating to Dr. Priya Sharma, picking date & slot in gesture bottom sheet.
+4. **Resilience & 409 Conflict Rollback**: Forcing slot conflict to show optimistic booking rollback and error banner.
+5. **Prescriptions & Reminders**: Viewing morning/afternoon/night schedule and checking off taken doses.
+
+---
+
 ## 📄 License & Attribution
 Created for the **Tapza Technologies Mobile Engineer Assignment**. Built with React Native and TypeScript.
+

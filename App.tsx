@@ -10,10 +10,7 @@ function AppContent() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
-      <StatusBar
-        barStyle={isFestival ? 'light-content' : 'dark-content'}
-        backgroundColor={isFestival ? '#7F1D1D' : theme.background}
-      />
+      <StatusBar barStyle={isFestival ? 'light-content' : 'dark-content'} />
       <AppNavigator />
     </View>
   );
