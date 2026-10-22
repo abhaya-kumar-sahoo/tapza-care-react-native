@@ -1,10 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from 'react-native';
 import { useTheme } from '../../theme';
 import { useI18n } from '../../i18n';
 import { Icon } from '../common/Icon';
 import { Badge } from '../common/Badge';
 import { ServiceItem } from '../../types';
+import { resolveImageSource } from '../../assets/images';
 
 export interface ServiceGridProps {
   title?: string;
@@ -80,9 +81,9 @@ export const ServiceGrid: React.FC<ServiceGridProps> = ({
                 borderRadius: radii.lg,
                 borderColor: '#E2E8F0',
                 borderWidth: 1,
-                padding: spacing.md,
+                padding: spacing.sm,
                 marginRight: spacing.md,
-                width: 140,
+                width: 148,
                 shadowColor: '#000',
                 shadowOffset: { width: 0, height: 2 },
                 shadowOpacity: 0.04,
@@ -91,28 +92,48 @@ export const ServiceGrid: React.FC<ServiceGridProps> = ({
               },
             ]}
           >
-            {/* Top icon and badge */}
-            <View style={styles.cardTopRow}>
-              <View
-                style={[
-                  styles.serviceIconWrap,
-                  {
-                    backgroundColor: `${theme.primary}12`,
-                    borderRadius: radii.md,
-                  },
-                ]}
-              >
-                <Icon name={service.icon} size={22} color={theme.primary} />
-              </View>
-              {service.badge && (
-                <Badge
-                  label={service.badge}
-                  variant="accent"
-                  style={{ alignSelf: 'flex-start' }}
-                  textStyle={{ fontSize: 9 }}
+            {/* Top image or icon */}
+            {service.imageUrl ? (
+              <View style={[styles.imageContainer, { borderRadius: radii.md }]}>
+                <Image
+                  source={resolveImageSource(service.imageUrl)}
+                  style={styles.serviceImage}
+                  resizeMode="cover"
                 />
-              )}
-            </View>
+                {service.badge && (
+                  <View style={styles.badgeOverlay}>
+                    <Badge
+                      label={service.badge}
+                      variant="accent"
+                      style={{ alignSelf: 'flex-start' }}
+                      textStyle={{ fontSize: 9 }}
+                    />
+                  </View>
+                )}
+              </View>
+            ) : (
+              <View style={styles.cardTopRow}>
+                <View
+                  style={[
+                    styles.serviceIconWrap,
+                    {
+                      backgroundColor: `${theme.primary}12`,
+                      borderRadius: radii.md,
+                    },
+                  ]}
+                >
+                  <Icon name={service.icon} size={22} color={theme.primary} />
+                </View>
+                {service.badge && (
+                  <Badge
+                    label={service.badge}
+                    variant="accent"
+                    style={{ alignSelf: 'flex-start' }}
+                    textStyle={{ fontSize: 9 }}
+                  />
+                )}
+              </View>
+            )}
 
             {/* Name */}
             <Text
@@ -125,7 +146,7 @@ export const ServiceGrid: React.FC<ServiceGridProps> = ({
                   fontSize: typography.sizes.sm,
                   fontWeight: typography.weights.semibold,
                   marginTop: spacing.sm,
-                  minHeight: 36,
+                  minHeight: 34,
                 },
               ]}
             >
@@ -212,4 +233,20 @@ const styles = StyleSheet.create({
   },
   priceText: {},
   originalPriceText: {},
+  imageContainer: {
+    width: '100%',
+    height: 74,
+    overflow: 'hidden',
+    position: 'relative',
+    backgroundColor: '#F1F5F9',
+  },
+  serviceImage: {
+    width: '100%',
+    height: '100%',
+  },
+  badgeOverlay: {
+    position: 'absolute',
+    top: 4,
+    left: 4,
+  },
 });

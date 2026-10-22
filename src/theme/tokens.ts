@@ -1,4 +1,5 @@
 import { ThemeConfig } from '../types';
+import { Images } from '../assets/images';
 
 export const normalTheme: ThemeConfig = {
   primary: '#007A55',
@@ -21,7 +22,7 @@ export const diwaliTheme: ThemeConfig = {
   festival: {
     name: 'Diwali',
     greeting: 'Happy Diwali!',
-    bannerImageUrl: 'https://images.unsplash.com/photo-1605649487212-47bdab064df8?auto=format&fit=crop&w=800&q=80',
+    bannerImageUrl: Images.diwaliBanner as any,
   },
 };
 

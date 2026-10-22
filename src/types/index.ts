@@ -72,6 +72,7 @@ export interface ServiceItem {
   badge?: string;
   icon: string;
   category: string;
+  imageUrl?: string | any;
 }
 
 export interface OfferStripItem {
@@ -95,7 +96,7 @@ export interface Doctor {
   id: string;
   name: string;
   specialty: string;
-  photoUrl: string;
+  photoUrl: string | any;
   feeInr: number;
   languages: string[];
   qualification?: string;

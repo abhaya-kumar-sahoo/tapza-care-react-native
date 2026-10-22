@@ -13,6 +13,7 @@ import { QuickActions } from './QuickActions';
 import { ServiceGrid } from './ServiceGrid';
 import { DoctorCarousel } from './DoctorCarousel';
 import { OfferStrip } from './OfferStrip';
+import { resolveImageSource } from '../../assets/images';
 
 export interface SectionRendererProps {
   section: BaseSectionConfig;
@@ -144,7 +145,7 @@ export const SectionRenderer: React.FC<SectionRendererProps> = ({
   if (kind === 'image' && value) {
     return (
       <Animated.View style={[styles.sectionBand, animatedStyle]}>
-        <ImageBackground source={{ uri: value }} resizeMode="cover" style={styles.imageBackground}>
+        <ImageBackground source={resolveImageSource(value)} resizeMode="cover" style={styles.imageBackground}>
           {content}
         </ImageBackground>
       </Animated.View>

@@ -12,8 +12,8 @@ import { useTheme } from '../theme';
 import { useI18n } from '../i18n';
 import { Icon } from '../components/common/Icon';
 import { Button } from '../components/common/Button';
-import { Badge } from '../components/common/Badge';
 import { Doctor } from '../types';
+import { resolveImageSource } from '../assets/images';
 
 export interface DoctorDetailScreenProps {
   doctor: Doctor;
@@ -91,7 +91,7 @@ export const DoctorDetailScreen: React.FC<DoctorDetailScreenProps> = ({
         <View style={[styles.profileCard, { backgroundColor: '#FFFFFF', borderRadius: radii.xl, padding: spacing.lg }]}>
           <View style={styles.avatarWrap}>
             <Image
-              source={{ uri: doctor.photoUrl }}
+              source={resolveImageSource(doctor.photoUrl)}
               style={[styles.avatar, { borderRadius: radii.full }]}
               resizeMode="cover"
             />

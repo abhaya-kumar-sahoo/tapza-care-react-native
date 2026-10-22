@@ -18,6 +18,7 @@ import { useTheme } from '../../theme';
 import { useI18n } from '../../i18n';
 import { Icon } from '../common/Icon';
 import { HeroBannerItem } from '../../types';
+import { Images } from '../../assets/images';
 
 export interface HeroBannerProps {
   item: HeroBannerItem;
@@ -324,9 +325,11 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
             </View>
 
             <View style={styles.promoDoctorBadge}>
-              <View style={[styles.doctorIconBox, { backgroundColor: '#E6F4EA' }]}>
-                <Icon name="user" size={36} color={theme.primary} />
-              </View>
+              <Image
+                source={Images.smilingDoctor}
+                style={[styles.doctorIconBox, { borderRadius: radii.full }]}
+                resizeMode="cover"
+              />
             </View>
           </TouchableOpacity>
         </View>

@@ -1,20 +1,16 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   View,
   Text,
   StyleSheet,
+  ScrollView,
   Alert,
 } from 'react-native';
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withSpring,
-} from 'react-native-reanimated';
+import LottieView from 'lottie-react-native';
 import { useTheme } from '../theme';
 import { useI18n } from '../i18n';
 import { Icon } from '../components/common/Icon';
 import { Button } from '../components/common/Button';
-import { ConfettiBurst } from '../components/common/Confetti';
 import { Booking } from '../types';
 
 export interface BookingSuccessScreenProps {
@@ -28,172 +24,168 @@ export const BookingSuccessScreen: React.FC<BookingSuccessScreenProps> = ({
 }) => {
   const { theme, spacing, radii, typography } = useTheme();
   const { t } = useI18n();
-
-  const scaleCheck = useSharedValue(0);
+  const lottieRef = useRef<LottieView>(null);
 
   useEffect(() => {
-    scaleCheck.value = withSpring(1, {
-      damping: 8,
-      stiffness: 100,
-    });
-  }, [scaleCheck]);
-
-  const animatedCheckStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scaleCheck.value }],
-  }));
+    // Delay trigger by 120ms to allow screen slide transition to settle,
+    // giving 100% UI & GPU thread bandwidth to Lottie for silky smooth 60fps playback
+    const timer = setTimeout(() => {
+      lottieRef.current?.play();
+    }, 120);
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleAddToCalendar = () => {
     Alert.alert('Added to Calendar', `Appointment with ${booking.doctorName} on ${booking.appointmentDate} added to device calendar.`);
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: '#FFFFFF', padding: spacing.xl }]}>
-      {/* Top Confetti & Checkmark Celebration */}
-      <View style={styles.celebrationArea}>
-        <ConfettiBurst />
+    <View style={[styles.container, { backgroundColor: '#FFFFFF' }]}>
+      <ScrollView
+        contentContainerStyle={[styles.scrollContent, { padding: spacing.xl }]}
+        showsVerticalScrollIndicator={false}
+        bounces={false}
+      >
+        {/* Top Lottie Celebration Animation (Bigger & Hardware Accelerated) */}
+        <View style={styles.celebrationArea}>
+          <LottieView
+            ref={lottieRef}
+            source={require('../assets/lottie/OrderSuccess.json')}
+            autoPlay={false}
+            loop={false}
+            speed={1.2}
+            renderMode="HARDWARE"
+            cacheComposition={true}
+            style={styles.lottie}
+            resizeMode="contain"
+          />
+        </View>
 
-        <Animated.View
+        {/* Title & Subtitle */}
+        <Text
+          allowFontScaling={true}
           style={[
-            styles.checkCircle,
+            styles.title,
             {
-              backgroundColor: '#10B981',
-              shadowColor: '#10B981',
-              shadowOffset: { width: 0, height: 6 },
-              shadowOpacity: 0.35,
-              shadowRadius: 12,
-              elevation: 8,
+              color: theme.textPrimary,
+              fontSize: typography.sizes.xxl,
+              fontWeight: typography.weights.extrabold,
+              marginTop: spacing.sm,
+              textAlign: 'center',
             },
-            animatedCheckStyle,
           ]}
         >
-          <Icon name="check" size={40} color="#FFFFFF" strokeWidth={3.5} />
-        </Animated.View>
-      </View>
+          {t.appointmentBooked}
+        </Text>
 
-      {/* Title & Subtitle */}
-      <Text
-        allowFontScaling={true}
-        style={[
-          styles.title,
-          {
-            color: theme.textPrimary,
-            fontSize: typography.sizes.xxl,
-            fontWeight: typography.weights.extrabold,
-            marginTop: spacing.xl,
-            textAlign: 'center',
-          },
-        ]}
-      >
-        {t.appointmentBooked}
-      </Text>
+        <Text
+          allowFontScaling={true}
+          style={[
+            styles.subtitle,
+            {
+              color: theme.textSecondary,
+              fontSize: typography.sizes.sm,
+              marginTop: spacing.xs,
+              textAlign: 'center',
+            },
+          ]}
+        >
+          Your appointment with {booking.doctorName} is confirmed.
+        </Text>
 
-      <Text
-        allowFontScaling={true}
-        style={[
-          styles.subtitle,
-          {
-            color: theme.textSecondary,
-            fontSize: typography.sizes.sm,
-            marginTop: spacing.xs,
-            textAlign: 'center',
-          },
-        ]}
-      >
-        Your appointment with {booking.doctorName} is confirmed.
-      </Text>
+        {/* Appointment Summary Card */}
+        <View
+          style={[
+            styles.card,
+            {
+              backgroundColor: '#F8FAFC',
+              borderRadius: radii.xl,
+              borderColor: '#E2E8F0',
+              borderWidth: 1,
+              padding: spacing.lg,
+              marginTop: spacing.lg,
+              width: '100%',
+            },
+          ]}
+        >
+          {/* Date / Time */}
+          <View style={styles.itemRow}>
+            <Icon name="calendar" size={18} color={theme.primary} />
+            <Text
+              allowFontScaling={true}
+              style={[
+                styles.itemText,
+                {
+                  color: theme.textPrimary,
+                  fontSize: typography.sizes.sm,
+                  fontWeight: typography.weights.semibold,
+                  marginLeft: spacing.sm,
+                },
+              ]}
+            >
+              {booking.appointmentDate}
+            </Text>
+          </View>
 
-      {/* Appointment Summary Card */}
-      <View
-        style={[
-          styles.card,
-          {
-            backgroundColor: '#F8FAFC',
-            borderRadius: radii.xl,
-            borderColor: '#E2E8F0',
-            borderWidth: 1,
-            padding: spacing.lg,
-            marginTop: spacing.xl,
-            width: '100%',
-          },
-        ]}
-      >
-        {/* Date / Time */}
-        <View style={styles.itemRow}>
-          <Icon name="calendar" size={18} color={theme.primary} />
-          <Text
-            allowFontScaling={true}
-            style={[
-              styles.itemText,
-              {
-                color: theme.textPrimary,
-                fontSize: typography.sizes.sm,
-                fontWeight: typography.weights.semibold,
-                marginLeft: spacing.sm,
-              },
-            ]}
-          >
-            {booking.appointmentDate}
-          </Text>
+          {/* Doctor */}
+          <View style={[styles.itemRow, { marginTop: spacing.md }]}>
+            <Icon name="stethoscope" size={18} color={theme.primary} />
+            <Text
+              allowFontScaling={true}
+              style={[
+                styles.itemText,
+                {
+                  color: theme.textPrimary,
+                  fontSize: typography.sizes.sm,
+                  fontWeight: typography.weights.semibold,
+                  marginLeft: spacing.sm,
+                },
+              ]}
+            >
+              {booking.doctorName}
+            </Text>
+          </View>
+
+          {/* Clinic */}
+          <View style={[styles.itemRow, { marginTop: spacing.md }]}>
+            <Icon name="location" size={18} color={theme.primary} />
+            <Text
+              allowFontScaling={true}
+              style={[
+                styles.itemText,
+                {
+                  color: theme.textPrimary,
+                  fontSize: typography.sizes.sm,
+                  fontWeight: typography.weights.semibold,
+                  marginLeft: spacing.sm,
+                },
+              ]}
+            >
+              {booking.clinicName}
+            </Text>
+          </View>
         </View>
 
-        {/* Doctor */}
-        <View style={[styles.itemRow, { marginTop: spacing.md }]}>
-          <Icon name="stethoscope" size={18} color={theme.primary} />
-          <Text
-            allowFontScaling={true}
-            style={[
-              styles.itemText,
-              {
-                color: theme.textPrimary,
-                fontSize: typography.sizes.sm,
-                fontWeight: typography.weights.semibold,
-                marginLeft: spacing.sm,
-              },
-            ]}
-          >
-            {booking.doctorName}
-          </Text>
+        <View style={styles.spacer} />
+
+        {/* Actions */}
+        <View style={styles.buttonsContainer}>
+          <Button
+            title={t.addToCalendar}
+            variant="outline"
+            size="lg"
+            onPress={handleAddToCalendar}
+            style={{ marginBottom: spacing.md }}
+          />
+
+          <Button
+            title={t.done}
+            variant="primary"
+            size="lg"
+            onPress={onDone}
+          />
         </View>
-
-        {/* Clinic */}
-        <View style={[styles.itemRow, { marginTop: spacing.md }]}>
-          <Icon name="location" size={18} color={theme.primary} />
-          <Text
-            allowFontScaling={true}
-            style={[
-              styles.itemText,
-              {
-                color: theme.textPrimary,
-                fontSize: typography.sizes.sm,
-                fontWeight: typography.weights.semibold,
-                marginLeft: spacing.sm,
-              },
-            ]}
-          >
-            {booking.clinicName}
-          </Text>
-        </View>
-      </View>
-
-      <View style={{ flex: 1 }} />
-
-      {/* Actions */}
-      <View style={styles.buttonsContainer}>
-        <Button
-          title={t.addToCalendar}
-          variant="outline"
-          size="lg"
-          onPress={handleAddToCalendar}
-          style={{ marginBottom: spacing.md }}
-        />
-
-        <Button
-          title={t.done}
-          variant="primary"
-          size="lg"
-          onPress={onDone}
-        />
-      </View>
+      </ScrollView>
     </View>
   );
 };
@@ -201,22 +193,22 @@ export const BookingSuccessScreen: React.FC<BookingSuccessScreenProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
   },
   celebrationArea: {
-    marginTop: 40,
-    width: 140,
-    height: 140,
+    marginTop: 8,
+    width: 240,
+    height: 240,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  checkCircle: {
-    width: 84,
-    height: 84,
-    borderRadius: 42,
-    alignItems: 'center',
-    justifyContent: 'center',
+  lottie: {
+    width: 240,
+    height: 240,
   },
   title: {
     letterSpacing: -0.5,
@@ -228,8 +220,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   itemText: {},
+  spacer: {
+    flex: 1,
+    minHeight: 16,
+  },
   buttonsContainer: {
     width: '100%',
-    paddingBottom: 20,
+    paddingBottom: 16,
+    marginTop: 16,
   },
 });

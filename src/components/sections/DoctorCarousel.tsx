@@ -12,6 +12,7 @@ import { useI18n } from '../../i18n';
 import { Icon } from '../common/Icon';
 import { Badge } from '../common/Badge';
 import { Doctor } from '../../types';
+import { resolveImageSource } from '../../assets/images';
 
 export interface DoctorCarouselProps {
   title?: string;
@@ -101,7 +102,7 @@ export const DoctorCarousel: React.FC<DoctorCarouselProps> = ({
             {/* Doctor Photo */}
             <View style={styles.photoContainer}>
               <Image
-                source={{ uri: doctor.photoUrl }}
+                source={resolveImageSource(doctor.photoUrl)}
                 style={[styles.avatar, { borderRadius: radii.full }]}
                 resizeMode="cover"
               />

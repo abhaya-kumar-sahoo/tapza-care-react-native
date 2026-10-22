@@ -23,6 +23,7 @@ import { ErrorBanner } from '../components/common/ErrorBanner';
 import { Doctor, Slot, Booking } from '../types';
 import { MockApiClient } from '../api/mockClient';
 import { mockDoctors } from '../api/mockData';
+import { resolveImageSource } from '../assets/images';
 
 export interface BookingScreenProps {
   initialDoctor?: Doctor;
@@ -210,7 +211,7 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({
         {/* Doctor Mini Card matching Screenshot 4 */}
         <View style={[styles.doctorMiniCard, { backgroundColor: '#FFFFFF', borderRadius: radii.lg, padding: spacing.md, marginHorizontal: spacing.lg, marginTop: spacing.xs }]}>
           <Image
-            source={{ uri: doctor.photoUrl }}
+            source={resolveImageSource(doctor.photoUrl)}
             style={[styles.miniAvatar, { borderRadius: radii.full }]}
             resizeMode="cover"
           />

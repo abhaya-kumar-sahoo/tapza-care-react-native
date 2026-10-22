@@ -20,7 +20,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
   onOpenAdmin,
   onOpenReminders,
 }) => {
-  const { theme, spacing, radii, typography, isFestival } = useTheme();
+  const { theme, spacing, radii, typography } = useTheme();
   const { language, setLanguage, t } = useI18n();
 
   return (
