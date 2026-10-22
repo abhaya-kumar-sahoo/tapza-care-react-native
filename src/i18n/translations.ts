@@ -64,6 +64,9 @@ export interface Translations {
   diwaliSpecial: string;
   diwaliOfferHeadline: string;
   bookNow: string;
+  care247: string;
+  consultDoctorOnline: string;
+  consultDoctorSubtext: string;
 }
 
 export const translations: Record<SupportedLanguage, Translations> = {
@@ -131,6 +134,9 @@ export const translations: Record<SupportedLanguage, Translations> = {
     diwaliSpecial: 'Diwali Special',
     diwaliOfferHeadline: 'Flat 20% off on selected lab tests',
     bookNow: 'Book Now',
+    care247: '24/7 Care',
+    consultDoctorOnline: 'Consult a Doctor\nOnline',
+    consultDoctorSubtext: 'Get expert medical advice from the comfort of home.',
   },
   hi: {
     appName: 'ताप्ज़ा केयर',
@@ -196,6 +202,9 @@ export const translations: Record<SupportedLanguage, Translations> = {
     diwaliSpecial: 'दीपावली स्पेशल',
     diwaliOfferHeadline: 'चुनिंदा लैब टेस्ट पर 20% की छूट',
     bookNow: 'अभी बुक करें',
+    care247: '24/7 सेवा',
+    consultDoctorOnline: 'डॉक्टर से ऑनलाइन\nपरामर्श लें',
+    consultDoctorSubtext: 'घर बैठे विशेषज्ञ डॉक्टरों से चिकित्सीय सलाह प्राप्त करें।',
   },
   te: {
     appName: 'తాప్జా కేర్',
@@ -261,5 +270,8 @@ export const translations: Record<SupportedLanguage, Translations> = {
     diwaliSpecial: 'దీపావళి స్పెషల్',
     diwaliOfferHeadline: 'ఎంపిక చేసిన ల్యాబ్ పరీక్షలపై 20% రాయితీ',
     bookNow: 'ఇప్పుడే బుక్ చేయండి',
+    care247: '24/7 సంరక్షణ',
+    consultDoctorOnline: 'డాక్టర్‌తో ఆన్‌లైన్\nసంప్రదింపులు',
+    consultDoctorSubtext: 'మీ ఇంటి వద్ద నుంచే నిపుణులైన వైద్యుల సలహాలు పొందండి.',
   },
 };

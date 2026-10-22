@@ -24,27 +24,11 @@ export const normalLayoutConfig: LayoutConfig = {
           greeting: 'Good morning,',
           userName: 'Abhaya',
           subGreeting: 'Your health, our care',
-          promoTitle: 'Book a doctor',
-          promoSubtitle: 'Consult from top specialists near you',
-          promoCta: 'Consult now',
+          promoTitle: 'Consult a Doctor Online',
+          promoSubtitle: 'Get expert medical advice from the comfort of home.',
+          promoCta: 'Book Now',
           illustrationType: 'doctor',
         },
-      ],
-    },
-    {
-      id: 'sec_categories',
-      type: 'category_chips',
-      background: {
-        kind: 'color',
-        value: '#FFFFFF',
-      },
-      title: 'Explore by category',
-      items: [
-        { id: 'cat_consult', name: 'Consult', icon: 'stethoscope', tintColor: '#10B981' },
-        { id: 'cat_lab', name: 'Lab Tests', icon: 'flask', tintColor: '#3B82F6' },
-        { id: 'cat_pharmacy', name: 'Pharmacy', icon: 'pill', tintColor: '#F97316' },
-        { id: 'cat_vaccine', name: 'Vaccines', icon: 'syringe', tintColor: '#06B6D4' },
-        { id: 'cat_health', name: 'Health Packages', icon: 'heart', tintColor: '#8B5CF6' },
       ],
     },
     {
@@ -54,7 +38,7 @@ export const normalLayoutConfig: LayoutConfig = {
         kind: 'color',
         value: '#F8FAFC',
       },
-      title: 'Quick actions',
+      title: 'Quick Actions',
       items: [
         {
           id: 'qa_book',
@@ -84,6 +68,22 @@ export const normalLayoutConfig: LayoutConfig = {
           bgColor: '#F3E8FF',
           screenTarget: 'profile',
         },
+      ],
+    },
+    {
+      id: 'sec_categories',
+      type: 'category_chips',
+      background: {
+        kind: 'color',
+        value: '#FFFFFF',
+      },
+      title: 'Explore by category',
+      items: [
+        { id: 'cat_consult', name: 'Consult', icon: 'stethoscope', tintColor: '#10B981' },
+        { id: 'cat_lab', name: 'Lab Tests', icon: 'flask', tintColor: '#3B82F6' },
+        { id: 'cat_pharmacy', name: 'Pharmacy', icon: 'pill', tintColor: '#F97316' },
+        { id: 'cat_vaccine', name: 'Vaccines', icon: 'syringe', tintColor: '#06B6D4' },
+        { id: 'cat_health', name: 'Health Packages', icon: 'heart', tintColor: '#8B5CF6' },
       ],
     },
     {

@@ -263,73 +263,60 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
         </TouchableOpacity>
       </View>
 
-      {/* Normal Day Promo Banner (Card matching Screenshot 1) */}
-      {!isFestival && item.promoTitle && (
+      {/* Normal Day Promo Banner (Full image background with text overlay) */}
+      {!isFestival && (
         <View style={[styles.promoContainer, { paddingHorizontal: spacing.lg, marginTop: spacing.md }]}>
           <TouchableOpacity
             onPress={onBookPress}
-            activeOpacity={0.9}
-            style={[
-              styles.promoCard,
-              {
-                backgroundColor: '#FFFFFF',
-                borderRadius: radii.lg,
-                padding: spacing.md,
-                shadowColor: '#000',
-                shadowOffset: { width: 0, height: 2 },
-                shadowOpacity: 0.05,
-                shadowRadius: 6,
-                elevation: 2,
-              },
-            ]}
+            activeOpacity={0.92}
+            accessibilityRole="button"
+            accessibilityLabel={`${t.consultDoctorOnline}. ${t.bookNow}`}
+            style={styles.promoCard}
           >
+            {/* Full Background Image */}
+            <Image
+              source={Images.doctorConsultBanner}
+              style={styles.bannerBackgroundImage}
+              resizeMode="cover"
+            />
+
+            {/* Left Content Column */}
             <View style={styles.promoTextCol}>
+              {/* 24/7 Care Pill Badge */}
+              <View style={styles.careBadge}>
+                <Text allowFontScaling={true} style={styles.careBadgeText}>
+                  {t.care247 || '24/7 Care'}
+                </Text>
+              </View>
+
+              {/* Title: Consult a Doctor Online */}
               <Text
                 allowFontScaling={true}
-                style={[
-                  styles.promoTitle,
-                  {
-                    color: theme.textPrimary,
-                    fontSize: typography.sizes.md,
-                    fontWeight: typography.weights.bold,
-                  },
-                ]}
+                style={styles.consultTitle}
               >
-                {t.bookADoctor}
+                {t.consultDoctorOnline}
               </Text>
+
+              {/* Subtitle */}
               <Text
                 allowFontScaling={true}
-                style={[
-                  styles.promoSubtitle,
-                  {
-                    color: theme.textSecondary,
-                    fontSize: typography.sizes.xs,
-                    marginTop: 2,
-                    marginBottom: spacing.sm,
-                  },
-                ]}
+                style={styles.consultSubtext}
               >
-                {t.bookDoctorSubtitle}
+                {t.consultDoctorSubtext}
               </Text>
-              <View
-                style={[
-                  styles.promoArrowCircle,
-                  {
-                    backgroundColor: theme.primary,
-                    borderRadius: radii.full,
-                  },
-                ]}
-              >
-                <Icon name="chevron-right" size={14} color="#FFFFFF" />
+
+              {/* Book Now -> CTA Pill Button */}
+              <View style={styles.bookNowButton}>
+                <Text allowFontScaling={true} style={styles.bookNowText}>
+                  {t.bookNow}
+                </Text>
+                <Icon name="arrow-right" size={13} color="#FFFFFF" strokeWidth={2.4} />
               </View>
             </View>
 
-            <View style={styles.promoDoctorBadge}>
-              <Image
-                source={Images.smilingDoctor}
-                style={[styles.doctorIconBox, { borderRadius: radii.full }]}
-                resizeMode="cover"
-              />
+            {/* Floating Plus Badge on Doctor */}
+            <View style={styles.floatingPlusBadge} pointerEvents="none">
+              <Icon name="plus" size={16} color="#008653" strokeWidth={3.4} />
             </View>
           </TouchableOpacity>
         </View>
@@ -415,31 +402,106 @@ const styles = StyleSheet.create({
   searchPlaceholder: {},
   promoContainer: {},
   promoCard: {
+    backgroundColor: '#D1F4ED',
+    borderRadius: 24,
+    minHeight: 196,
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    borderLeftWidth: 4,
-    borderLeftColor: '#10B981',
+    alignItems: 'stretch',
+    overflow: 'hidden',
+    shadowColor: '#008653',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 3,
   },
   promoTextCol: {
-    flex: 1,
+    width: '58%',
+    paddingLeft: 18,
+    paddingRight: 6,
+    paddingTop: 16,
+    paddingBottom: 16,
+    justifyContent: 'space-between',
+    zIndex: 2,
   },
-  promoTitle: {},
-  promoSubtitle: {},
-  promoArrowCircle: {
-    width: 28,
-    height: 28,
+  careBadge: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    paddingHorizontal: 11,
+    paddingVertical: 5,
+    alignSelf: 'flex-start',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 1,
+  },
+  careBadgeText: {
+    color: '#0F172A',
+    fontSize: 11.5,
+    fontWeight: '700',
+    letterSpacing: 0.2,
+  },
+  consultTitle: {
+    color: '#092518',
+    fontSize: 21,
+    fontWeight: '800',
+    lineHeight: 25,
+    marginTop: 8,
+    letterSpacing: -0.4,
+  },
+  consultSubtext: {
+    color: '#254A39',
+    fontSize: 12.5,
+    fontWeight: '400',
+    lineHeight: 16.5,
+    marginTop: 6,
+    marginBottom: 12,
+  },
+  bookNowButton: {
+    backgroundColor: '#008653',
+    borderRadius: 24,
+    paddingHorizontal: 16,
+    paddingVertical: 9,
+    alignSelf: 'flex-start',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    shadowColor: '#008653',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  bookNowText: {
+    color: '#FFFFFF',
+    fontSize: 13,
+    fontWeight: '700',
+    marginRight: 2,
+  },
+  bannerBackgroundImage: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    width: '100%',
+    height: '100%',
+  },
+  floatingPlusBadge: {
+    position: 'absolute',
+    bottom: 22,
+    right: 28,
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    backgroundColor: '#FFFFFF',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  promoDoctorBadge: {
-    marginLeft: 12,
-  },
-  doctorIconBox: {
-    width: 54,
-    height: 54,
-    borderRadius: 27,
-    alignItems: 'center',
-    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.12,
+    shadowRadius: 4,
+    elevation: 3,
+    zIndex: 2,
   },
 });

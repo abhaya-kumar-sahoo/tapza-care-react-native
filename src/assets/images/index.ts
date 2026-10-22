@@ -11,6 +11,7 @@ export const Images = {
   dermatology: require('./dermatology.webp'),
   diwaliBanner: require('./diwali-banner.webp'),
   healthBanner: require('./health-banner.webp'),
+  doctorConsultBanner: require('./DoctorConsultBanner.webp'),
 } as const;
 
 export type ImageKey = keyof typeof Images;
@@ -59,3 +60,4 @@ export const VaccineProtectionImage = Images.vaccineProtection;
 export const DermatologyImage = Images.dermatology;
 export const DiwaliBannerImage = Images.diwaliBanner;
 export const HealthBannerImage = Images.healthBanner;
+export const DoctorConsultBannerImage = Images.doctorConsultBanner;
