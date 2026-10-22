@@ -108,6 +108,7 @@ export interface Doctor {
   reviewCount?: number;
   nextSlotTime?: string;
   about?: string;
+  specializations?: string[];
   clinicName?: string;
   clinicAddress?: string;
   distanceKm?: number;

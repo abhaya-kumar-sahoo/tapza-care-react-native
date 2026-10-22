@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   View,
   Text,
@@ -7,14 +7,13 @@ import {
   TouchableOpacity,
   Image,
   Share,
+  StatusBar,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useTheme, colors } from '../theme';
-import { useI18n } from '../i18n';
+import { colors } from '../theme';
 import { Icon } from '../components/common/Icon';
-import { Button } from '../components/common/Button';
 import { Doctor } from '../types';
-import { resolveImageSource, getDoctorProfileImage } from '../assets/images';
+import { getDoctorProfileImage } from '../assets/images';
 
 export interface DoctorDetailScreenProps {
   doctor: Doctor;
@@ -22,452 +21,324 @@ export interface DoctorDetailScreenProps {
   onBookAppointment: (doctor: Doctor) => void;
 }
 
+type ConsultationMode = 'video' | 'in-person' | 'chat';
+
 export const DoctorDetailScreen: React.FC<DoctorDetailScreenProps> = ({
   doctor,
   onBack,
   onBookAppointment,
 }) => {
   const insets = useSafeAreaInsets();
-  const { theme, spacing, radii, typography } = useTheme();
-  const { t } = useI18n();
 
   const [isFavorited, setIsFavorited] = useState(false);
+  const [selectedMode, setSelectedMode] = useState<ConsultationMode>('in-person');
   const [isExpandedAbout, setIsExpandedAbout] = useState(false);
+
+  // Compute specializations based on doctor data or specialty
+  const specializations = useMemo(() => {
+    if (doctor.specializations && doctor.specializations.length > 0) {
+      return doctor.specializations;
+    }
+    const specLower = doctor.specialty.toLowerCase();
+    if (specLower.includes('cardio')) {
+      return ['Heart Health', 'Hypertension', 'Cardiology'];
+    }
+    if (specLower.includes('derma')) {
+      return ['Acne Treatment', 'Skin Health', 'Clinical Dermatology'];
+    }
+    if (specLower.includes('pedia')) {
+      return ['Child Health', 'Immunization', 'Pediatric Care'];
+    }
+    if (specLower.includes('gynec')) {
+      return ["Women's Health", 'Prenatal Care', 'PCOS Care'];
+    }
+    return ['Preventive Care', 'Family Medicine', 'Adult Health'];
+  }, [doctor]);
 
   const handleShare = async () => {
     try {
       await Share.share({
-        message: `Book consultation with ${doctor.name} (${doctor.specialty}) on Tapza Care!`,
+        message: `Book a consultation with ${doctor.name} (${doctor.specialty}) on Tapza Care!`,
       });
     } catch {
       // ignore
     }
   };
 
+  const doctorPhoto = getDoctorProfileImage(doctor);
+
   return (
-    <View style={[styles.container, { backgroundColor: colors.slate[50] }]}>
-      {/* Top Navigation Bar */}
-      <View style={[styles.navBar, { paddingHorizontal: spacing.lg, paddingTop: insets.top + spacing.sm, paddingBottom: spacing.md }]}>
-        <TouchableOpacity
-          onPress={onBack}
-          activeOpacity={0.7}
-          accessibilityRole="button"
-          accessibilityLabel="Back"
-          style={[styles.circleBtn, { backgroundColor: theme.cardBackground, borderRadius: radii.full }]}
-        >
-          <Icon name="arrow-left" size={20} color={theme.textPrimary} />
-        </TouchableOpacity>
-
-        <View style={styles.navRightActions}>
-          <TouchableOpacity
-            onPress={() => setIsFavorited(!isFavorited)}
-            activeOpacity={0.7}
-            accessibilityRole="button"
-            accessibilityLabel="Favorite"
-            style={[styles.circleBtn, { backgroundColor: theme.cardBackground, borderRadius: radii.full, marginRight: spacing.sm }]}
-          >
-            <Icon
-              name="heart"
-              size={20}
-              color={isFavorited ? colors.red[500] : theme.textSecondary}
-            />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={handleShare}
-            activeOpacity={0.7}
-            accessibilityRole="button"
-            accessibilityLabel="Share Doctor"
-            style={[styles.circleBtn, { backgroundColor: theme.cardBackground, borderRadius: radii.full }]}
-          >
-            <Icon name="share" size={20} color={theme.textSecondary} />
-          </TouchableOpacity>
-        </View>
-      </View>
+    <View style={styles.container}>
+      <StatusBar barStyle="dark-content" />
 
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={[styles.scrollContent, { paddingHorizontal: spacing.lg, paddingBottom: 110 }]}
+        contentContainerStyle={styles.scrollContent}
+        bounces={false}
       >
-        {/* Doctor Header Card */}
-        <View style={[styles.profileCard, { backgroundColor: theme.cardBackground, borderRadius: radii.xl, padding: spacing.lg }]}>
-          <View style={styles.avatarWrap}>
-            <Image
-              source={getDoctorProfileImage(doctor)}
-              style={[styles.avatar, { borderRadius: radii.full }]}
-              resizeMode="cover"
-            />
-            <View style={[styles.verifiedBadge, { backgroundColor: colors.emerald[500] }]}>
-              <Icon name="check" size={14} color={colors.white} strokeWidth={3} />
-            </View>
+        {/* Top Hero Section with Mint Gradient/Tint */}
+        <View style={[styles.heroHeader, { paddingTop: insets.top + 8 }]}>
+          {/* Subtle Organic Curved Background Shapes */}
+          <View style={styles.decorativeCircleBack} />
+          <View style={styles.decorativeCircleFront} />
+
+          {/* Navigation Bar: Back & Favorite Buttons */}
+          <View style={styles.navBar}>
+            <TouchableOpacity
+              onPress={onBack}
+              activeOpacity={0.8}
+              accessibilityRole="button"
+              accessibilityLabel="Go back"
+              style={styles.circleBtn}
+            >
+              <Icon name="arrow-left" size={20} color={colors.slate[800]} strokeWidth={2.5} />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => setIsFavorited(!isFavorited)}
+              activeOpacity={0.8}
+              accessibilityRole="button"
+              accessibilityLabel="Favorite doctor"
+              style={styles.circleBtn}
+            >
+              <Icon
+                name="heart"
+                size={20}
+                color={isFavorited ? colors.red[500] : colors.slate[800]}
+                strokeWidth={2}
+              />
+            </TouchableOpacity>
           </View>
 
-          <Text
-            allowFontScaling={true}
-            style={[
-              styles.doctorName,
-              {
-                color: theme.textPrimary,
-                fontSize: typography.sizes.xl,
-                fontWeight: typography.weights.bold,
-                marginTop: spacing.md,
-                textAlign: 'center',
-              },
-            ]}
-          >
+          {/* Centered Doctor Hero Portrait */}
+          <View style={styles.doctorImageContainer}>
+            <Image
+              source={doctorPhoto}
+              style={styles.doctorHeroImage}
+              resizeMode="contain"
+            />
+          </View>
+
+          {/* Top Rated Floating Pill Badge */}
+          <View style={styles.topRatedBadge}>
+            <Icon name="star" size={13} color={colors.emerald.brand} strokeWidth={2} />
+            <Text style={styles.topRatedText}>Top Rated</Text>
+          </View>
+        </View>
+
+        {/* Main White Sheet with Large Rounded Corners */}
+        <View style={styles.sheetContainer}>
+          {/* Doctor Name */}
+          <Text allowFontScaling={true} style={styles.doctorName}>
             {doctor.name}
           </Text>
 
-          <Text
-            allowFontScaling={true}
-            style={[
-              styles.doctorSpecialty,
-              {
-                color: theme.textSecondary,
-                fontSize: typography.sizes.sm,
-                marginTop: 2,
-                textAlign: 'center',
-              },
-            ]}
-          >
-            {doctor.specialty}
-          </Text>
-
-          <Text
-            allowFontScaling={true}
-            style={[
-              styles.qualification,
-              {
-                color: colors.slate[500],
-                fontSize: typography.sizes.xs,
-                marginTop: 2,
-                textAlign: 'center',
-              },
-            ]}
-          >
-            {doctor.qualification} • {doctor.experienceYears} years experience
-          </Text>
-
-          {/* Rating */}
-          <View style={[styles.ratingRow, { marginTop: spacing.sm }]}>
-            <Icon name="star" size={16} color={colors.amber[500]} />
-            <Text
-              allowFontScaling={true}
-              style={[
-                styles.ratingText,
-                {
-                  color: theme.textPrimary,
-                  fontSize: typography.sizes.sm,
-                  fontWeight: typography.weights.bold,
-                  marginLeft: 4,
-                },
-              ]}
-            >
-              {doctor.rating}
-            </Text>
-            <Text
-              allowFontScaling={true}
-              style={[
-                styles.reviewsCount,
-                {
-                  color: theme.textSecondary,
-                  fontSize: typography.sizes.xs,
-                  marginLeft: 3,
-                },
-              ]}
-            >
-              ({doctor.reviewCount} reviews)
-            </Text>
+          {/* Specialty & Qualification Row */}
+          <View style={styles.specialtyRow}>
+            <Icon name="shield-check" size={16} color={colors.emerald.brand} strokeWidth={2.2} />
+            <Text style={styles.specialtyText}>{doctor.specialty}</Text>
+            {doctor.qualification ? (
+              <Text style={styles.qualificationText} numberOfLines={1}>
+                {`• ${doctor.qualification}`}
+              </Text>
+            ) : null}
           </View>
 
-          {/* Fee & Languages */}
-          <View style={[styles.divider, { backgroundColor: colors.slate[100], marginVertical: spacing.md }]} />
-
-          <View style={styles.feeLanguagesRow}>
-            <View>
-              <Text
-                allowFontScaling={true}
-                style={[
-                  styles.feeAmount,
-                  {
-                    color: theme.textPrimary,
-                    fontSize: typography.sizes.xl,
-                    fontWeight: typography.weights.bold,
-                  },
-                ]}
-              >
-                ₹{doctor.feeInr}
-              </Text>
-              <Text
-                allowFontScaling={true}
-                style={[
-                  styles.feeLabel,
-                  {
-                    color: theme.textSecondary,
-                    fontSize: typography.sizes.xs,
-                  },
-                ]}
-              >
-                {t.consultationFee}
+          {/* 3 Stats Highlight Columns: Rating | Experience | Visiting Fee */}
+          <View style={styles.statsRow}>
+            {/* Rating */}
+            <View style={styles.statCol}>
+              <View style={styles.statValueRow}>
+                <Text style={styles.starIcon}>★</Text>
+                <Text style={styles.statPrimary}>{(doctor.rating ?? 4.8).toFixed(1)}</Text>
+              </View>
+              <Text style={styles.statSecondary}>
+                {`(${doctor.reviewCount ?? 248} reviews)`}
               </Text>
             </View>
 
-            {/* Language Pills */}
-            <View style={styles.languagePills}>
-              {doctor.languages.map(lang => (
-                <View
-                  key={lang}
-                  style={[
-                    styles.langPill,
-                    {
-                      backgroundColor: colors.slate[100],
-                      borderRadius: radii.full,
-                      paddingVertical: 4,
-                      paddingHorizontal: spacing.sm,
-                      marginLeft: spacing.xs,
-                    },
-                  ]}
-                >
-                  <Text
-                    allowFontScaling={true}
-                    style={{
-                      color: colors.slate[600],
-                      fontSize: 11,
-                      fontWeight: '600',
-                    }}
-                  >
-                    {lang}
-                  </Text>
+            <View style={styles.statDivider} />
+
+            {/* Experience */}
+            <View style={styles.statCol}>
+              <Text style={styles.statPrimary}>
+                {`${doctor.experienceYears ?? 8}+ Years`}
+              </Text>
+              <Text style={styles.statSecondary}>Experience</Text>
+            </View>
+
+            <View style={styles.statDivider} />
+
+            {/* Visiting Price */}
+            <View style={styles.statCol}>
+              <Text style={[styles.statPrimary, styles.statPrice]}>
+                {`₹${doctor.feeInr}`}
+              </Text>
+              <Text style={styles.statSecondary}>Visiting Fee</Text>
+            </View>
+          </View>
+
+          {/* Consultation Type Selector Tabs */}
+          <View style={styles.consultationTabsContainer}>
+            {/* Video Call */}
+            <TouchableOpacity
+              onPress={() => setSelectedMode('video')}
+              activeOpacity={0.75}
+              style={[
+                styles.modeTab,
+                selectedMode === 'video' && styles.modeTabActive,
+              ]}
+            >
+              <View
+                style={[
+                  styles.modeIconWrap,
+                  selectedMode === 'video' && styles.modeIconWrapActive,
+                ]}
+              >
+                <Icon
+                  name="video"
+                  size={20}
+                  color={selectedMode === 'video' ? colors.emerald.brand : colors.slate[600]}
+                  strokeWidth={2}
+                />
+              </View>
+              <Text
+                style={[
+                  styles.modeLabel,
+                  selectedMode === 'video' && styles.modeLabelActive,
+                ]}
+              >
+                Video Call
+              </Text>
+              {selectedMode === 'video' && <View style={styles.activeIndicatorBar} />}
+            </TouchableOpacity>
+
+            {/* In-Person */}
+            <TouchableOpacity
+              onPress={() => setSelectedMode('in-person')}
+              activeOpacity={0.75}
+              style={[
+                styles.modeTab,
+                selectedMode === 'in-person' && styles.modeTabActive,
+              ]}
+            >
+              <View
+                style={[
+                  styles.modeIconWrap,
+                  selectedMode === 'in-person' && styles.modeIconWrapActive,
+                ]}
+              >
+                <Icon
+                  name="users"
+                  size={20}
+                  color={selectedMode === 'in-person' ? colors.emerald.brand : colors.slate[600]}
+                  strokeWidth={2}
+                />
+              </View>
+              <Text
+                style={[
+                  styles.modeLabel,
+                  selectedMode === 'in-person' && styles.modeLabelActive,
+                ]}
+              >
+                In-Person
+              </Text>
+              {selectedMode === 'in-person' && <View style={styles.activeIndicatorBar} />}
+            </TouchableOpacity>
+
+            {/* Chat */}
+            <TouchableOpacity
+              onPress={() => setSelectedMode('chat')}
+              activeOpacity={0.75}
+              style={[
+                styles.modeTab,
+                selectedMode === 'chat' && styles.modeModeActive,
+              ]}
+            >
+              <View
+                style={[
+                  styles.modeIconWrap,
+                  selectedMode === 'chat' && styles.modeIconWrapActive,
+                ]}
+              >
+                <Icon
+                  name="chat"
+                  size={20}
+                  color={selectedMode === 'chat' ? colors.emerald.brand : colors.slate[600]}
+                  strokeWidth={2}
+                />
+              </View>
+              <Text
+                style={[
+                  styles.modeLabel,
+                  selectedMode === 'chat' && styles.modeLabelActive,
+                ]}
+              >
+                Chat
+              </Text>
+              {selectedMode === 'chat' && <View style={styles.activeIndicatorBar} />}
+            </TouchableOpacity>
+          </View>
+
+          {/* About Doctor */}
+          <View style={styles.sectionWrap}>
+            <Text style={styles.sectionTitle}>About Doctor</Text>
+            <Text
+              allowFontScaling={true}
+              numberOfLines={isExpandedAbout ? undefined : 4}
+              style={styles.aboutBody}
+            >
+              {doctor.about ||
+                `${doctor.name} is a board-certified ${doctor.specialty.toLowerCase()} with over ${doctor.experienceYears ?? 8
+                } years of clinical experience in preventive care and patient health.`}
+            </Text>
+            {doctor.about && doctor.about.length > 140 && (
+              <TouchableOpacity
+                onPress={() => setIsExpandedAbout(!isExpandedAbout)}
+                style={styles.readMoreBtn}
+              >
+                <Text style={styles.readMoreText}>
+                  {isExpandedAbout ? 'Read less' : 'Read more'}
+                </Text>
+              </TouchableOpacity>
+            )}
+          </View>
+
+          {/* Specializations */}
+          <View style={styles.sectionWrap}>
+            <Text style={styles.sectionTitle}>Specializations</Text>
+            <View style={styles.specializationsRow}>
+              {specializations.map((item, idx) => (
+                <View key={`${item}_${idx}`} style={styles.specPill}>
+                  <Text style={styles.specPillText}>{item}</Text>
                 </View>
               ))}
             </View>
           </View>
         </View>
-
-        {/* Next Available Slot Banner matching screenshot */}
-        <TouchableOpacity
-          onPress={() => onBookAppointment(doctor)}
-          activeOpacity={0.88}
-          style={[
-            styles.nextSlotCard,
-            {
-              backgroundColor: colors.emerald.pale,
-              borderRadius: radii.lg,
-              borderColor: colors.emerald[300],
-              borderWidth: 1,
-              padding: spacing.md,
-              marginTop: spacing.md,
-            },
-          ]}
-        >
-          <View style={styles.nextSlotLeft}>
-            <Icon name="calendar" size={20} color={colors.emerald.subtleText} />
-            <View style={{ marginLeft: spacing.sm }}>
-              <Text
-                allowFontScaling={true}
-                style={[
-                  styles.nextSlotTitle,
-                  {
-                    color: colors.emerald.subtleText,
-                    fontSize: typography.sizes.sm,
-                    fontWeight: typography.weights.bold,
-                  },
-                ]}
-              >
-                Next available slot
-              </Text>
-              <Text
-                allowFontScaling={true}
-                style={[
-                  styles.nextSlotTime,
-                  {
-                    color: colors.emerald[800],
-                    fontSize: typography.sizes.xs,
-                    marginTop: 2,
-                  },
-                ]}
-              >
-                {doctor.nextSlotTime || 'Today, 4:30 PM'}
-              </Text>
-            </View>
-          </View>
-
-          <Text
-            allowFontScaling={true}
-            style={[
-              styles.viewSlotsLink,
-              {
-                color: colors.emerald.subtleText,
-                fontSize: typography.sizes.xs,
-                fontWeight: typography.weights.bold,
-              },
-            ]}
-          >
-            View all slots ›
-          </Text>
-        </TouchableOpacity>
-
-        {/* About Section */}
-        <View style={[styles.sectionBlock, { backgroundColor: theme.cardBackground, borderRadius: radii.lg, padding: spacing.lg, marginTop: spacing.md }]}>
-          <Text
-            allowFontScaling={true}
-            style={[
-              styles.blockTitle,
-              {
-                color: theme.textPrimary,
-                fontSize: typography.sizes.md,
-                fontWeight: typography.weights.bold,
-                marginBottom: spacing.xs,
-              },
-            ]}
-          >
-            {t.aboutDoctor}
-          </Text>
-          <Text
-            allowFontScaling={true}
-            numberOfLines={isExpandedAbout ? undefined : 3}
-            style={[
-              styles.aboutText,
-              {
-                color: theme.textSecondary,
-                fontSize: typography.sizes.sm,
-                lineHeight: 22,
-              },
-            ]}
-          >
-            {doctor.about}
-          </Text>
-          <TouchableOpacity
-            onPress={() => setIsExpandedAbout(!isExpandedAbout)}
-            style={{ marginTop: 4 }}
-          >
-            <Text style={{ color: theme.primary, fontWeight: '600', fontSize: 13 }}>
-              {isExpandedAbout ? 'Read less' : 'Read more'}
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Clinic Location Card matching Screenshot 3 */}
-        <View style={[styles.sectionBlock, { backgroundColor: theme.cardBackground, borderRadius: radii.lg, padding: spacing.lg, marginTop: spacing.md }]}>
-          <Text
-            allowFontScaling={true}
-            style={[
-              styles.blockTitle,
-              {
-                color: theme.textPrimary,
-                fontSize: typography.sizes.md,
-                fontWeight: typography.weights.bold,
-                marginBottom: spacing.sm,
-              },
-            ]}
-          >
-            {t.clinicLocation}
-          </Text>
-
-          <View style={styles.locationCard}>
-            {/* Map Thumbnail Placeholder */}
-            <View style={[styles.mapThumb, { borderRadius: radii.md, backgroundColor: colors.slate[200] }]}>
-              <Icon name="location" size={26} color={colors.red[600]} />
-            </View>
-
-            <View style={{ flex: 1, marginLeft: spacing.md }}>
-              <Text
-                allowFontScaling={true}
-                style={[
-                  styles.clinicName,
-                  {
-                    color: theme.textPrimary,
-                    fontSize: typography.sizes.sm,
-                    fontWeight: typography.weights.bold,
-                  },
-                ]}
-              >
-                {doctor.clinicName || 'Tapza Clinic'}
-              </Text>
-              <Text
-                allowFontScaling={true}
-                style={[
-                  styles.clinicAddress,
-                  {
-                    color: theme.textSecondary,
-                    fontSize: typography.sizes.xs,
-                    marginTop: 2,
-                  },
-                ]}
-              >
-                {doctor.clinicAddress || 'Banjara Hills, Hyderabad'}
-              </Text>
-              <Text
-                allowFontScaling={true}
-                style={{
-                  color: colors.slate[500],
-                  fontSize: 11,
-                  marginTop: 2,
-                }}
-              >
-                {doctor.distanceKm || 2.3} km away
-              </Text>
-              <TouchableOpacity style={{ marginTop: 4 }}>
-                <Text style={{ color: theme.primary, fontWeight: '600', fontSize: 12 }}>
-                  {t.getDirections} ›
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
       </ScrollView>
 
-      {/* Bottom Floating Bar */}
+      {/* Floating Sticky Bottom Bar */}
       <View
         style={[
-          styles.bottomBar,
-          {
-            backgroundColor: theme.cardBackground,
-            borderTopColor: theme.cardBorder,
-            paddingHorizontal: spacing.lg,
-            paddingVertical: spacing.md,
-          },
+          styles.bottomFixedContainer,
+          { paddingBottom: Math.max(insets.bottom, 14) },
         ]}
       >
-        <TouchableOpacity
-          activeOpacity={0.8}
-          accessibilityRole="button"
-          accessibilityLabel="Chat with doctor"
-          style={[
-            styles.chatBtn,
-            {
-              backgroundColor: colors.slate[100],
-              borderRadius: radii.md,
-              marginRight: spacing.md,
-              minHeight: 48,
-              paddingHorizontal: spacing.lg,
-            },
-          ]}
-        >
-          <Icon name="chat" size={20} color={theme.textPrimary} />
-          <Text
-            allowFontScaling={true}
-            style={[
-              styles.chatBtnText,
-              {
-                color: theme.textPrimary,
-                fontSize: typography.sizes.sm,
-                fontWeight: typography.weights.semibold,
-                marginLeft: spacing.xs,
-              },
-            ]}
-          >
-            {t.chat}
-          </Text>
-        </TouchableOpacity>
+        <View style={styles.bottomBarRow}>
+          <View style={styles.bottomPriceCol}>
+            <Text style={styles.bottomPriceLabel}>Visiting Fee</Text>
+            <Text style={styles.bottomPriceValue}>{`₹${doctor.feeInr}`}</Text>
+          </View>
 
-        <View style={{ flex: 1 }}>
-          <Button
-            title={t.bookAppointment}
+          <TouchableOpacity
+            activeOpacity={0.88}
             onPress={() => onBookAppointment(doctor)}
-            size="lg"
-            variant="primary"
-          />
+            style={styles.bookAppointmentBtn}
+          >
+            <Text style={styles.bookAppointmentText}>Book Appointment</Text>
+            <Icon name="arrow-right" size={17} color={colors.white} strokeWidth={2.5} />
+          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -477,131 +348,331 @@ export const DoctorDetailScreen: React.FC<DoctorDetailScreenProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: colors.white,
   },
+  scrollContent: {
+    paddingBottom: 110,
+  },
+
+  /* Top Hero Section */
+  heroHeader: {
+    backgroundColor: colors.emerald.heroBackdrop,
+    position: 'relative',
+    overflow: 'hidden',
+    paddingBottom: 36,
+  },
+  decorativeCircleBack: {
+    position: 'absolute',
+    top: -40,
+    alignSelf: 'center',
+    width: 340,
+    height: 340,
+    borderRadius: 170,
+    backgroundColor: colors.emerald.heroCircleBack,
+    opacity: 0.6,
+  },
+  decorativeCircleFront: {
+    position: 'absolute',
+    top: 20,
+    right: -40,
+    width: 260,
+    height: 260,
+    borderRadius: 130,
+    backgroundColor: colors.emerald.heroCircleFront,
+    opacity: 0.45,
+  },
+
+  /* Navigation Bar */
   navBar: {
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    zIndex: 10,
   },
   circleBtn: {
-    width: 40,
-    height: 40,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: colors.white,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: colors.black,
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.08,
-    shadowRadius: 3,
-    elevation: 2,
-  },
-  navRightActions: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  scrollContent: {},
-  profileCard: {
-    alignItems: 'center',
     shadowColor: colors.black,
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 6,
-    elevation: 2,
+    shadowOpacity: 0.08,
+    shadowRadius: 5,
+    elevation: 3,
   },
-  avatarWrap: {
+
+  /* Doctor Hero Portrait */
+  doctorImageContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 4,
+    height: 280,
+  },
+  doctorHeroImage: {
+    width: 280,
+    height: 280,
+  },
+
+  /* Top Rated Floating Badge */
+  topRatedBadge: {
+    position: 'absolute',
+    bottom: 46,
+    left: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.white,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 20,
+    gap: 5,
+    shadowColor: colors.black,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 3,
+    zIndex: 5,
+  },
+  topRatedText: {
+    fontSize: 12.5,
+    fontWeight: '700',
+    color: colors.slate[900],
+  },
+
+  /* Main Overlapping Sheet */
+  sheetContainer: {
+    marginTop: -32,
+    backgroundColor: colors.white,
+    borderTopLeftRadius: 36,
+    borderTopRightRadius: 36,
+    paddingHorizontal: 20,
+    paddingTop: 24,
+    paddingBottom: 24,
+  },
+
+  /* Doctor Name & Meta */
+  doctorName: {
+    fontSize: 24,
+    fontWeight: '800',
+    color: colors.gray[900],
+    letterSpacing: -0.3,
+    marginBottom: 8,
+  },
+  specialtyRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginBottom: 14,
+    flexWrap: 'wrap',
+  },
+  specialtyText: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: colors.slate[700],
+  },
+  qualificationText: {
+    fontSize: 13,
+    color: colors.slate[500],
+    fontWeight: '500',
+    flexShrink: 1,
+  },
+
+  /* 3 Stats Highlight Columns */
+  statsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: colors.slate[50],
+    borderRadius: 18,
+    paddingVertical: 14,
+    paddingHorizontal: 8,
+    marginBottom: 6,
+    borderWidth: 1,
+    borderColor: colors.slate[100],
+  },
+  statCol: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  statValueRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 3,
+  },
+  starIcon: {
+    fontSize: 15,
+    color: colors.amber[500],
+  },
+  statPrimary: {
+    fontSize: 15.5,
+    fontWeight: '800',
+    color: colors.slate[900],
+    letterSpacing: -0.2,
+  },
+  statPrice: {
+    color: colors.emerald.brand,
+  },
+  statSecondary: {
+    fontSize: 11.5,
+    color: colors.slate[500],
+    fontWeight: '500',
+    marginTop: 3,
+  },
+  statDivider: {
+    width: 1,
+    height: 28,
+    backgroundColor: colors.slate[200],
+  },
+
+  /* Consultation Modes */
+  consultationTabsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 18,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.slate[100],
+  },
+  modeTab: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 8,
     position: 'relative',
   },
-  avatar: {
-    width: 86,
-    height: 86,
+  modeTabActive: {},
+  modeModeActive: {},
+  modeIconWrap: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: colors.slate[50],
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 6,
   },
-  verifiedBadge: {
+  modeIconWrapActive: {
+    backgroundColor: colors.emerald[50],
+  },
+  modeLabel: {
+    fontSize: 13,
+    fontWeight: '500',
+    color: colors.slate[500],
+  },
+  modeLabelActive: {
+    fontWeight: '700',
+    color: colors.slate[900],
+  },
+  activeIndicatorBar: {
     position: 'absolute',
-    bottom: 2,
-    right: 2,
-    width: 22,
-    height: 22,
-    borderRadius: 11,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 2,
-    borderColor: colors.white,
+    bottom: -18,
+    width: 32,
+    height: 3,
+    borderRadius: 2,
+    backgroundColor: colors.emerald.brand,
   },
-  doctorName: {},
-  doctorSpecialty: {},
-  qualification: {},
-  ratingRow: {
+
+  /* Sections: About, Specializations, Available Slots */
+  sectionWrap: {
+    marginTop: 22,
+  },
+  sectionTitle: {
+    fontSize: 17,
+    fontWeight: '700',
+    color: colors.gray[900],
+    marginBottom: 10,
+    letterSpacing: -0.2,
+  },
+  aboutBody: {
+    fontSize: 14,
+    lineHeight: 22,
+    color: colors.gray[600],
+  },
+  readMoreBtn: {
+    marginTop: 4,
+    alignSelf: 'flex-start',
+  },
+  readMoreText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: colors.emerald.brand,
+  },
+
+  /* Specializations */
+  specializationsRow: {
     flexDirection: 'row',
-    alignItems: 'center',
+    flexWrap: 'wrap',
+    gap: 10,
   },
-  ratingText: {},
-  reviewsCount: {},
-  divider: {
-    width: '100%',
-    height: 1,
+  specPill: {
+    backgroundColor: colors.emerald.pillBg,
+    paddingHorizontal: 16,
+    paddingVertical: 9,
+    borderRadius: 20,
   },
-  feeLanguagesRow: {
-    width: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+  specPillText: {
+    fontSize: 13.5,
+    fontWeight: '600',
+    color: colors.slate[700],
   },
-  feeAmount: {},
-  feeLabel: {},
-  languagePills: {
-    flexDirection: 'row',
-  },
-  langPill: {},
-  nextSlotCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  nextSlotLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  nextSlotTitle: {},
-  nextSlotTime: {},
-  viewSlotsLink: {},
-  sectionBlock: {
-    shadowColor: colors.black,
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.04,
-    shadowRadius: 4,
-    elevation: 1,
-  },
-  blockTitle: {},
-  aboutText: {},
-  locationCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  mapThumb: {
-    width: 72,
-    height: 72,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  clinicName: {},
-  clinicAddress: {},
-  bottomBar: {
+
+  /* Floating Sticky Bottom Bar */
+  bottomFixedContainer: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
+    backgroundColor: colors.white,
+    paddingHorizontal: 20,
+    paddingTop: 10,
+    borderTopWidth: 0,
+    elevation: 0,
+    shadowOpacity: 0,
+  },
+  bottomBarRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderTopWidth: 1,
-    shadowColor: colors.black,
-    shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.06,
-    shadowRadius: 6,
-    elevation: 6,
+    justifyContent: 'space-between',
+    gap: 16,
   },
-  chatBtn: {
+  bottomPriceCol: {
+    justifyContent: 'center',
+    minWidth: 80,
+  },
+  bottomPriceLabel: {
+    fontSize: 12,
+    color: colors.slate[500],
+    fontWeight: '500',
+  },
+  bottomPriceValue: {
+    fontSize: 20,
+    fontWeight: '800',
+    color: colors.emerald.brand,
+    marginTop: 2,
+    letterSpacing: -0.3,
+  },
+  bookAppointmentBtn: {
+    flex: 1,
+    backgroundColor: colors.emerald.brand,
+    height: 52,
+    borderRadius: 26,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    gap: 8,
+    shadowColor: colors.emerald.brand,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.22,
+    shadowRadius: 6,
+    elevation: 3,
   },
-  chatBtnText: {},
+  bookAppointmentText: {
+    fontSize: 15.5,
+    fontWeight: '700',
+    color: colors.white,
+    letterSpacing: -0.2,
+  },
 });

@@ -300,6 +300,7 @@ export const mockDoctors: Doctor[] = [
     nextSlotTime: 'Today, 4:30 PM',
     about:
       'Dr. Priya Sharma is a compassionate general physician with 8+ years of experience in adult and family medicine. She focuses on preventive care, diabetes management, hypertension, and seasonal infections at Tapza Clinic.',
+    specializations: ['General Medicine', 'Preventive Care', 'Diabetes Management', 'Hypertension'],
     clinicName: 'Tapza Clinic',
     clinicAddress: 'Road No. 12, Banjara Hills, Hyderabad',
     distanceKm: 2.3,
@@ -318,6 +319,7 @@ export const mockDoctors: Doctor[] = [
     nextSlotTime: 'Today, 5:00 PM',
     about:
       'Dr. Arjun Reddy is a renowned dermatologist specializing in clinical dermatology, acne treatments, hair disorders, and skin allergies with 10 years of practice in Hyderabad.',
+    specializations: ['Acne Treatment', 'Skin Health', 'Clinical Dermatology', 'Hair Care'],
     clinicName: 'Tapza Clinic',
     clinicAddress: 'Road No. 12, Banjara Hills, Hyderabad',
     distanceKm: 2.3,
@@ -336,6 +338,7 @@ export const mockDoctors: Doctor[] = [
     nextSlotTime: 'Tomorrow, 10:30 AM',
     about:
       'Dr. Nikhil Rao provides gentle, expert care for infants, children, and adolescents, including immunization, growth monitoring, and pediatric infections.',
+    specializations: ['Child Health', 'Immunization', 'Pediatric Care', 'Newborn Care'],
     clinicName: 'Tapza Clinic',
     clinicAddress: 'Road No. 12, Banjara Hills, Hyderabad',
     distanceKm: 2.3,
@@ -354,6 +357,7 @@ export const mockDoctors: Doctor[] = [
     nextSlotTime: 'Tomorrow, 11:30 AM',
     about:
       "Dr. Meera Iyer has over 12 years of clinical excellence in women's reproductive health, prenatal guidance, PCOS management, and hormonal wellness.",
+    specializations: ["Women's Health", 'Prenatal Care', 'PCOS Care', 'Hormonal Health'],
     clinicName: 'Tapza Clinic',
     clinicAddress: 'Road No. 12, Banjara Hills, Hyderabad',
     distanceKm: 2.3,
@@ -372,6 +376,7 @@ export const mockDoctors: Doctor[] = [
     nextSlotTime: 'Today, 6:00 PM',
     about:
       'Dr. Rajesh Varma is a senior consultant cardiologist specializing in preventive cardiology, hypertension management, heart health assessments, and lipid management.',
+    specializations: ['Heart Health', 'Hypertension', 'Cardiology'],
     clinicName: 'Tapza Clinic',
     clinicAddress: 'Road No. 12, Banjara Hills, Hyderabad',
     distanceKm: 2.3,
@@ -390,6 +395,7 @@ export const mockDoctors: Doctor[] = [
     nextSlotTime: 'Today, 3:30 PM',
     about:
       'Dr. Sneha Kulkarni is an experienced family physician focusing on routine checkups, chronic fever, seasonal allergies, thyroid disorders, and lifestyle disease management.',
+    specializations: ['Family Medicine', 'Allergies', 'Chronic Fever', 'Lifestyle Health'],
     clinicName: 'Tapza Clinic',
     clinicAddress: 'Road No. 12, Banjara Hills, Hyderabad',
     distanceKm: 2.3,
