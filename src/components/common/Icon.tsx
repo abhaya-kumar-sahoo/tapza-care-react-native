@@ -198,6 +198,19 @@ export const Icon: React.FC<IconProps> = ({
         </Svg>
       );
 
+    case 'chevron-left':
+      return (
+        <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+          <Path
+            d="M15 18l-6-6 6-6"
+            stroke={color}
+            strokeWidth={strokeWidth}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </Svg>
+      );
+
     case 'chevron-right':
       return (
         <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">

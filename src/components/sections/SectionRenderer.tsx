@@ -25,6 +25,7 @@ export interface SectionRendererProps {
   onSelectAction?: (action: QuickActionItem) => void;
   onSelectDoctor?: (doctor: Doctor) => void;
   onSelectService?: (service: ServiceItem) => void;
+  onViewAllDoctors?: () => void;
   onOfferPress?: (item: OfferStripItem) => void;
   onAdminPress?: () => void;
   onNotificationPress?: () => void;
@@ -40,6 +41,7 @@ export const SectionRenderer: React.FC<SectionRendererProps> = ({
   onSelectAction,
   onSelectDoctor,
   onSelectService,
+  onViewAllDoctors,
   onOfferPress,
   onAdminPress,
   onNotificationPress,
@@ -114,6 +116,7 @@ export const SectionRenderer: React.FC<SectionRendererProps> = ({
             title={section.title}
             doctors={doctorList}
             onSelectDoctor={onSelectDoctor}
+            onViewAll={onViewAllDoctors}
           />
         );
       }

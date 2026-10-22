@@ -20,13 +20,14 @@ import { Icon } from '../components/common/Icon';
 import { Button } from '../components/common/Button';
 import { SlotsSkeleton } from '../components/common/Skeleton';
 import { ErrorBanner } from '../components/common/ErrorBanner';
-import { Doctor, Slot, Booking } from '../types';
+import { Doctor, Slot, Booking, ServiceItem } from '../types';
 import { MockApiClient } from '../api/mockClient';
 import { mockDoctors } from '../api/mockData';
 import { resolveImageSource } from '../assets/images';
 
 export interface BookingScreenProps {
   initialDoctor?: Doctor;
+  service?: ServiceItem;
   onBack: () => void;
   onBookingSuccess: (booking: Booking) => void;
 }
@@ -39,6 +40,7 @@ interface DateItem {
 
 export const BookingScreen: React.FC<BookingScreenProps> = ({
   initialDoctor = mockDoctors[0],
+  service,
   onBack,
   onBookingSuccess,
 }) => {
@@ -208,8 +210,35 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({
           />
         )}
 
+        {/* Selected Service Callout Banner */}
+        {service && (
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              backgroundColor: '#E6F4EA',
+              paddingHorizontal: spacing.md,
+              paddingVertical: 10,
+              marginHorizontal: spacing.lg,
+              marginTop: spacing.xs,
+              borderRadius: radii.md,
+              borderLeftWidth: 3,
+              borderLeftColor: '#008653',
+            }}
+          >
+            <View style={{ flex: 1 }}>
+              <Text style={{ fontSize: 13, fontWeight: '700', color: '#064E3B' }}>
+                Service: {service.name}
+              </Text>
+              <Text style={{ fontSize: 11.5, color: '#047857', marginTop: 2 }}>
+                ₹{service.priceInr} • {service.duration || '30 mins'}
+              </Text>
+            </View>
+          </View>
+        )}
+
         {/* Doctor Mini Card matching Screenshot 4 */}
-        <View style={[styles.doctorMiniCard, { backgroundColor: '#FFFFFF', borderRadius: radii.lg, padding: spacing.md, marginHorizontal: spacing.lg, marginTop: spacing.xs }]}>
+        <View style={[styles.doctorMiniCard, { backgroundColor: '#FFFFFF', borderRadius: radii.lg, padding: spacing.md, marginHorizontal: spacing.lg, marginTop: service ? spacing.sm : spacing.xs }]}>
           <Image
             source={resolveImageSource(doctor.photoUrl)}
             style={[styles.miniAvatar, { borderRadius: radii.full }]}

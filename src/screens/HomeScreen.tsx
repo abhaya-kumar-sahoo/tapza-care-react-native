@@ -28,6 +28,7 @@ import { DevAdminModal } from '../components/admin/DevAdminModal';
 
 export interface HomeScreenProps {
   onNavigateToDoctor: (doctor: Doctor) => void;
+  onNavigateToDoctorList?: (service?: ServiceItem, filterSpecialty?: string) => void;
   onNavigateToBooking: (doctor?: Doctor, service?: ServiceItem) => void;
   onNavigateToPrescriptions: () => void;
   onNavigateToReminders: () => void;
@@ -36,6 +37,7 @@ export interface HomeScreenProps {
 
 export const HomeScreen: React.FC<HomeScreenProps> = ({
   onNavigateToDoctor,
+  onNavigateToDoctorList,
   onNavigateToBooking,
   onNavigateToPrescriptions,
   onNavigateToReminders,
@@ -103,32 +105,56 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
   const handleSelectAction = (action: QuickActionItem) => {
     if (action.screenTarget === 'booking') {
-      onNavigateToBooking();
+      if (onNavigateToDoctorList) {
+        onNavigateToDoctorList();
+      } else {
+        onNavigateToBooking();
+      }
     } else if (action.screenTarget === 'prescriptions') {
       onNavigateToPrescriptions();
     } else if (action.screenTarget === 'reminders') {
       onNavigateToReminders();
     } else {
-      onNavigateToBooking();
+      if (onNavigateToDoctorList) {
+        onNavigateToDoctorList();
+      } else {
+        onNavigateToBooking();
+      }
     }
   };
 
   const handleSelectService = (service: ServiceItem) => {
-    onNavigateToBooking(undefined, service);
+    if (onNavigateToDoctorList) {
+      onNavigateToDoctorList(service);
+    } else {
+      onNavigateToBooking(undefined, service);
+    }
   };
 
   const handleSelectCategory = (category: CategoryItem) => {
     if (category.id === 'cat_consult') {
-      onNavigateToBooking();
+      if (onNavigateToDoctorList) {
+        onNavigateToDoctorList(undefined, 'General Physician');
+      } else {
+        onNavigateToBooking();
+      }
     } else if (category.id === 'cat_pharmacy') {
       onNavigateToPrescriptions();
     } else {
-      onNavigateToBooking();
+      if (onNavigateToDoctorList) {
+        onNavigateToDoctorList();
+      } else {
+        onNavigateToBooking();
+      }
     }
   };
 
-  const handleOfferPress = (offer: OfferStripItem) => {
-    onNavigateToBooking();
+  const handleOfferPress = (_offer: OfferStripItem) => {
+    if (onNavigateToDoctorList) {
+      onNavigateToDoctorList();
+    } else {
+      onNavigateToBooking();
+    }
   };
 
   return (
@@ -174,13 +200,34 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
                   section={section}
                   doctors={doctors}
                   scrollY={scrollY}
-                  onSearchPress={() => onNavigateToBooking()}
-                  onBookPress={(doctor, service) => onNavigateToBooking(doctor, service)}
+                  onSearchPress={() => {
+                    if (onNavigateToDoctorList) {
+                      onNavigateToDoctorList();
+                    } else {
+                      onNavigateToBooking();
+                    }
+                  }}
+                  onBookPress={(doctor, service) => {
+                    if (doctor) {
+                      onNavigateToBooking(doctor, service);
+                    } else if (onNavigateToDoctorList) {
+                      onNavigateToDoctorList(service);
+                    } else {
+                      onNavigateToBooking(doctor, service);
+                    }
+                  }}
                   onSelectDoctor={doctor => onNavigateToDoctor(doctor)}
                   onSelectService={handleSelectService}
                   onSelectCategory={handleSelectCategory}
                   onSelectAction={handleSelectAction}
                   onOfferPress={handleOfferPress}
+                  onViewAllDoctors={() => {
+                    if (onNavigateToDoctorList) {
+                      onNavigateToDoctorList();
+                    } else {
+                      onNavigateToBooking();
+                    }
+                  }}
                   onAdminPress={onOpenAdmin}
                   onNotificationPress={() => onNavigateToReminders()}
                 />

@@ -14,12 +14,14 @@ import { BookingScreen } from '../screens/BookingScreen';
 import { BookingSuccessScreen } from '../screens/BookingSuccessScreen';
 import { PrescriptionDetailScreen } from '../screens/PrescriptionDetailScreen';
 import { MedicineRemindersScreen } from '../screens/MedicineRemindersScreen';
+import { DoctorListScreen } from '../screens/DoctorListScreen';
 import { DevAdminModal } from '../components/admin/DevAdminModal';
 import { AnimatedScreen } from './AnimatedScreen';
 import { mockDoctors } from '../api/mockData';
 
 export type ModalRoute =
   | { type: 'doctor_detail'; doctor: Doctor }
+  | { type: 'doctor_list'; service?: ServiceItem; filterSpecialty?: string }
   | { type: 'booking'; doctor?: Doctor; service?: ServiceItem }
   | { type: 'booking_success'; booking: Booking }
   | { type: 'prescription_detail'; prescription: Prescription }
@@ -69,7 +71,16 @@ export const AppNavigator: React.FC = () => {
           <HomeScreen
             key={`home_cfg_${configVersion}`}
             onNavigateToDoctor={doctor => pushRoute({ type: 'doctor_detail', doctor })}
-            onNavigateToBooking={(doctor, service) => pushRoute({ type: 'booking', doctor, service })}
+            onNavigateToDoctorList={(service, filterSpecialty) =>
+              pushRoute({ type: 'doctor_list', service, filterSpecialty })
+            }
+            onNavigateToBooking={(doctor, service) => {
+              if (doctor) {
+                pushRoute({ type: 'booking', doctor, service });
+              } else {
+                pushRoute({ type: 'doctor_list', service });
+              }
+            }}
             onNavigateToPrescriptions={() => setActiveTab('prescriptions')}
             onNavigateToReminders={() => pushRoute({ type: 'reminders' })}
             onOpenAdmin={() => setIsAdminVisible(true)}
@@ -78,7 +89,7 @@ export const AppNavigator: React.FC = () => {
 
         <View style={[styles.tabPane, activeTab === 'bookings' ? styles.visiblePane : styles.hiddenPane]}>
           <BookingsScreen
-            onNewBooking={() => pushRoute({ type: 'booking', doctor: mockDoctors[0] })}
+            onNewBooking={() => pushRoute({ type: 'doctor_list' })}
           />
         </View>
 
@@ -180,10 +191,25 @@ export const AppNavigator: React.FC = () => {
                       onBookAppointment={doc => pushRoute({ type: 'booking', doctor: doc })}
                     />
                   );
+                case 'doctor_list':
+                  return (
+                    <DoctorListScreen
+                      service={route.service}
+                      initialSpecialty={route.filterSpecialty}
+                      onBack={requestClose}
+                      onSelectDoctor={doc =>
+                        pushRoute({ type: 'booking', doctor: doc, service: route.service })
+                      }
+                      onViewDoctorDetail={doc =>
+                        pushRoute({ type: 'doctor_detail', doctor: doc })
+                      }
+                    />
+                  );
                 case 'booking':
                   return (
                     <BookingScreen
                       initialDoctor={route.doctor || mockDoctors[0]}
+                      service={route.service}
                       onBack={requestClose}
                       onBookingSuccess={booking =>
                         replaceTopRoute({ type: 'booking_success', booking })

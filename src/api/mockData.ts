@@ -372,6 +372,42 @@ export const mockDoctors: Doctor[] = [
     clinicAddress: 'Road No. 12, Banjara Hills, Hyderabad',
     distanceKm: 2.3,
   },
+  {
+    id: 'doc_rajesh_varma',
+    name: 'Dr. Rajesh Varma',
+    specialty: 'Cardiologist',
+    photoUrl: Images.modernLaboratory,
+    feeInr: 850,
+    languages: ['Telugu', 'English', 'Hindi'],
+    qualification: 'MBBS, MD, DM - Cardiology',
+    experienceYears: 15,
+    rating: 4.9,
+    reviewCount: 610,
+    nextSlotTime: 'Today, 6:00 PM',
+    about:
+      'Dr. Rajesh Varma is a senior consultant cardiologist specializing in preventive cardiology, hypertension management, heart health assessments, and lipid management.',
+    clinicName: 'Tapza Clinic',
+    clinicAddress: 'Road No. 12, Banjara Hills, Hyderabad',
+    distanceKm: 2.3,
+  },
+  {
+    id: 'doc_sneha_kulkarni',
+    name: 'Dr. Sneha Kulkarni',
+    specialty: 'General Physician',
+    photoUrl: Images.vaccineProtection,
+    feeInr: 550,
+    languages: ['Hindi', 'English', 'Telugu'],
+    qualification: 'MBBS, DNB - Family Medicine',
+    experienceYears: 9,
+    rating: 4.8,
+    reviewCount: 290,
+    nextSlotTime: 'Today, 3:30 PM',
+    about:
+      'Dr. Sneha Kulkarni is an experienced family physician focusing on routine checkups, chronic fever, seasonal allergies, thyroid disorders, and lifestyle disease management.',
+    clinicName: 'Tapza Clinic',
+    clinicAddress: 'Road No. 12, Banjara Hills, Hyderabad',
+    distanceKm: 2.3,
+  },
 ];
 
 export const generateMockSlots = (doctorId: string, date: string): Slot[] => {
