@@ -14,6 +14,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { GestureDetector, Gesture } from 'react-native-gesture-handler';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme, colors } from '../theme';
 import { useI18n } from '../i18n';
 import { Icon } from '../components/common/Icon';
@@ -44,6 +45,7 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({
   onBack,
   onBookingSuccess,
 }) => {
+  const insets = useSafeAreaInsets();
   const { theme, spacing, radii, typography } = useTheme();
   const { t } = useI18n();
 
@@ -171,7 +173,7 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({
   return (
     <View style={[styles.container, { backgroundColor: colors.slate[50] }]}>
       {/* Header */}
-      <View style={[styles.navBar, { paddingHorizontal: spacing.lg, paddingVertical: spacing.md }]}>
+      <View style={[styles.navBar, { paddingHorizontal: spacing.lg, paddingTop: insets.top + spacing.sm, paddingBottom: spacing.md }]}>
         <TouchableOpacity
           onPress={onBack}
           activeOpacity={0.7}

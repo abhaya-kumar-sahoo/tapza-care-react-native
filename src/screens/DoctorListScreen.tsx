@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
-  StatusBar,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme, colors } from '../theme';
@@ -87,8 +86,6 @@ export const DoctorListScreen: React.FC<DoctorListScreenProps> = ({
 
   return (
     <View style={[styles.root, { backgroundColor: colors.slate[50] }]}>
-      <StatusBar barStyle="dark-content" />
-
       {/* Top Header */}
       <View
         style={[

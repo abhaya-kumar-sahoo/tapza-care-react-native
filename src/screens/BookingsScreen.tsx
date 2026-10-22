@@ -6,6 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme, colors } from '../theme';
 import { useI18n } from '../i18n';
 import { Icon } from '../components/common/Icon';
@@ -19,6 +20,7 @@ export interface BookingsScreenProps {
 }
 
 export const BookingsScreen: React.FC<BookingsScreenProps> = ({ onNewBooking }) => {
+  const insets = useSafeAreaInsets();
   const { theme, spacing, radii, typography } = useTheme();
   const { t } = useI18n();
 
@@ -53,7 +55,7 @@ export const BookingsScreen: React.FC<BookingsScreenProps> = ({ onNewBooking }) 
 
   return (
     <View style={[styles.container, { backgroundColor: colors.slate[50] }]}>
-      <View style={[styles.header, { paddingHorizontal: spacing.lg, paddingVertical: spacing.md }]}>
+      <View style={[styles.header, { paddingHorizontal: spacing.lg, paddingTop: insets.top + spacing.sm, paddingBottom: spacing.md }]}>
         <Text
           allowFontScaling={true}
           style={[

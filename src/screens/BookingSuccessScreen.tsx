@@ -7,6 +7,7 @@ import {
   Alert,
 } from 'react-native';
 import LottieView from 'lottie-react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme, colors } from '../theme';
 import { useI18n } from '../i18n';
 import { Icon } from '../components/common/Icon';
@@ -22,6 +23,7 @@ export const BookingSuccessScreen: React.FC<BookingSuccessScreenProps> = ({
   booking,
   onDone,
 }) => {
+  const insets = useSafeAreaInsets();
   const { theme, spacing, radii, typography } = useTheme();
   const { t } = useI18n();
   const lottieRef = useRef<LottieView>(null);
@@ -42,7 +44,7 @@ export const BookingSuccessScreen: React.FC<BookingSuccessScreenProps> = ({
   return (
     <View style={[styles.container, { backgroundColor: theme.surface }]}>
       <ScrollView
-        contentContainerStyle={[styles.scrollContent, { padding: spacing.xl }]}
+        contentContainerStyle={[styles.scrollContent, { padding: spacing.xl, paddingTop: insets.top + spacing.lg }]}
         showsVerticalScrollIndicator={false}
         bounces={false}
       >

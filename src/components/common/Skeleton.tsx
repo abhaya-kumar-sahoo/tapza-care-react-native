@@ -7,6 +7,7 @@ import Animated, {
   withSequence,
   withTiming,
 } from 'react-native-reanimated';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme, colors } from '../../theme';
 
 export interface SkeletonProps {
@@ -56,9 +57,10 @@ export const Skeleton: React.FC<SkeletonProps> = ({
 };
 
 export const HeroBannerSkeleton: React.FC = () => {
+  const insets = useSafeAreaInsets();
   const { spacing, radii } = useTheme();
   return (
-    <View style={[styles.skeletonContainer, { padding: spacing.lg, backgroundColor: colors.emerald.pale }]}>
+    <View style={[styles.skeletonContainer, { padding: spacing.lg, paddingTop: insets.top + spacing.sm, backgroundColor: colors.emerald.pale }]}>
       <Skeleton width={120} height={18} style={{ marginBottom: spacing.xs }} />
       <Skeleton width={180} height={32} style={{ marginBottom: spacing.xs }} />
       <Skeleton width={140} height={14} style={{ marginBottom: spacing.lg }} />

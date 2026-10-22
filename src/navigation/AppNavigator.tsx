@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import React, { useState, useMemo, useEffect } from 'react';
+import { View, StyleSheet, TouchableOpacity, Text, StatusBar, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme, colors } from '../theme';
 import { useI18n } from '../i18n';
@@ -28,13 +28,51 @@ export type ModalRoute =
   | { type: 'reminders' };
 
 export const AppNavigator: React.FC = () => {
-  const { theme, spacing, radii, typography, minTouchTarget } = useTheme();
+  const { theme, spacing, radii, typography, minTouchTarget, isFestival } = useTheme();
   const { t } = useI18n();
 
   const [activeTab, setActiveTab] = useState<ScreenType>('home');
   const [stack, setStack] = useState<ModalRoute[]>([]);
   const [isAdminVisible, setIsAdminVisible] = useState(false);
   const [configVersion, setConfigVersion] = useState(1);
+
+  // Configure Android status bar for immersive edge-to-edge drawing
+  useEffect(() => {
+    if (Platform.OS === 'android') {
+      try {
+        (StatusBar as any).setBackgroundColor?.('transparent');
+        (StatusBar as any).setTranslucent?.(true);
+      } catch {
+        // ignore
+      }
+    }
+  }, []);
+
+  // Dynamic status bar styling: guarantees optimal contrast against active screen background
+  const statusBarStyle: 'light-content' | 'dark-content' = useMemo(() => {
+    // 1. Dark overlay active when DevAdminModal is open
+    if (isAdminVisible) {
+      return 'light-content';
+    }
+
+    // 2. All modal detail & action screens have light backgrounds (slate[50] / white)
+    if (stack.length > 0) {
+      return 'dark-content';
+    }
+
+    // 3. Secondary tabs (bookings, prescriptions, profile) have light backgrounds
+    if (activeTab !== 'home') {
+      return 'dark-content';
+    }
+
+    // 4. HomeScreen with Diwali theme has dark crimson festival header
+    if (isFestival) {
+      return 'light-content';
+    }
+
+    // 5. HomeScreen with Normal theme has light mint emerald header
+    return 'dark-content';
+  }, [isAdminVisible, stack.length, activeTab, isFestival]);
 
   const pushRoute = (route: ModalRoute) => {
     setStack(prev => [...prev, route]);
@@ -60,7 +98,11 @@ export const AppNavigator: React.FC = () => {
   ];
 
   return (
-    <SafeAreaView style={[styles.root, { backgroundColor: theme.background }]}>
+    <SafeAreaView edges={['bottom', 'left', 'right']} style={[styles.root, { backgroundColor: theme.background }]}>
+      <StatusBar
+        barStyle={statusBarStyle}
+        animated={true}
+      />
       {/* 
         Persistent Tab Hierarchy:
         All tabs remain mounted in the tree so HomeScreen never unmounts,
