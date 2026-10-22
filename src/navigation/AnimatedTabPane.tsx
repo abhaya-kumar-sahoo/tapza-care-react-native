@@ -6,6 +6,7 @@ import Animated, {
   withTiming,
   Easing,
 } from 'react-native-reanimated';
+import { colors } from '../theme';
 
 export interface AnimatedTabPaneProps {
   isActive: boolean;
@@ -14,8 +15,8 @@ export interface AnimatedTabPaneProps {
 }
 
 /**
- * AnimatedTabPane provides smooth 60fps cross-fade and directional slide
- * transitions between bottom tab screens without unmounting or resetting scroll state.
+ * AnimatedTabPane provides smooth 60fps solid cross-transitions
+ * between bottom tab screens without unmounting or resetting scroll state.
  */
 export const AnimatedTabPane: React.FC<AnimatedTabPaneProps> = ({
   isActive,
@@ -33,26 +34,26 @@ export const AnimatedTabPane: React.FC<AnimatedTabPaneProps> = ({
     }
 
     if (isActive) {
-      // Incoming tab screen slides in subtly from right or left and fades in
-      const enterOffset = direction === 'right' ? 22 : direction === 'left' ? -22 : 0;
+      // Incoming tab screen slides in subtly from right or left while remaining solid
+      const enterOffset = direction === 'right' ? 16 : direction === 'left' ? -16 : 0;
       translateX.value = enterOffset;
       translateX.value = withTiming(0, {
-        duration: 220,
+        duration: 180,
         easing: Easing.out(Easing.cubic),
       });
       opacity.value = withTiming(1, {
-        duration: 220,
+        duration: 140,
         easing: Easing.out(Easing.cubic),
       });
     } else {
       // Outgoing tab screen shifts subtly away and fades out
-      const exitOffset = direction === 'right' ? -18 : direction === 'left' ? 18 : 0;
+      const exitOffset = direction === 'right' ? -12 : direction === 'left' ? 12 : 0;
       translateX.value = withTiming(exitOffset, {
-        duration: 160,
+        duration: 140,
         easing: Easing.in(Easing.cubic),
       });
       opacity.value = withTiming(0, {
-        duration: 160,
+        duration: 140,
         easing: Easing.in(Easing.cubic),
       });
     }
@@ -70,7 +71,7 @@ export const AnimatedTabPane: React.FC<AnimatedTabPaneProps> = ({
       style={[
         styles.pane,
         animatedStyle,
-        { zIndex: isActive ? 1 : 0 },
+        { zIndex: isActive ? 10 : 1 },
       ]}
       pointerEvents={isActive ? 'auto' : 'none'}
     >
@@ -82,5 +83,7 @@ export const AnimatedTabPane: React.FC<AnimatedTabPaneProps> = ({
 const styles = StyleSheet.create({
   pane: {
     ...StyleSheet.absoluteFill,
+    backgroundColor: colors.slate[50],
   },
 });
+

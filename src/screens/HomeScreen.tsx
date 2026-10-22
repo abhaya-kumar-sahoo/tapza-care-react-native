@@ -15,7 +15,7 @@ import { useI18n } from '../i18n';
 import { LayoutConfig, Doctor, ServiceItem, CategoryItem, QuickActionItem, OfferStripItem } from '../types';
 import { MockApiClient } from '../api/mockClient';
 import { StorageService } from '../api/storage';
-import { normalLayoutConfig } from '../api/mockData';
+import { normalLayoutConfig, mockDoctors } from '../api/mockData';
 import { SectionRenderer } from '../components/sections/SectionRenderer';
 import {
   HeroBannerSkeleton,
@@ -48,9 +48,9 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   const { theme, updateTheme, spacing, isFestival } = useTheme();
   const { t } = useI18n();
 
-  const [config, setConfig] = useState<LayoutConfig | null>(null);
-  const [doctors, setDoctors] = useState<Doctor[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [config, setConfig] = useState<LayoutConfig | null>(normalLayoutConfig);
+  const [doctors, setDoctors] = useState<Doctor[]>(mockDoctors);
+  const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [errorBannerMsg, setErrorBannerMsg] = useState<string | null>(null);
 
@@ -62,7 +62,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   const loadData = useCallback(async (isRefresh = false) => {
     if (isRefresh) {
       setRefreshing(true);
-    } else {
+    } else if (!config) {
       setLoading(true);
     }
 

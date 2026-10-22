@@ -15,6 +15,7 @@ import { Badge } from '../components/common/Badge';
 import { PrescriptionsSkeleton } from '../components/common/Skeleton';
 import { Prescription } from '../types';
 import { MockApiClient } from '../api/mockClient';
+import { mockPrescriptions } from '../api/mockData';
 
 export interface PrescriptionsScreenProps {
   onBack: () => void;
@@ -31,8 +32,8 @@ export const PrescriptionsScreen: React.FC<PrescriptionsScreenProps> = ({
   const { theme, spacing, radii, typography } = useTheme();
   const { t } = useI18n();
 
-  const [prescriptions, setPrescriptions] = useState<Prescription[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [prescriptions, setPrescriptions] = useState<Prescription[]>(mockPrescriptions);
+  const [loading, setLoading] = useState(false);
   const [filter, setFilter] = useState<FilterType>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -40,8 +41,7 @@ export const PrescriptionsScreen: React.FC<PrescriptionsScreenProps> = ({
   useEffect(() => {
     MockApiClient.getPrescriptions()
       .then(data => setPrescriptions(data))
-      .catch(err => console.warn('Failed to load prescriptions', err))
-      .finally(() => setLoading(false));
+      .catch(err => console.warn('Failed to load prescriptions', err));
   }, []);
 
   const filteredPrescriptions = prescriptions.filter(item => {

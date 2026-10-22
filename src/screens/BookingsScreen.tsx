@@ -24,32 +24,29 @@ export const BookingsScreen: React.FC<BookingsScreenProps> = ({ onNewBooking }) 
   const { theme, spacing, radii, typography } = useTheme();
   const { t } = useI18n();
 
-  const [bookings, setBookings] = useState<Booking[]>([]);
-  const [loading, setLoading] = useState(true);
+  const defaultBooking: Booking = {
+    id: 'bk_default_1',
+    doctorId: 'doc_priya_sharma',
+    doctorName: 'Dr. Priya Sharma',
+    doctorSpecialty: 'General Physician',
+    slotId: 'slot_1',
+    appointmentDate: 'Tue, 12 Nov 2024 · 4:30 PM',
+    appointmentTime: '4:30 PM',
+    clinicName: 'Tapza Clinic',
+    clinicAddress: 'Road No. 12, Banjara Hills, Hyderabad',
+    feeInr: 500,
+    status: 'confirmed',
+    createdAt: new Date().toISOString(),
+  };
+
+  const [bookings, setBookings] = useState<Booking[]>([defaultBooking]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     StorageService.getBookings().then(saved => {
       if (saved && saved.length > 0) {
         setBookings(saved);
-      } else {
-        // default dummy booking matching design
-        const defaultBooking: Booking = {
-          id: 'bk_default_1',
-          doctorId: 'doc_priya_sharma',
-          doctorName: 'Dr. Priya Sharma',
-          doctorSpecialty: 'General Physician',
-          slotId: 'slot_1',
-          appointmentDate: 'Tue, 12 Nov 2024 · 4:30 PM',
-          appointmentTime: '4:30 PM',
-          clinicName: 'Tapza Clinic',
-          clinicAddress: 'Road No. 12, Banjara Hills, Hyderabad',
-          feeInr: 500,
-          status: 'confirmed',
-          createdAt: new Date().toISOString(),
-        };
-        setBookings([defaultBooking]);
       }
-      setLoading(false);
     });
   }, []);
 
