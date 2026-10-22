@@ -1,9 +1,13 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text, StatusBar, Platform } from 'react-native';
+import { View, StyleSheet, StatusBar, Platform, useWindowDimensions } from 'react-native';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+} from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme, colors } from '../theme';
 import { useI18n } from '../i18n';
-import { Icon } from '../components/common/Icon';
 import { ScreenType, Doctor, ServiceItem, Prescription, Booking } from '../types';
 import { HomeScreen } from '../screens/HomeScreen';
 import { BookingsScreen } from '../screens/BookingsScreen';
@@ -17,6 +21,8 @@ import { MedicineRemindersScreen } from '../screens/MedicineRemindersScreen';
 import { DoctorListScreen } from '../screens/DoctorListScreen';
 import { DevAdminModal } from '../components/admin/DevAdminModal';
 import { AnimatedScreen } from './AnimatedScreen';
+import { AnimatedTabPane } from './AnimatedTabPane';
+import { AnimatedTabItem } from './AnimatedTabItem';
 import { mockDoctors } from '../api/mockData';
 
 export type ModalRoute =
@@ -27,14 +33,50 @@ export type ModalRoute =
   | { type: 'prescription_detail'; prescription: Prescription }
   | { type: 'reminders' };
 
+const TAB_KEYS: ScreenType[] = ['home', 'bookings', 'prescriptions', 'profile'];
+
 export const AppNavigator: React.FC = () => {
   const { theme, spacing, radii, typography, minTouchTarget, isFestival } = useTheme();
   const { t } = useI18n();
+  const { width: windowWidth } = useWindowDimensions();
 
   const [activeTab, setActiveTab] = useState<ScreenType>('home');
+  const [prevTab, setPrevTab] = useState<ScreenType>('home');
   const [stack, setStack] = useState<ModalRoute[]>([]);
   const [isAdminVisible, setIsAdminVisible] = useState(false);
   const [configVersion, setConfigVersion] = useState(1);
+
+  // Tab switching handler that tracks transition direction
+  const handleTabPress = (newTab: ScreenType) => {
+    if (newTab === activeTab) return;
+    setPrevTab(activeTab);
+    setActiveTab(newTab);
+  };
+
+  const prevIndex = TAB_KEYS.indexOf(prevTab);
+  const currentIndex = TAB_KEYS.indexOf(activeTab);
+  const tabTransitionDirection = currentIndex >= prevIndex ? 'right' : 'left';
+
+  // Sliding top active indicator on the bottom tab bar
+  const tabWidth = windowWidth / TAB_KEYS.length;
+  const indicatorWidth = 38;
+  const indicatorOffset = (tabWidth - indicatorWidth) / 2;
+  const indicatorTranslateX = useSharedValue(indicatorOffset);
+
+  useEffect(() => {
+    const targetX = currentIndex * tabWidth + indicatorOffset;
+    indicatorTranslateX.value = withSpring(targetX, {
+      damping: 18,
+      stiffness: 180,
+      mass: 0.6,
+    });
+  }, [currentIndex, tabWidth, indicatorOffset]);
+
+  const indicatorAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateX: indicatorTranslateX.value }],
+    };
+  });
 
   // Configure Android status bar for immersive edge-to-edge drawing
   useEffect(() => {
@@ -104,12 +146,15 @@ export const AppNavigator: React.FC = () => {
         animated={true}
       />
       {/* 
-        Persistent Tab Hierarchy:
+        Persistent Tab Hierarchy with Smooth Cross-Fade & Directional Slide:
         All tabs remain mounted in the tree so HomeScreen never unmounts,
         never juggles, never refetches data, and preserves scroll position.
       */}
       <View style={styles.main}>
-        <View style={[styles.tabPane, activeTab === 'home' ? styles.visiblePane : styles.hiddenPane]}>
+        <AnimatedTabPane
+          isActive={activeTab === 'home'}
+          direction={tabTransitionDirection}
+        >
           <HomeScreen
             configVersion={configVersion}
             onNavigateToDoctor={doctor => pushRoute({ type: 'doctor_detail', doctor })}
@@ -123,36 +168,45 @@ export const AppNavigator: React.FC = () => {
                 pushRoute({ type: 'doctor_list', service });
               }
             }}
-            onNavigateToPrescriptions={() => setActiveTab('prescriptions')}
+            onNavigateToPrescriptions={() => handleTabPress('prescriptions')}
             onNavigateToReminders={() => pushRoute({ type: 'reminders' })}
             onOpenAdmin={() => setIsAdminVisible(true)}
           />
-        </View>
+        </AnimatedTabPane>
 
-        <View style={[styles.tabPane, activeTab === 'bookings' ? styles.visiblePane : styles.hiddenPane]}>
+        <AnimatedTabPane
+          isActive={activeTab === 'bookings'}
+          direction={tabTransitionDirection}
+        >
           <BookingsScreen
             onNewBooking={() => pushRoute({ type: 'doctor_list' })}
           />
-        </View>
+        </AnimatedTabPane>
 
-        <View style={[styles.tabPane, activeTab === 'prescriptions' ? styles.visiblePane : styles.hiddenPane]}>
+        <AnimatedTabPane
+          isActive={activeTab === 'prescriptions'}
+          direction={tabTransitionDirection}
+        >
           <PrescriptionsScreen
-            onBack={() => setActiveTab('home')}
+            onBack={() => handleTabPress('home')}
             onSelectPrescription={prescription =>
               pushRoute({ type: 'prescription_detail', prescription })
             }
           />
-        </View>
+        </AnimatedTabPane>
 
-        <View style={[styles.tabPane, activeTab === 'profile' ? styles.visiblePane : styles.hiddenPane]}>
+        <AnimatedTabPane
+          isActive={activeTab === 'profile'}
+          direction={tabTransitionDirection}
+        >
           <ProfileScreen
             onOpenAdmin={() => setIsAdminVisible(true)}
             onOpenReminders={() => pushRoute({ type: 'reminders' })}
           />
-        </View>
+        </AnimatedTabPane>
       </View>
 
-      {/* Bottom Tab Bar */}
+      {/* Bottom Tab Bar with On-Top Sliding Indicator */}
       <View
         style={[
           styles.tabBar,
@@ -168,42 +222,41 @@ export const AppNavigator: React.FC = () => {
           },
         ]}
       >
+        {/* Animated Top Sliding Active Indicator Line */}
+        <Animated.View
+          pointerEvents="none"
+          style={[
+            styles.tabTopIndicator,
+            {
+              width: indicatorWidth,
+              backgroundColor: theme.primary,
+              shadowColor: theme.primary,
+            },
+            indicatorAnimatedStyle,
+          ]}
+        />
+
         {tabs.map(tab => {
           const isActive = activeTab === tab.id;
           const activeColor = theme.primary;
           const inactiveColor = colors.slate[400];
+          const pillBgColor = isFestival
+            ? 'rgba(251, 191, 36, 0.16)'
+            : 'rgba(0, 122, 85, 0.10)';
 
           return (
-            <TouchableOpacity
+            <AnimatedTabItem
               key={tab.id}
-              onPress={() => setActiveTab(tab.id)}
-              activeOpacity={0.8}
-              accessibilityRole="tab"
-              accessibilityState={{ selected: isActive }}
-              accessibilityLabel={tab.label}
-              style={[styles.tabButton, { minHeight: minTouchTarget }]}
-            >
-              <Icon
-                name={tab.icon}
-                size={22}
-                color={isActive ? activeColor : inactiveColor}
-                strokeWidth={isActive ? 2.4 : 1.8}
-              />
-              <Text
-                allowFontScaling={true}
-                style={[
-                  styles.tabLabel,
-                  {
-                    color: isActive ? activeColor : inactiveColor,
-                    fontSize: 11,
-                    fontWeight: isActive ? '700' : '500',
-                    marginTop: 3,
-                  },
-                ]}
-              >
-                {tab.label}
-              </Text>
-            </TouchableOpacity>
+              id={tab.id}
+              label={tab.label}
+              icon={tab.icon}
+              isActive={isActive}
+              onPress={() => handleTabPress(tab.id)}
+              activeColor={activeColor}
+              inactiveColor={inactiveColor}
+              minTouchTarget={minTouchTarget}
+              pillBgColor={pillBgColor}
+            />
           );
         })}
       </View>
@@ -307,15 +360,7 @@ const styles = StyleSheet.create({
   },
   main: {
     flex: 1,
-  },
-  tabPane: {
-    flex: 1,
-  },
-  visiblePane: {
-    display: 'flex',
-  },
-  hiddenPane: {
-    display: 'none',
+    position: 'relative',
   },
   tabBar: {
     flexDirection: 'row',
@@ -323,13 +368,17 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     height: 62,
     paddingBottom: 4,
+    position: 'relative',
   },
-  tabButton: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  tabLabel: {
-    letterSpacing: 0.2,
+  tabTopIndicator: {
+    position: 'absolute',
+    top: -1,
+    height: 3,
+    borderRadius: 2,
+    shadowOffset: { width: 0, height: 1.5 },
+    shadowOpacity: 0.4,
+    shadowRadius: 3,
+    elevation: 3,
+    zIndex: 10,
   },
 });

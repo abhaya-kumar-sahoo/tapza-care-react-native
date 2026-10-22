@@ -8,9 +8,12 @@ import {
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
+  withSpring,
   withTiming,
   Easing,
   runOnJS,
+  interpolate,
+  Extrapolation,
 } from 'react-native-reanimated';
 
 import { colors } from '../theme';
@@ -33,16 +36,28 @@ export const AnimatedScreen: React.FC<AnimatedScreenProps> = ({
 
   const initialOffset = direction === 'horizontal' ? width : height;
   const offset = useSharedValue(initialOffset);
+  const scale = useSharedValue(0.97);
   const backdropOpacity = useSharedValue(0);
+  const topBarProgress = useSharedValue(0);
 
-  // Entry animation via Reanimated on the UI thread
+  // Entry animation via Reanimated with smooth spring physics
   useEffect(() => {
-    offset.value = withTiming(0, {
-      duration: 250,
-      easing: Easing.out(Easing.cubic),
+    offset.value = withSpring(0, {
+      damping: 24,
+      stiffness: 200,
+      mass: 0.7,
+    });
+    scale.value = withSpring(1.0, {
+      damping: 24,
+      stiffness: 200,
+      mass: 0.7,
     });
     backdropOpacity.value = withTiming(1, {
       duration: 250,
+      easing: Easing.out(Easing.cubic),
+    });
+    topBarProgress.value = withTiming(1, {
+      duration: 380,
       easing: Easing.out(Easing.cubic),
     });
   }, [initialOffset]);
@@ -53,6 +68,11 @@ export const AnimatedScreen: React.FC<AnimatedScreenProps> = ({
     closingRef.current = true;
 
     backdropOpacity.value = withTiming(0, {
+      duration: 200,
+      easing: Easing.in(Easing.cubic),
+    });
+
+    scale.value = withTiming(0.97, {
       duration: 200,
       easing: Easing.in(Easing.cubic),
     });
@@ -88,14 +108,26 @@ export const AnimatedScreen: React.FC<AnimatedScreenProps> = ({
     return {
       transform:
         direction === 'horizontal'
-          ? [{ translateX: offset.value }]
-          : [{ translateY: offset.value }],
+          ? [{ translateX: offset.value }, { scale: scale.value }]
+          : [{ translateY: offset.value }, { scale: scale.value }],
     };
   });
 
   const animatedBackdropStyle = useAnimatedStyle(() => {
     return {
       opacity: backdropOpacity.value,
+    };
+  });
+
+  const topAccentAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: interpolate(
+        topBarProgress.value,
+        [0, 0.4, 1],
+        [0, 0.85, 0],
+        Extrapolation.CLAMP
+      ),
+      transform: [{ scaleX: topBarProgress.value }],
     };
   });
 
@@ -119,6 +151,12 @@ export const AnimatedScreen: React.FC<AnimatedScreenProps> = ({
           animatedTransformStyle,
         ]}
       >
+        {/* Animated Top Accent Glow on Screen Entry */}
+        <Animated.View
+          pointerEvents="none"
+          style={[styles.topAccentBar, topAccentAnimatedStyle]}
+        />
+
         {children({ requestClose })}
       </Animated.View>
     </View>
@@ -133,8 +171,18 @@ const styles = StyleSheet.create({
     backgroundColor: colors.slate[50],
     shadowColor: colors.black,
     shadowOffset: { width: -3, height: 0 },
-    shadowOpacity: 0.12,
+    shadowOpacity: 0.14,
     shadowRadius: 10,
     elevation: 16,
   },
+  topAccentBar: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 2.5,
+    backgroundColor: colors.emerald.brand,
+    zIndex: 999,
+  },
 });
+
