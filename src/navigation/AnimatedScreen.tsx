@@ -1,12 +1,17 @@
 import React, { useEffect, useRef } from 'react';
 import {
-  Animated,
   StyleSheet,
   BackHandler,
-  Easing,
   View,
   useWindowDimensions,
 } from 'react-native';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  Easing,
+  runOnJS,
+} from 'react-native-reanimated';
 
 export interface AnimatedScreenProps {
   children: (helpers: { requestClose: () => void }) => React.ReactNode;
@@ -25,48 +30,43 @@ export const AnimatedScreen: React.FC<AnimatedScreenProps> = ({
   const closingRef = useRef(false);
 
   const initialOffset = direction === 'horizontal' ? width : height;
-  const animOffset = useRef(new Animated.Value(initialOffset)).current;
-  const backdropOpacity = useRef(new Animated.Value(0)).current;
+  const offset = useSharedValue(initialOffset);
+  const backdropOpacity = useSharedValue(0);
 
-  // Entry animation
+  // Entry animation via Reanimated on the UI thread
   useEffect(() => {
-    Animated.parallel([
-      Animated.timing(animOffset, {
-        toValue: 0,
-        duration: 260,
-        easing: Easing.out(Easing.cubic),
-        useNativeDriver: true,
-      }),
-      Animated.timing(backdropOpacity, {
-        toValue: 1,
-        duration: 260,
-        easing: Easing.out(Easing.cubic),
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }, [animOffset, backdropOpacity]);
+    offset.value = withTiming(0, {
+      duration: 250,
+      easing: Easing.out(Easing.cubic),
+    });
+    backdropOpacity.value = withTiming(1, {
+      duration: 250,
+      easing: Easing.out(Easing.cubic),
+    });
+  }, [initialOffset]);
 
   // Request close with smooth exit animation
   const requestClose = () => {
     if (closingRef.current) return;
     closingRef.current = true;
 
-    Animated.parallel([
-      Animated.timing(animOffset, {
-        toValue: initialOffset,
-        duration: 220,
-        easing: Easing.in(Easing.cubic),
-        useNativeDriver: true,
-      }),
-      Animated.timing(backdropOpacity, {
-        toValue: 0,
-        duration: 220,
-        easing: Easing.in(Easing.cubic),
-        useNativeDriver: true,
-      }),
-    ]).start(() => {
-      onDismiss();
+    backdropOpacity.value = withTiming(0, {
+      duration: 200,
+      easing: Easing.in(Easing.cubic),
     });
+
+    offset.value = withTiming(
+      initialOffset,
+      {
+        duration: 200,
+        easing: Easing.in(Easing.cubic),
+      },
+      finished => {
+        if (finished) {
+          runOnJS(onDismiss)();
+        }
+      }
+    );
   };
 
   // Hardware back button support on Android (only active on top-most screen)
@@ -76,16 +76,26 @@ export const AnimatedScreen: React.FC<AnimatedScreenProps> = ({
       'hardwareBackPress',
       () => {
         requestClose();
-        return true; // prevent default exit
+        return true;
       }
     );
     return () => backHandler.remove();
   }, [isTop]);
 
-  const transformStyle =
-    direction === 'horizontal'
-      ? { transform: [{ translateX: animOffset }] }
-      : { transform: [{ translateY: animOffset }] };
+  const animatedTransformStyle = useAnimatedStyle(() => {
+    return {
+      transform:
+        direction === 'horizontal'
+          ? [{ translateX: offset.value }]
+          : [{ translateY: offset.value }],
+    };
+  });
+
+  const animatedBackdropStyle = useAnimatedStyle(() => {
+    return {
+      opacity: backdropOpacity.value,
+    };
+  });
 
   return (
     <View style={StyleSheet.absoluteFill} pointerEvents="box-none">
@@ -95,7 +105,7 @@ export const AnimatedScreen: React.FC<AnimatedScreenProps> = ({
         style={[
           StyleSheet.absoluteFill,
           styles.backdrop,
-          { opacity: backdropOpacity },
+          animatedBackdropStyle,
         ]}
       />
 
@@ -104,7 +114,7 @@ export const AnimatedScreen: React.FC<AnimatedScreenProps> = ({
         style={[
           StyleSheet.absoluteFill,
           styles.screenContainer,
-          transformStyle,
+          animatedTransformStyle,
         ]}
       >
         {children({ requestClose })}

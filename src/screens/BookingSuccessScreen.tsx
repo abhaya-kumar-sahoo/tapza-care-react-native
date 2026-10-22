@@ -1,11 +1,15 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  Animated,
   Alert,
 } from 'react-native';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+} from 'react-native-reanimated';
 import { useTheme } from '../theme';
 import { useI18n } from '../i18n';
 import { Icon } from '../components/common/Icon';
@@ -25,16 +29,18 @@ export const BookingSuccessScreen: React.FC<BookingSuccessScreenProps> = ({
   const { theme, spacing, radii, typography } = useTheme();
   const { t } = useI18n();
 
-  const scaleCheck = useRef(new Animated.Value(0)).current;
+  const scaleCheck = useSharedValue(0);
 
   useEffect(() => {
-    Animated.spring(scaleCheck, {
-      toValue: 1,
-      tension: 50,
-      friction: 5,
-      useNativeDriver: true,
-    }).start();
+    scaleCheck.value = withSpring(1, {
+      damping: 8,
+      stiffness: 100,
+    });
   }, [scaleCheck]);
+
+  const animatedCheckStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scaleCheck.value }],
+  }));
 
   const handleAddToCalendar = () => {
     Alert.alert('Added to Calendar', `Appointment with ${booking.doctorName} on ${booking.appointmentDate} added to device calendar.`);
@@ -51,13 +57,13 @@ export const BookingSuccessScreen: React.FC<BookingSuccessScreenProps> = ({
             styles.checkCircle,
             {
               backgroundColor: '#10B981',
-              transform: [{ scale: scaleCheck }],
               shadowColor: '#10B981',
               shadowOffset: { width: 0, height: 6 },
               shadowOpacity: 0.35,
               shadowRadius: 12,
               elevation: 8,
             },
+            animatedCheckStyle,
           ]}
         >
           <Icon name="check" size={40} color="#FFFFFF" strokeWidth={3.5} />

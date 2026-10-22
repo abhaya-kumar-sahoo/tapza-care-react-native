@@ -6,10 +6,14 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
-  Animated,
-  PanResponder,
   Alert,
 } from 'react-native';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+} from 'react-native-reanimated';
+import { GestureDetector, Gesture } from 'react-native-gesture-handler';
 import { useTheme } from '../theme';
 import { useI18n } from '../i18n';
 import { Icon } from '../components/common/Icon';
@@ -60,33 +64,26 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({
   const [confirming, setConfirming] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  // Gesture-driven bottom sheet translation
-  const panY = useRef(new Animated.Value(0)).current;
+  // Gesture-driven bottom sheet translation using Reanimated and GestureHandler
+  const translateY = useSharedValue(0);
 
-  const panResponder = useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponder: () => true,
-      onPanResponderMove: (_, gestureState) => {
-        if (gestureState.dy > 0) {
-          panY.setValue(gestureState.dy);
-        }
-      },
-      onPanResponderRelease: (_, gestureState) => {
-        if (gestureState.dy > 80) {
-          // pull down slightly
-          Animated.spring(panY, {
-            toValue: 40,
-            useNativeDriver: true,
-          }).start();
-        } else {
-          Animated.spring(panY, {
-            toValue: 0,
-            useNativeDriver: true,
-          }).start();
-        }
-      },
+  const panGesture = Gesture.Pan()
+    .onUpdate(event => {
+      if (event.translationY > 0) {
+        translateY.value = event.translationY;
+      }
     })
-  ).current;
+    .onEnd(event => {
+      if (event.translationY > 80) {
+        translateY.value = withSpring(40, { damping: 15, stiffness: 120 });
+      } else {
+        translateY.value = withSpring(0, { damping: 15, stiffness: 120 });
+      }
+    });
+
+  const animatedSheetStyle = useAnimatedStyle(() => ({
+    transform: [{ translateY: translateY.value }],
+  }));
 
   const fetchSlots = useCallback(async (dateStr: string) => {
     setLoadingSlots(true);
@@ -464,27 +461,28 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({
       </ScrollView>
 
       {/* Gesture-driven Bottom Sheet matching Screenshot 4 */}
-      <Animated.View
-        style={[
-          styles.bottomSheet,
-          {
-            backgroundColor: '#FFFFFF',
-            borderTopLeftRadius: radii.xl,
-            borderTopRightRadius: radii.xl,
-            padding: spacing.lg,
-            transform: [{ translateY: panY }],
-            shadowColor: '#000',
-            shadowOffset: { width: 0, height: -4 },
-            shadowOpacity: 0.08,
-            shadowRadius: 10,
-            elevation: 8,
-          },
-        ]}
-      >
-        {/* Drag handle */}
-        <View {...panResponder.panHandlers} style={styles.dragHandleWrap}>
-          <View style={[styles.dragHandle, { backgroundColor: '#CBD5E1', borderRadius: radii.full }]} />
-        </View>
+      <GestureDetector gesture={panGesture}>
+        <Animated.View
+          style={[
+            styles.bottomSheet,
+            {
+              backgroundColor: '#FFFFFF',
+              borderTopLeftRadius: radii.xl,
+              borderTopRightRadius: radii.xl,
+              padding: spacing.lg,
+              shadowColor: '#000',
+              shadowOffset: { width: 0, height: -4 },
+              shadowOpacity: 0.08,
+              shadowRadius: 10,
+              elevation: 8,
+            },
+            animatedSheetStyle,
+          ]}
+        >
+          {/* Drag handle */}
+          <View style={styles.dragHandleWrap}>
+            <View style={[styles.dragHandle, { backgroundColor: '#CBD5E1', borderRadius: radii.full }]} />
+          </View>
 
         <Text
           allowFontScaling={true}
@@ -581,7 +579,8 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({
           variant="primary"
           style={{ marginTop: spacing.lg }}
         />
-      </Animated.View>
+        </Animated.View>
+      </GestureDetector>
     </View>
   );
 };

@@ -29,3 +29,65 @@ jest.mock('react-native-safe-area-context', () => {
     useSafeAreaFrame: () => ({ x: 0, y: 0, width: 390, height: 844 }),
   };
 });
+
+// Mock react-native-gesture-handler
+jest.mock('react-native-gesture-handler', () => {
+  return {
+    GestureHandlerRootView: ({ children }) => children,
+    PanGestureHandler: ({ children }) => children,
+    TapGestureHandler: ({ children }) => children,
+    State: {},
+    Directions: {},
+    GestureDetector: ({ children }) => children,
+  };
+});
+
+// Mock lottie-react-native
+jest.mock('lottie-react-native', () => {
+  const React = require('react');
+  const View = require('react-native').View;
+  return React.forwardRef((props, ref) => React.createElement(View, props));
+});
+
+// Mock react-native-reanimated
+jest.mock('react-native-reanimated', () => {
+  const React = require('react');
+  const View = require('react-native').View;
+  return {
+    __esModule: true,
+    default: {
+      View: View,
+      Text: require('react-native').Text,
+      ScrollView: require('react-native').ScrollView,
+      createAnimatedComponent: (c) => c,
+    },
+    useSharedValue: (init) => ({ value: init }),
+    useAnimatedStyle: (fn) => fn(),
+    useAnimatedScrollHandler: (handlers) => (typeof handlers === 'function' ? handlers : (handlers.onScroll || (() => {}))),
+    interpolate: (val, input, output) => output[1] ?? output[0],
+    Extrapolation: {
+      CLAMP: 'clamp',
+      EXTEND: 'extend',
+      IDENTITY: 'identity',
+    },
+    withTiming: (toValue, config, cb) => {
+      if (cb) cb(true);
+      return toValue;
+    },
+    withSpring: (toValue, config, cb) => {
+      if (cb) cb(true);
+      return toValue;
+    },
+    withDelay: (delay, anim) => anim,
+    withRepeat: (anim) => anim,
+    withSequence: (...anims) => anims[0],
+    runOnJS: (fn) => fn,
+    Easing: {
+      out: () => (t) => t,
+      in: () => (t) => t,
+      cubic: (t) => t,
+      ease: (t) => t,
+      linear: (t) => t,
+    },
+  };
+});

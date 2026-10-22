@@ -1,5 +1,12 @@
-import React, { useEffect, useRef } from 'react';
-import { View, Animated, StyleSheet, ViewStyle, ScrollView } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, StyleSheet, ViewStyle, ScrollView } from 'react-native';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withRepeat,
+  withSequence,
+  withTiming,
+} from 'react-native-reanimated';
 import { useTheme } from '../../theme';
 
 export interface SkeletonProps {
@@ -15,26 +22,22 @@ export const Skeleton: React.FC<SkeletonProps> = ({
   borderRadius = 8,
   style,
 }) => {
-  const animatedValue = useRef(new Animated.Value(0.3)).current;
+  const opacity = useSharedValue(0.3);
 
   useEffect(() => {
-    const animation = Animated.loop(
-      Animated.sequence([
-        Animated.timing(animatedValue, {
-          toValue: 0.8,
-          duration: 750,
-          useNativeDriver: true,
-        }),
-        Animated.timing(animatedValue, {
-          toValue: 0.3,
-          duration: 750,
-          useNativeDriver: true,
-        }),
-      ])
+    opacity.value = withRepeat(
+      withSequence(
+        withTiming(0.8, { duration: 750 }),
+        withTiming(0.3, { duration: 750 })
+      ),
+      -1,
+      true
     );
-    animation.start();
-    return () => animation.stop();
-  }, [animatedValue]);
+  }, [opacity]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+  }));
 
   return (
     <Animated.View
@@ -44,8 +47,8 @@ export const Skeleton: React.FC<SkeletonProps> = ({
           height,
           borderRadius,
           backgroundColor: '#E2E8F0',
-          opacity: animatedValue,
         },
+        animatedStyle,
         style,
       ]}
     />
