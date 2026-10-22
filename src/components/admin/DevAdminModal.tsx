@@ -10,7 +10,7 @@ import {
   TextInput,
   Alert,
 } from 'react-native';
-import { useTheme } from '../../theme';
+import { useTheme, colors } from '../../theme';
 import { useI18n } from '../../i18n';
 import { MockApiClient, ResilienceConfig } from '../../api/mockClient';
 import { Icon } from '../common/Icon';
@@ -91,10 +91,10 @@ export const DevAdminModal: React.FC<DevAdminModalProps> = ({
       >
         <TouchableOpacity
           activeOpacity={1}
-          style={[styles.sheet, { backgroundColor: '#FFFFFF', borderRadius: radii.xl }]}
+          style={[styles.sheet, { backgroundColor: theme.cardBackground, borderRadius: radii.xl }]}
         >
           {/* Header */}
-          <View style={[styles.header, { borderBottomColor: '#E2E8F0', padding: spacing.lg }]}>
+          <View style={[styles.header, { borderBottomColor: theme.cardBorder, padding: spacing.lg }]}>
             <View style={styles.titleRow}>
               <Icon name="settings" size={22} color={theme.primary} />
               <Text
@@ -116,9 +116,9 @@ export const DevAdminModal: React.FC<DevAdminModalProps> = ({
               onPress={onClose}
               accessibilityRole="button"
               accessibilityLabel="Close admin panel"
-              style={[styles.closeBtn, { backgroundColor: '#F1F5F9', borderRadius: radii.full }]}
+              style={[styles.closeBtn, { backgroundColor: colors.slate[100], borderRadius: radii.full }]}
             >
-              <Text style={{ fontSize: 18, fontWeight: '700', color: '#64748B' }}>✕</Text>
+              <Text style={{ fontSize: 18, fontWeight: '700', color: colors.slate[500] }}>✕</Text>
             </TouchableOpacity>
           </View>
 
@@ -133,7 +133,7 @@ export const DevAdminModal: React.FC<DevAdminModalProps> = ({
                 style={[
                   styles.segmentBtn,
                   {
-                    backgroundColor: resilience.themeMode === 'normal' ? theme.primary : '#F1F5F9',
+                    backgroundColor: resilience.themeMode === 'normal' ? theme.primary : colors.slate[100],
                     borderRadius: radii.sm,
                   },
                 ]}
@@ -142,7 +142,7 @@ export const DevAdminModal: React.FC<DevAdminModalProps> = ({
                   style={[
                     styles.segmentText,
                     {
-                      color: resilience.themeMode === 'normal' ? '#FFFFFF' : '#475569',
+                      color: resilience.themeMode === 'normal' ? colors.white : colors.slate[600],
                       fontWeight: '600',
                     },
                   ]}
@@ -155,7 +155,7 @@ export const DevAdminModal: React.FC<DevAdminModalProps> = ({
                 style={[
                   styles.segmentBtn,
                   {
-                    backgroundColor: resilience.themeMode === 'festival' ? '#C83214' : '#F1F5F9',
+                    backgroundColor: resilience.themeMode === 'festival' ? colors.red.diwaliPrimary : colors.slate[100],
                     borderRadius: radii.sm,
                   },
                 ]}
@@ -164,7 +164,7 @@ export const DevAdminModal: React.FC<DevAdminModalProps> = ({
                   style={[
                     styles.segmentText,
                     {
-                      color: resilience.themeMode === 'festival' ? '#FFFFFF' : '#475569',
+                      color: resilience.themeMode === 'festival' ? colors.white : colors.slate[600],
                       fontWeight: '600',
                     },
                   ]}
@@ -186,7 +186,7 @@ export const DevAdminModal: React.FC<DevAdminModalProps> = ({
                   style={[
                     styles.segmentBtn,
                     {
-                      backgroundColor: language === lang ? theme.primary : '#F1F5F9',
+                      backgroundColor: language === lang ? theme.primary : colors.slate[100],
                       borderRadius: radii.sm,
                     },
                   ]}
@@ -195,7 +195,7 @@ export const DevAdminModal: React.FC<DevAdminModalProps> = ({
                     style={[
                       styles.segmentText,
                       {
-                        color: language === lang ? '#FFFFFF' : '#475569',
+                        color: language === lang ? colors.white : colors.slate[600],
                         fontWeight: '600',
                       },
                     ]}
@@ -218,7 +218,7 @@ export const DevAdminModal: React.FC<DevAdminModalProps> = ({
                   style={[
                     styles.latencyChip,
                     {
-                      backgroundColor: resilience.latencyMs === ms ? theme.primary : '#F1F5F9',
+                      backgroundColor: resilience.latencyMs === ms ? theme.primary : colors.slate[100],
                       borderRadius: radii.sm,
                       paddingVertical: 6,
                       paddingHorizontal: spacing.md,
@@ -227,7 +227,7 @@ export const DevAdminModal: React.FC<DevAdminModalProps> = ({
                 >
                   <Text
                     style={{
-                      color: resilience.latencyMs === ms ? '#FFFFFF' : '#334155',
+                      color: resilience.latencyMs === ms ? colors.white : colors.slate[700],
                       fontWeight: '600',
                       fontSize: 12,
                     }}
@@ -251,7 +251,7 @@ export const DevAdminModal: React.FC<DevAdminModalProps> = ({
               <Switch
                 value={resilience.forceConfigError}
                 onValueChange={val => handleUpdate({ forceConfigError: val })}
-                trackColor={{ false: '#CBD5E1', true: '#DC2626' }}
+                trackColor={{ false: colors.slate[300], true: colors.red[600] }}
               />
             </View>
 
@@ -263,7 +263,7 @@ export const DevAdminModal: React.FC<DevAdminModalProps> = ({
               <Switch
                 value={resilience.forceBookingConflict}
                 onValueChange={val => handleUpdate({ forceBookingConflict: val })}
-                trackColor={{ false: '#CBD5E1', true: '#DC2626' }}
+                trackColor={{ false: colors.slate[300], true: colors.red[600] }}
               />
             </View>
 
@@ -275,7 +275,7 @@ export const DevAdminModal: React.FC<DevAdminModalProps> = ({
               <Switch
                 value={resilience.forceEmptyDoctors}
                 onValueChange={val => handleUpdate({ forceEmptyDoctors: val, forceEmptySlots: val })}
-                trackColor={{ false: '#CBD5E1', true: '#F59E0B' }}
+                trackColor={{ false: colors.slate[300], true: colors.amber[500] }}
               />
             </View>
 
@@ -287,7 +287,7 @@ export const DevAdminModal: React.FC<DevAdminModalProps> = ({
               <Switch
                 value={resilience.forceNetworkOffline}
                 onValueChange={val => handleUpdate({ forceNetworkOffline: val })}
-                trackColor={{ false: '#CBD5E1', true: '#64748B' }}
+                trackColor={{ false: colors.slate[300], true: colors.slate[500] }}
               />
             </View>
 
@@ -312,7 +312,7 @@ export const DevAdminModal: React.FC<DevAdminModalProps> = ({
                   style={[
                     styles.jsonInput,
                     {
-                      borderColor: '#CBD5E1',
+                      borderColor: colors.slate[300],
                       borderRadius: radii.md,
                       padding: spacing.md,
                     },
@@ -346,7 +346,7 @@ export const DevAdminModal: React.FC<DevAdminModalProps> = ({
 const styles = StyleSheet.create({
   backdrop: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: colors.alpha.black50,
     justifyContent: 'flex-end',
   },
   sheet: {
@@ -373,7 +373,7 @@ const styles = StyleSheet.create({
   sectionTitle: {},
   segmentedRow: {
     flexDirection: 'row',
-    backgroundColor: '#F1F5F9',
+    backgroundColor: colors.slate[100],
     padding: 3,
     gap: 4,
   },
@@ -397,16 +397,16 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#F1F5F9',
+    borderBottomColor: colors.slate[100],
   },
   switchLabel: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#1E293B',
+    color: colors.slate[800],
   },
   switchSub: {
     fontSize: 12,
-    color: '#64748B',
+    color: colors.slate[500],
     marginTop: 2,
   },
   accordionHeader: {
@@ -416,8 +416,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     fontFamily: 'Courier',
     fontSize: 11,
-    backgroundColor: '#F8FAFC',
-    color: '#0F172A',
+    backgroundColor: colors.slate[50],
+    color: colors.slate[900],
     minHeight: 120,
     textAlignVertical: 'top',
   },

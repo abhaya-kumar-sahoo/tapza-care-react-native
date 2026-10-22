@@ -6,7 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import { useTheme } from '../theme';
+import { useTheme, colors } from '../theme';
 import { useI18n } from '../i18n';
 import { Icon } from '../components/common/Icon';
 import { StorageService } from '../api/storage';
@@ -34,8 +34,8 @@ const INITIAL_DOSES: DoseItem[] = [
     dose: '1 tablet',
     timeSlot: 'Morning · 8:00 AM',
     timingKey: 'morning',
-    iconColor: '#EA580C',
-    bgColor: '#FFEDD5',
+    iconColor: colors.orange[600],
+    bgColor: colors.orange[100],
     defaultTaken: true, // as seen in screenshot
   },
   {
@@ -44,8 +44,8 @@ const INITIAL_DOSES: DoseItem[] = [
     dose: '1 capsule',
     timeSlot: 'Afternoon · 2:00 PM',
     timingKey: 'afternoon',
-    iconColor: '#DB2777',
-    bgColor: '#FCE7F3',
+    iconColor: colors.rose[600],
+    bgColor: colors.rose[100],
     defaultTaken: false,
   },
   {
@@ -54,8 +54,8 @@ const INITIAL_DOSES: DoseItem[] = [
     dose: '1 tablet',
     timeSlot: 'Night · 9:00 PM',
     timingKey: 'night',
-    iconColor: '#EA580C',
-    bgColor: '#FFEDD5',
+    iconColor: colors.orange[600],
+    bgColor: colors.orange[100],
     defaultTaken: false,
   },
 ];
@@ -120,12 +120,12 @@ export const MedicineRemindersScreen: React.FC<MedicineRemindersScreenProps> = (
         style={[
           styles.doseCard,
           {
-            backgroundColor: '#FFFFFF',
+            backgroundColor: theme.cardBackground,
             borderRadius: radii.lg,
-            borderColor: '#E2E8F0',
+            borderColor: theme.cardBorder,
             borderWidth: 1,
             padding: spacing.md,
-            shadowColor: '#000',
+            shadowColor: colors.black,
             shadowOffset: { width: 0, height: 1 },
             shadowOpacity: 0.04,
             shadowRadius: 4,
@@ -172,19 +172,19 @@ export const MedicineRemindersScreen: React.FC<MedicineRemindersScreenProps> = (
           style={[
             styles.checkCircle,
             {
-              backgroundColor: isTaken ? '#10B981' : '#FFFFFF',
-              borderColor: isTaken ? '#10B981' : '#CBD5E1',
+              backgroundColor: isTaken ? colors.emerald[500] : colors.white,
+              borderColor: isTaken ? colors.emerald[500] : colors.slate[300],
             },
           ]}
         >
-          {isTaken && <Icon name="check" size={14} color="#FFFFFF" strokeWidth={3} />}
+          {isTaken && <Icon name="check" size={14} color={colors.white} strokeWidth={3} />}
         </View>
       </TouchableOpacity>
     );
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: '#F8FAFC' }]}>
+    <View style={[styles.container, { backgroundColor: colors.slate[50] }]}>
       {/* Header matching Screenshot 8 */}
       <View style={[styles.header, { paddingHorizontal: spacing.lg, paddingVertical: spacing.md }]}>
         <TouchableOpacity
@@ -192,7 +192,7 @@ export const MedicineRemindersScreen: React.FC<MedicineRemindersScreenProps> = (
           activeOpacity={0.7}
           accessibilityRole="button"
           accessibilityLabel="Back"
-          style={[styles.circleBtn, { backgroundColor: '#FFFFFF', borderRadius: radii.full }]}
+          style={[styles.circleBtn, { backgroundColor: theme.cardBackground, borderRadius: radii.full }]}
         >
           <Icon name="arrow-left" size={20} color={theme.textPrimary} />
         </TouchableOpacity>
@@ -218,7 +218,7 @@ export const MedicineRemindersScreen: React.FC<MedicineRemindersScreenProps> = (
           activeOpacity={0.7}
           accessibilityRole="button"
           accessibilityLabel="Reminder settings"
-          style={[styles.circleBtn, { backgroundColor: '#FFFFFF', borderRadius: radii.full }]}
+          style={[styles.circleBtn, { backgroundColor: theme.cardBackground, borderRadius: radii.full }]}
         >
           <Icon name="settings" size={20} color={theme.textPrimary} />
         </TouchableOpacity>
@@ -244,7 +244,7 @@ export const MedicineRemindersScreen: React.FC<MedicineRemindersScreenProps> = (
             style={[
               styles.segmentText,
               {
-                color: activeTab === 'today' ? '#FFFFFF' : theme.textSecondary,
+                color: activeTab === 'today' ? colors.white : theme.textSecondary,
                 fontSize: typography.sizes.sm,
                 fontWeight: activeTab === 'today' ? '700' : '500',
               },
@@ -272,7 +272,7 @@ export const MedicineRemindersScreen: React.FC<MedicineRemindersScreenProps> = (
             style={[
               styles.segmentText,
               {
-                color: activeTab === 'all' ? '#FFFFFF' : theme.textSecondary,
+                color: activeTab === 'all' ? colors.white : theme.textSecondary,
                 fontSize: typography.sizes.sm,
                 fontWeight: activeTab === 'all' ? '700' : '500',
               },
@@ -334,7 +334,7 @@ const styles = StyleSheet.create({
   title: {},
   segmentedRow: {
     flexDirection: 'row',
-    backgroundColor: '#E2E8F0',
+    backgroundColor: colors.slate[200],
     padding: 3,
   },
   segmentTab: {

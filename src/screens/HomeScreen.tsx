@@ -10,7 +10,7 @@ import Animated, {
   useSharedValue,
   useAnimatedScrollHandler,
 } from 'react-native-reanimated';
-import { useTheme } from '../theme';
+import { useTheme, colors } from '../theme';
 import { useI18n } from '../i18n';
 import { LayoutConfig, Doctor, ServiceItem, CategoryItem, QuickActionItem, OfferStripItem } from '../types';
 import { MockApiClient } from '../api/mockClient';
@@ -259,14 +259,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 999,
     borderWidth: 1,
-    shadowColor: '#000',
+    shadowColor: colors.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 4,
   },
   floatingAdminText: {
-    color: '#FFFFFF',
+    color: colors.white,
     fontSize: 11,
     fontWeight: '700',
   },

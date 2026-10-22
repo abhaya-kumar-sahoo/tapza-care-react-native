@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { useTheme } from '../../theme';
+import { useTheme, colors } from '../../theme';
 import { useI18n } from '../../i18n';
 import { Icon } from '../common/Icon';
 import { OfferStripItem } from '../../types';
@@ -30,12 +30,12 @@ export const OfferStrip: React.FC<OfferStripProps> = ({
         style={[
           styles.bannerCard,
           {
-            backgroundColor: '#881337',
+            backgroundColor: colors.red.burgundy,
             borderRadius: radii.lg,
             padding: spacing.md,
-            borderColor: '#BE123C',
+            borderColor: colors.red.crimson,
             borderWidth: 1,
-            shadowColor: '#000',
+            shadowColor: colors.black,
             shadowOffset: { width: 0, height: 3 },
             shadowOpacity: 0.15,
             shadowRadius: 8,
@@ -49,8 +49,8 @@ export const OfferStrip: React.FC<OfferStripProps> = ({
             style={[
               styles.tagPill,
               {
-                backgroundColor: 'rgba(251, 191, 36, 0.2)',
-                borderColor: '#F59E0B',
+                backgroundColor: colors.alpha.goldPillBg,
+                borderColor: colors.amber[500],
                 borderRadius: radii.full,
                 paddingVertical: 2,
                 paddingHorizontal: spacing.sm,
@@ -62,7 +62,7 @@ export const OfferStrip: React.FC<OfferStripProps> = ({
               style={[
                 styles.tagText,
                 {
-                  color: '#FDE68A',
+                  color: colors.amber[200],
                   fontSize: 10,
                   fontWeight: typography.weights.bold,
                   letterSpacing: 0.5,
@@ -79,7 +79,7 @@ export const OfferStrip: React.FC<OfferStripProps> = ({
             style={[
               styles.headline,
               {
-                color: '#FFFFFF',
+                color: colors.white,
                 fontSize: typography.sizes.lg,
                 fontWeight: typography.weights.extrabold,
                 marginTop: spacing.xs,
@@ -93,7 +93,7 @@ export const OfferStrip: React.FC<OfferStripProps> = ({
             style={[
               styles.subline,
               {
-                color: '#FECDD3',
+                color: colors.red.rosePale,
                 fontSize: typography.sizes.xs,
                 marginBottom: spacing.sm,
               },
@@ -107,7 +107,7 @@ export const OfferStrip: React.FC<OfferStripProps> = ({
             style={[
               styles.ctaBtn,
               {
-                backgroundColor: '#F59E0B',
+                backgroundColor: colors.amber[500],
                 borderRadius: radii.full,
                 paddingVertical: 6,
                 paddingHorizontal: spacing.md,
@@ -119,7 +119,7 @@ export const OfferStrip: React.FC<OfferStripProps> = ({
               style={[
                 styles.ctaText,
                 {
-                  color: '#78350F',
+                  color: colors.amber.darkBrown,
                   fontSize: typography.sizes.xs,
                   fontWeight: typography.weights.bold,
                 },
@@ -132,7 +132,7 @@ export const OfferStrip: React.FC<OfferStripProps> = ({
 
         {/* Diya / Festive Lamp Graphic */}
         <View style={styles.graphicWrap}>
-          <Icon name="diya" size={54} color="#FBBF24" />
+          <Icon name="diya" size={54} color={colors.amber[400]} />
         </View>
       </TouchableOpacity>
     </View>

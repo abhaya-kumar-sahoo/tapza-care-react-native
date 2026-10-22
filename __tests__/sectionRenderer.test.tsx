@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactTestRenderer from 'react-test-renderer';
 import { SectionRenderer } from '../src/components/sections/SectionRenderer';
-import { ThemeProvider } from '../src/theme';
+import { ThemeProvider, colors } from '../src/theme';
 import { I18nProvider } from '../src/i18n';
 import { BaseSectionConfig } from '../src/types';
 
@@ -16,7 +16,7 @@ describe('SectionRenderer', () => {
     const validSection: BaseSectionConfig = {
       id: 'test_sec_chips',
       type: 'category_chips',
-      background: { kind: 'color', value: '#FFFFFF' },
+      background: { kind: 'color', value: colors.white },
       title: 'Explore by category',
       items: [
         { id: 'c1', name: 'Consult', icon: 'stethoscope' },
@@ -38,7 +38,7 @@ describe('SectionRenderer', () => {
     const unknownSection: BaseSectionConfig = {
       id: 'test_unknown_sec',
       type: 'teleportation_drone_delivery',
-      background: { kind: 'color', value: '#000000' },
+      background: { kind: 'color', value: colors.black },
       title: 'Future Feature',
       items: [{ foo: 'bar' }],
     };

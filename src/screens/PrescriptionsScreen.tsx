@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
-import { useTheme } from '../theme';
+import { useTheme, colors } from '../theme';
 import { useI18n } from '../i18n';
 import { Icon } from '../components/common/Icon';
 import { Badge } from '../components/common/Badge';
@@ -55,7 +55,7 @@ export const PrescriptionsScreen: React.FC<PrescriptionsScreenProps> = ({
   });
 
   return (
-    <View style={[styles.container, { backgroundColor: '#F8FAFC' }]}>
+    <View style={[styles.container, { backgroundColor: colors.slate[50] }]}>
       {/* Top Header */}
       <View style={[styles.header, { paddingHorizontal: spacing.lg, paddingVertical: spacing.md }]}>
         <TouchableOpacity
@@ -63,7 +63,7 @@ export const PrescriptionsScreen: React.FC<PrescriptionsScreenProps> = ({
           activeOpacity={0.7}
           accessibilityRole="button"
           accessibilityLabel="Back"
-          style={[styles.circleBtn, { backgroundColor: '#FFFFFF', borderRadius: radii.full }]}
+          style={[styles.circleBtn, { backgroundColor: theme.cardBackground, borderRadius: radii.full }]}
         >
           <Icon name="arrow-left" size={20} color={theme.textPrimary} />
         </TouchableOpacity>
@@ -89,7 +89,7 @@ export const PrescriptionsScreen: React.FC<PrescriptionsScreenProps> = ({
           activeOpacity={0.7}
           accessibilityRole="button"
           accessibilityLabel="Search prescriptions"
-          style={[styles.circleBtn, { backgroundColor: '#FFFFFF', borderRadius: radii.full }]}
+          style={[styles.circleBtn, { backgroundColor: theme.cardBackground, borderRadius: radii.full }]}
         >
           <Icon name="search" size={18} color={theme.textPrimary} />
         </TouchableOpacity>
@@ -105,9 +105,9 @@ export const PrescriptionsScreen: React.FC<PrescriptionsScreenProps> = ({
             style={[
               styles.searchInput,
               {
-                backgroundColor: '#FFFFFF',
+                backgroundColor: theme.cardBackground,
                 borderRadius: radii.md,
-                borderColor: '#E2E8F0',
+                borderColor: theme.cardBorder,
                 paddingHorizontal: spacing.md,
               },
             ]}
@@ -140,7 +140,7 @@ export const PrescriptionsScreen: React.FC<PrescriptionsScreenProps> = ({
                 style={[
                   styles.segmentTabText,
                   {
-                    color: isSelected ? '#FFFFFF' : theme.textSecondary,
+                    color: isSelected ? colors.white : theme.textSecondary,
                     fontSize: typography.sizes.sm,
                     fontWeight: isSelected ? '700' : '500',
                   },
@@ -162,7 +162,7 @@ export const PrescriptionsScreen: React.FC<PrescriptionsScreenProps> = ({
           <PrescriptionsSkeleton />
         ) : filteredPrescriptions.length === 0 ? (
           <View style={styles.emptyWrap}>
-            <Icon name="file-text" size={48} color="#94A3B8" />
+            <Icon name="file-text" size={48} color={colors.slate[400]} />
             <Text style={[styles.emptyText, { color: theme.textSecondary, marginTop: spacing.md }]}>
               {t.emptyPrescriptions}
             </Text>
@@ -178,12 +178,12 @@ export const PrescriptionsScreen: React.FC<PrescriptionsScreenProps> = ({
               style={[
                 styles.card,
                 {
-                  backgroundColor: '#FFFFFF',
+                  backgroundColor: theme.cardBackground,
                   borderRadius: radii.lg,
-                  borderColor: '#E2E8F0',
+                  borderColor: theme.cardBorder,
                   borderWidth: 1,
                   padding: spacing.md,
-                  shadowColor: '#000',
+                  shadowColor: colors.black,
                   shadowOffset: { width: 0, height: 2 },
                   shadowOpacity: 0.04,
                   shadowRadius: 5,
@@ -192,11 +192,11 @@ export const PrescriptionsScreen: React.FC<PrescriptionsScreenProps> = ({
               ]}
             >
               <View style={styles.cardHeader}>
-                <View style={[styles.iconSquare, { backgroundColor: item.status === 'active' ? '#E6F4EA' : '#F1F5F9', borderRadius: radii.md }]}>
+                <View style={[styles.iconSquare, { backgroundColor: item.status === 'active' ? colors.emerald.pale : colors.slate[100], borderRadius: radii.md }]}>
                   <Icon
                     name="file-text"
                     size={20}
-                    color={item.status === 'active' ? '#0D652D' : '#64748B'}
+                    color={item.status === 'active' ? colors.emerald.subtleText : colors.slate[500]}
                   />
                 </View>
 
@@ -230,7 +230,7 @@ export const PrescriptionsScreen: React.FC<PrescriptionsScreenProps> = ({
                   <Text
                     allowFontScaling={true}
                     style={{
-                      color: '#64748B',
+                      color: colors.slate[500],
                       fontSize: 12,
                       marginTop: 4,
                     }}
@@ -273,7 +273,7 @@ const styles = StyleSheet.create({
   },
   segmentedRow: {
     flexDirection: 'row',
-    backgroundColor: '#E2E8F0',
+    backgroundColor: colors.slate[200],
     padding: 3,
   },
   segmentTab: {

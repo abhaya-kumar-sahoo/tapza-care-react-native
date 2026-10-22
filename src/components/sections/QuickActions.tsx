@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { useTheme } from '../../theme';
+import { useTheme, colors } from '../../theme';
 import { useI18n } from '../../i18n';
 import { Icon } from '../common/Icon';
 import { QuickActionItem } from '../../types';
@@ -49,7 +49,7 @@ export const QuickActions: React.FC<QuickActionsProps> = ({
             style={[
               styles.actionTile,
               {
-                backgroundColor: action.bgColor || '#F1F5F9',
+                backgroundColor: action.bgColor || colors.slate[100],
                 borderRadius: radii.md,
                 paddingVertical: spacing.md,
                 paddingHorizontal: spacing.xs,
@@ -62,12 +62,12 @@ export const QuickActions: React.FC<QuickActionsProps> = ({
                 size={24}
                 color={
                   action.id === 'qa_book'
-                    ? '#059669'
+                    ? colors.emerald[600]
                     : action.id === 'qa_prescriptions'
-                    ? '#2563EB'
+                    ? colors.blue[600]
                     : action.id === 'qa_reminders'
-                    ? '#E11D48'
-                    : '#7C3AED'
+                    ? colors.rose[600]
+                    : colors.purple[600]
                 }
               />
             </View>

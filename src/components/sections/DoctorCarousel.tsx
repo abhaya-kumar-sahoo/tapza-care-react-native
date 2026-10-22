@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import { useTheme } from '../../theme';
+import { useTheme, colors } from '../../theme';
 import { useI18n } from '../../i18n';
 import { Icon } from '../common/Icon';
 import { Badge } from '../common/Badge';
@@ -84,14 +84,14 @@ export const DoctorCarousel: React.FC<DoctorCarouselProps> = ({
             style={[
               styles.doctorCard,
               {
-                backgroundColor: '#FFFFFF',
+                backgroundColor: theme.cardBackground,
                 borderRadius: radii.lg,
-                borderColor: '#E2E8F0',
+                borderColor: theme.cardBorder,
                 borderWidth: 1,
                 padding: spacing.md,
                 marginRight: spacing.md,
                 width: 175,
-                shadowColor: '#000',
+                shadowColor: colors.black,
                 shadowOffset: { width: 0, height: 2 },
                 shadowOpacity: 0.05,
                 shadowRadius: 6,
@@ -106,8 +106,8 @@ export const DoctorCarousel: React.FC<DoctorCarouselProps> = ({
                 style={[styles.avatar, { borderRadius: radii.full }]}
                 resizeMode="cover"
               />
-              <View style={[styles.verifiedBadge, { backgroundColor: '#10B981' }]}>
-                <Icon name="check" size={10} color="#FFFFFF" strokeWidth={3} />
+              <View style={[styles.verifiedBadge, { backgroundColor: colors.emerald[500] }]}>
+                <Icon name="check" size={10} color={colors.white} strokeWidth={3} />
               </View>
             </View>
 
@@ -182,7 +182,7 @@ export const DoctorCarousel: React.FC<DoctorCarouselProps> = ({
                 style={[
                   styles.slotTag,
                   {
-                    backgroundColor: '#E6F4EA',
+                    backgroundColor: colors.emerald.pale,
                     borderRadius: radii.xs,
                     paddingVertical: 3,
                     paddingHorizontal: spacing.xs,
@@ -196,7 +196,7 @@ export const DoctorCarousel: React.FC<DoctorCarouselProps> = ({
                   style={[
                     styles.slotTagText,
                     {
-                      color: '#0D652D',
+                      color: colors.emerald.subtleText,
                       fontSize: 10,
                       fontWeight: typography.weights.semibold,
                       textAlign: 'center',
@@ -252,7 +252,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1.5,
-    borderColor: '#FFFFFF',
+    borderColor: colors.white,
   },
   doctorName: {},
   doctorSpecialty: {},

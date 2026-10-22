@@ -1,5 +1,6 @@
 import { LayoutConfig, Doctor, Slot, Prescription } from '../types';
 import { normalTheme, diwaliTheme } from '../theme/tokens';
+import { colors } from '../theme/colors';
 import { Images } from '../assets/images';
 
 export const normalLayoutConfig: LayoutConfig = {
@@ -17,7 +18,7 @@ export const normalLayoutConfig: LayoutConfig = {
       type: 'hero_banner',
       background: {
         kind: 'gradient',
-        value: '#E8F5E9,#C8E6C9',
+        value: `${colors.emerald[100]},${colors.emerald[200]}`,
       },
       items: [
         {
@@ -36,7 +37,7 @@ export const normalLayoutConfig: LayoutConfig = {
       type: 'quick_actions',
       background: {
         kind: 'color',
-        value: '#F8FAFC',
+        value: colors.slate[50],
       },
       title: 'Quick Actions',
       items: [
@@ -44,28 +45,28 @@ export const normalLayoutConfig: LayoutConfig = {
           id: 'qa_book',
           title: 'Book Appointment',
           icon: 'calendar-plus',
-          bgColor: '#E6F4EA',
+          bgColor: colors.emerald.pale,
           screenTarget: 'booking',
         },
         {
           id: 'qa_prescriptions',
           title: 'Prescriptions',
           icon: 'file-text',
-          bgColor: '#E0F2FE',
+          bgColor: colors.blue[100],
           screenTarget: 'prescriptions',
         },
         {
           id: 'qa_reminders',
           title: 'Reminders',
           icon: 'bell',
-          bgColor: '#FFE4E6',
+          bgColor: colors.rose[100],
           screenTarget: 'reminders',
         },
         {
           id: 'qa_family',
           title: 'Family',
           icon: 'users',
-          bgColor: '#F3E8FF',
+          bgColor: colors.purple[100],
           screenTarget: 'profile',
         },
       ],
@@ -75,15 +76,15 @@ export const normalLayoutConfig: LayoutConfig = {
       type: 'category_chips',
       background: {
         kind: 'color',
-        value: '#FFFFFF',
+        value: colors.white,
       },
       title: 'Explore by category',
       items: [
-        { id: 'cat_consult', name: 'Consult', icon: 'stethoscope', tintColor: '#10B981' },
-        { id: 'cat_lab', name: 'Lab Tests', icon: 'flask', tintColor: '#3B82F6' },
-        { id: 'cat_pharmacy', name: 'Pharmacy', icon: 'pill', tintColor: '#F97316' },
-        { id: 'cat_vaccine', name: 'Vaccines', icon: 'syringe', tintColor: '#06B6D4' },
-        { id: 'cat_health', name: 'Health Packages', icon: 'heart', tintColor: '#8B5CF6' },
+        { id: 'cat_consult', name: 'Consult', icon: 'stethoscope', tintColor: colors.emerald[500] },
+        { id: 'cat_lab', name: 'Lab Tests', icon: 'flask', tintColor: colors.blue[500] },
+        { id: 'cat_pharmacy', name: 'Pharmacy', icon: 'pill', tintColor: colors.orange[500] },
+        { id: 'cat_vaccine', name: 'Vaccines', icon: 'syringe', tintColor: colors.cyan[500] },
+        { id: 'cat_health', name: 'Health Packages', icon: 'heart', tintColor: colors.purple[500] },
       ],
     },
     {
@@ -91,7 +92,7 @@ export const normalLayoutConfig: LayoutConfig = {
       type: 'service_grid',
       background: {
         kind: 'color',
-        value: '#FFFFFF',
+        value: colors.white,
       },
       title: 'Popular services',
       items: [
@@ -168,7 +169,7 @@ export const normalLayoutConfig: LayoutConfig = {
       type: 'doctor_carousel',
       background: {
         kind: 'color',
-        value: '#F8FAFC',
+        value: colors.slate[50],
       },
       title: 'Top doctors near you',
       items: [],
@@ -178,7 +179,7 @@ export const normalLayoutConfig: LayoutConfig = {
       type: 'ai_drone_medicine_delivery',
       background: {
         kind: 'color',
-        value: '#000000',
+        value: colors.black,
       },
       title: 'Experimental Future Section',
       items: [],
@@ -201,7 +202,7 @@ export const diwaliLayoutConfig: LayoutConfig = {
       type: 'hero_banner',
       background: {
         kind: 'gradient',
-        value: '#991B1B,#DC2626,#D97706',
+        value: `${colors.red[800]},${colors.red[600]},${colors.amber[600]}`,
       },
       items: [
         {
@@ -221,7 +222,7 @@ export const diwaliLayoutConfig: LayoutConfig = {
       type: 'quick_actions',
       background: {
         kind: 'color',
-        value: '#FFFFFF',
+        value: colors.white,
       },
       title: 'Quick Actions',
       items: [
@@ -229,28 +230,28 @@ export const diwaliLayoutConfig: LayoutConfig = {
           id: 'qa_book',
           title: 'Book Appointment',
           icon: 'calendar-plus',
-          bgColor: '#FEF3C7',
+          bgColor: colors.amber[100],
           screenTarget: 'booking',
         },
         {
           id: 'qa_prescriptions',
           title: 'Prescriptions',
           icon: 'file-text',
-          bgColor: '#FFEDD5',
+          bgColor: colors.orange[100],
           screenTarget: 'prescriptions',
         },
         {
           id: 'qa_reminders',
           title: 'Reminders',
           icon: 'bell',
-          bgColor: '#FEE2E2',
+          bgColor: colors.red[100],
           screenTarget: 'reminders',
         },
         {
           id: 'qa_family',
           title: 'Family',
           icon: 'users',
-          bgColor: '#FEF3C7',
+          bgColor: colors.amber[100],
           screenTarget: 'profile',
         },
       ],
@@ -260,15 +261,15 @@ export const diwaliLayoutConfig: LayoutConfig = {
       type: 'category_chips',
       background: {
         kind: 'color',
-        value: '#FFFFFF',
+        value: colors.white,
       },
       title: 'Explore by category',
       items: [
-        { id: 'cat_consult', name: 'Consult', icon: 'stethoscope', tintColor: '#D97706' },
-        { id: 'cat_lab', name: 'Lab Tests', icon: 'flask', tintColor: '#DC2626' },
-        { id: 'cat_pharmacy', name: 'Pharmacy', icon: 'pill', tintColor: '#EA580C' },
-        { id: 'cat_vaccine', name: 'Vaccines', icon: 'syringe', tintColor: '#CA8A04' },
-        { id: 'cat_health', name: 'Health Packages', icon: 'heart', tintColor: '#B91C1C' },
+        { id: 'cat_consult', name: 'Consult', icon: 'stethoscope', tintColor: colors.amber[600] },
+        { id: 'cat_lab', name: 'Lab Tests', icon: 'flask', tintColor: colors.red[600] },
+        { id: 'cat_pharmacy', name: 'Pharmacy', icon: 'pill', tintColor: colors.orange[600] },
+        { id: 'cat_vaccine', name: 'Vaccines', icon: 'syringe', tintColor: colors.amber[600] },
+        { id: 'cat_health', name: 'Health Packages', icon: 'heart', tintColor: colors.red[700] },
       ],
     },
     {
@@ -276,7 +277,7 @@ export const diwaliLayoutConfig: LayoutConfig = {
       type: 'doctor_carousel',
       background: {
         kind: 'color',
-        value: '#FFF8F0',
+        value: colors.amber.warmIvory,
       },
       title: 'Top doctors near you',
       items: [],

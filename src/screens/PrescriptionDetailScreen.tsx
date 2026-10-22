@@ -6,7 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import { useTheme } from '../theme';
+import { useTheme, colors } from '../theme';
 import { useI18n } from '../i18n';
 import { Icon } from '../components/common/Icon';
 import { Prescription, Medicine } from '../types';
@@ -26,7 +26,7 @@ export const PrescriptionDetailScreen: React.FC<PrescriptionDetailScreenProps> =
   const { t } = useI18n();
 
   return (
-    <View style={[styles.container, { backgroundColor: '#F8FAFC' }]}>
+    <View style={[styles.container, { backgroundColor: colors.slate[50] }]}>
       {/* Header */}
       <View style={[styles.header, { paddingHorizontal: spacing.lg, paddingVertical: spacing.md }]}>
         <TouchableOpacity
@@ -34,7 +34,7 @@ export const PrescriptionDetailScreen: React.FC<PrescriptionDetailScreenProps> =
           activeOpacity={0.7}
           accessibilityRole="button"
           accessibilityLabel="Back"
-          style={[styles.circleBtn, { backgroundColor: '#FFFFFF', borderRadius: radii.full }]}
+          style={[styles.circleBtn, { backgroundColor: theme.cardBackground, borderRadius: radii.full }]}
         >
           <Icon name="arrow-left" size={20} color={theme.textPrimary} />
         </TouchableOpacity>
@@ -59,7 +59,7 @@ export const PrescriptionDetailScreen: React.FC<PrescriptionDetailScreenProps> =
           activeOpacity={0.7}
           accessibilityRole="button"
           accessibilityLabel="More options"
-          style={[styles.circleBtn, { backgroundColor: '#FFFFFF', borderRadius: radii.full }]}
+          style={[styles.circleBtn, { backgroundColor: theme.cardBackground, borderRadius: radii.full }]}
         >
           <Icon name="more-vertical" size={20} color={theme.textPrimary} />
         </TouchableOpacity>
@@ -74,12 +74,12 @@ export const PrescriptionDetailScreen: React.FC<PrescriptionDetailScreenProps> =
           style={[
             styles.doctorCard,
             {
-              backgroundColor: '#FFFFFF',
+              backgroundColor: theme.cardBackground,
               borderRadius: radii.xl,
               padding: spacing.lg,
-              borderColor: '#E2E8F0',
+              borderColor: theme.cardBorder,
               borderWidth: 1,
-              shadowColor: '#000',
+              shadowColor: colors.black,
               shadowOffset: { width: 0, height: 2 },
               shadowOpacity: 0.04,
               shadowRadius: 5,
@@ -87,8 +87,8 @@ export const PrescriptionDetailScreen: React.FC<PrescriptionDetailScreenProps> =
             },
           ]}
         >
-          <View style={[styles.blueIconBox, { backgroundColor: '#E0F2FE', borderRadius: radii.md }]}>
-            <Icon name="file-text" size={24} color="#0284C7" />
+          <View style={[styles.blueIconBox, { backgroundColor: colors.blue[100], borderRadius: radii.md }]}>
+            <Icon name="file-text" size={24} color={colors.blue[600]} />
           </View>
 
           <View style={{ flex: 1, marginLeft: spacing.md }}>
@@ -121,7 +121,7 @@ export const PrescriptionDetailScreen: React.FC<PrescriptionDetailScreenProps> =
             <Text
               allowFontScaling={true}
               style={{
-                color: '#64748B',
+                color: colors.slate[500],
                 fontSize: 12,
                 marginTop: 2,
               }}
@@ -161,13 +161,13 @@ export const PrescriptionDetailScreen: React.FC<PrescriptionDetailScreenProps> =
             style={[
               styles.medCard,
               {
-                backgroundColor: '#FFFFFF',
+                backgroundColor: theme.cardBackground,
                 borderRadius: radii.lg,
-                borderColor: '#E2E8F0',
+                borderColor: theme.cardBorder,
                 borderWidth: 1,
                 padding: spacing.md,
                 marginTop: spacing.sm,
-                shadowColor: '#000',
+                shadowColor: colors.black,
                 shadowOffset: { width: 0, height: 1 },
                 shadowOpacity: 0.03,
                 shadowRadius: 4,
@@ -176,8 +176,8 @@ export const PrescriptionDetailScreen: React.FC<PrescriptionDetailScreenProps> =
             ]}
           >
             <View style={styles.medTopRow}>
-              <View style={[styles.pillIconBox, { backgroundColor: '#FEF3C7', borderRadius: radii.md }]}>
-                <Icon name="pill" size={20} color="#D97706" />
+              <View style={[styles.pillIconBox, { backgroundColor: colors.amber[100], borderRadius: radii.md }]}>
+                <Icon name="pill" size={20} color={colors.amber[600]} />
               </View>
 
               <View style={{ flex: 1, marginLeft: spacing.sm }}>
@@ -209,24 +209,24 @@ export const PrescriptionDetailScreen: React.FC<PrescriptionDetailScreenProps> =
                 </Text>
               </View>
 
-              <Icon name="chevron-right" size={16} color="#94A3B8" />
+              <Icon name="chevron-right" size={16} color={colors.slate[400]} />
             </View>
 
             {/* Timing Schedule Row matching Screenshot 7 */}
-            <View style={[styles.timingsRow, { marginTop: spacing.md, paddingTop: spacing.xs, borderTopWidth: 1, borderTopColor: '#F1F5F9' }]}>
+            <View style={[styles.timingsRow, { marginTop: spacing.md, paddingTop: spacing.xs, borderTopWidth: 1, borderTopColor: colors.slate[100] }]}>
               {/* Morning */}
               <View style={styles.timingItem}>
                 <View
                   style={[
                     styles.timingCheckbox,
                     {
-                      backgroundColor: med.timing.includes('morning') ? '#10B981' : '#FFFFFF',
-                      borderColor: med.timing.includes('morning') ? '#10B981' : '#CBD5E1',
+                      backgroundColor: med.timing.includes('morning') ? colors.emerald[500] : colors.white,
+                      borderColor: med.timing.includes('morning') ? colors.emerald[500] : colors.slate[300],
                     },
                   ]}
                 >
                   {med.timing.includes('morning') && (
-                    <Icon name="check" size={12} color="#FFFFFF" strokeWidth={3} />
+                    <Icon name="check" size={12} color={colors.white} strokeWidth={3} />
                   )}
                 </View>
                 <Text
@@ -234,7 +234,7 @@ export const PrescriptionDetailScreen: React.FC<PrescriptionDetailScreenProps> =
                   style={[
                     styles.timingLabel,
                     {
-                      color: med.timing.includes('morning') ? theme.textPrimary : '#94A3B8',
+                      color: med.timing.includes('morning') ? theme.textPrimary : colors.slate[400],
                       fontSize: 12,
                       fontWeight: med.timing.includes('morning') ? '600' : '400',
                       marginLeft: 4,
@@ -251,13 +251,13 @@ export const PrescriptionDetailScreen: React.FC<PrescriptionDetailScreenProps> =
                   style={[
                     styles.timingCheckbox,
                     {
-                      backgroundColor: med.timing.includes('afternoon') ? '#10B981' : '#FFFFFF',
-                      borderColor: med.timing.includes('afternoon') ? '#10B981' : '#CBD5E1',
+                      backgroundColor: med.timing.includes('afternoon') ? colors.emerald[500] : colors.white,
+                      borderColor: med.timing.includes('afternoon') ? colors.emerald[500] : colors.slate[300],
                     },
                   ]}
                 >
                   {med.timing.includes('afternoon') && (
-                    <Icon name="check" size={12} color="#FFFFFF" strokeWidth={3} />
+                    <Icon name="check" size={12} color={colors.white} strokeWidth={3} />
                   )}
                 </View>
                 <Text
@@ -265,7 +265,7 @@ export const PrescriptionDetailScreen: React.FC<PrescriptionDetailScreenProps> =
                   style={[
                     styles.timingLabel,
                     {
-                      color: med.timing.includes('afternoon') ? theme.textPrimary : '#94A3B8',
+                      color: med.timing.includes('afternoon') ? theme.textPrimary : colors.slate[400],
                       fontSize: 12,
                       fontWeight: med.timing.includes('afternoon') ? '600' : '400',
                       marginLeft: 4,
@@ -282,13 +282,13 @@ export const PrescriptionDetailScreen: React.FC<PrescriptionDetailScreenProps> =
                   style={[
                     styles.timingCheckbox,
                     {
-                      backgroundColor: med.timing.includes('night') ? '#10B981' : '#FFFFFF',
-                      borderColor: med.timing.includes('night') ? '#10B981' : '#CBD5E1',
+                      backgroundColor: med.timing.includes('night') ? colors.emerald[500] : colors.white,
+                      borderColor: med.timing.includes('night') ? colors.emerald[500] : colors.slate[300],
                     },
                   ]}
                 >
                   {med.timing.includes('night') && (
-                    <Icon name="check" size={12} color="#FFFFFF" strokeWidth={3} />
+                    <Icon name="check" size={12} color={colors.white} strokeWidth={3} />
                   )}
                 </View>
                 <Text
@@ -296,7 +296,7 @@ export const PrescriptionDetailScreen: React.FC<PrescriptionDetailScreenProps> =
                   style={[
                     styles.timingLabel,
                     {
-                      color: med.timing.includes('night') ? theme.textPrimary : '#94A3B8',
+                      color: med.timing.includes('night') ? theme.textPrimary : colors.slate[400],
                       fontSize: 12,
                       fontWeight: med.timing.includes('night') ? '600' : '400',
                       marginLeft: 4,

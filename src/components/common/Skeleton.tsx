@@ -7,7 +7,7 @@ import Animated, {
   withSequence,
   withTiming,
 } from 'react-native-reanimated';
-import { useTheme } from '../../theme';
+import { useTheme, colors } from '../../theme';
 
 export interface SkeletonProps {
   width?: number | string;
@@ -46,7 +46,7 @@ export const Skeleton: React.FC<SkeletonProps> = ({
           width: width as any,
           height,
           borderRadius,
-          backgroundColor: '#E2E8F0',
+          backgroundColor: colors.slate[200],
         },
         animatedStyle,
         style,
@@ -58,7 +58,7 @@ export const Skeleton: React.FC<SkeletonProps> = ({
 export const HeroBannerSkeleton: React.FC = () => {
   const { spacing, radii } = useTheme();
   return (
-    <View style={[styles.skeletonContainer, { padding: spacing.lg, backgroundColor: '#EDF7EE' }]}>
+    <View style={[styles.skeletonContainer, { padding: spacing.lg, backgroundColor: colors.emerald.pale }]}>
       <Skeleton width={120} height={18} style={{ marginBottom: spacing.xs }} />
       <Skeleton width={180} height={32} style={{ marginBottom: spacing.xs }} />
       <Skeleton width={140} height={14} style={{ marginBottom: spacing.lg }} />
@@ -73,7 +73,7 @@ export const HeroBannerSkeleton: React.FC = () => {
 export const CategoryChipsSkeleton: React.FC = () => {
   const { spacing, radii } = useTheme();
   return (
-    <View style={{ paddingVertical: spacing.md, paddingHorizontal: spacing.lg, backgroundColor: '#FFFFFF' }}>
+    <View style={{ paddingVertical: spacing.md, paddingHorizontal: spacing.lg, backgroundColor: colors.white }}>
       <Skeleton width={160} height={20} style={{ marginBottom: spacing.md }} />
       <View style={{ flexDirection: 'row', gap: spacing.md }}>
         {[1, 2, 3, 4, 5].map(i => (
@@ -90,7 +90,7 @@ export const CategoryChipsSkeleton: React.FC = () => {
 export const QuickActionsSkeleton: React.FC = () => {
   const { spacing, radii } = useTheme();
   return (
-    <View style={{ padding: spacing.lg, backgroundColor: '#F8FAFC' }}>
+    <View style={{ padding: spacing.lg, backgroundColor: colors.slate[50] }}>
       <Skeleton width={130} height={20} style={{ marginBottom: spacing.md }} />
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
         {[1, 2, 3, 4].map(i => (
@@ -104,7 +104,7 @@ export const QuickActionsSkeleton: React.FC = () => {
 export const ServiceGridSkeleton: React.FC = () => {
   const { spacing, radii } = useTheme();
   return (
-    <View style={{ padding: spacing.lg, backgroundColor: '#FFFFFF' }}>
+    <View style={{ padding: spacing.lg, backgroundColor: colors.white }}>
       <Skeleton width={150} height={20} style={{ marginBottom: spacing.md }} />
       <View style={{ flexDirection: 'row', gap: spacing.md }}>
         {[1, 2, 3].map(i => (

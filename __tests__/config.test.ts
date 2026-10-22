@@ -1,5 +1,6 @@
 import { normalLayoutConfig, diwaliLayoutConfig } from '../src/api/mockData';
 import { LayoutConfig } from '../src/types';
+import { colors } from '../src/theme';
 
 describe('LayoutConfig Remote Config Validation', () => {
   const validateConfig = (config: LayoutConfig) => {
@@ -24,7 +25,7 @@ describe('LayoutConfig Remote Config Validation', () => {
 
   test('validates Normal Day layout config', () => {
     validateConfig(normalLayoutConfig);
-    expect(normalLayoutConfig.theme.primary).toBe('#007A55');
+    expect(normalLayoutConfig.theme.primary).toBe(colors.emerald.brand);
     const hero = normalLayoutConfig.sections.find(s => s.type === 'hero_banner');
     expect(hero).toBeDefined();
   });
@@ -32,7 +33,7 @@ describe('LayoutConfig Remote Config Validation', () => {
   test('validates Diwali Festival layout config', () => {
     validateConfig(diwaliLayoutConfig);
     expect(diwaliLayoutConfig.theme.festival?.name).toBe('Diwali');
-    expect(diwaliLayoutConfig.theme.primary).toBe('#C83214');
+    expect(diwaliLayoutConfig.theme.primary).toBe(colors.red.diwaliPrimary);
     const hero = diwaliLayoutConfig.sections.find(s => s.type === 'hero_banner');
     expect(hero).toBeDefined();
     const heroItem = (hero?.items as any[])?.[0];

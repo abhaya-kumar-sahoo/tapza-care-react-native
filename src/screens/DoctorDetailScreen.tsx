@@ -8,7 +8,7 @@ import {
   Image,
   Share,
 } from 'react-native';
-import { useTheme } from '../theme';
+import { useTheme, colors } from '../theme';
 import { useI18n } from '../i18n';
 import { Icon } from '../components/common/Icon';
 import { Button } from '../components/common/Button';
@@ -43,7 +43,7 @@ export const DoctorDetailScreen: React.FC<DoctorDetailScreenProps> = ({
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: '#F8FAFC' }]}>
+    <View style={[styles.container, { backgroundColor: colors.slate[50] }]}>
       {/* Top Navigation Bar */}
       <View style={[styles.navBar, { paddingHorizontal: spacing.lg, paddingVertical: spacing.md }]}>
         <TouchableOpacity
@@ -51,7 +51,7 @@ export const DoctorDetailScreen: React.FC<DoctorDetailScreenProps> = ({
           activeOpacity={0.7}
           accessibilityRole="button"
           accessibilityLabel="Back"
-          style={[styles.circleBtn, { backgroundColor: '#FFFFFF', borderRadius: radii.full }]}
+          style={[styles.circleBtn, { backgroundColor: theme.cardBackground, borderRadius: radii.full }]}
         >
           <Icon name="arrow-left" size={20} color={theme.textPrimary} />
         </TouchableOpacity>
@@ -62,12 +62,12 @@ export const DoctorDetailScreen: React.FC<DoctorDetailScreenProps> = ({
             activeOpacity={0.7}
             accessibilityRole="button"
             accessibilityLabel="Favorite"
-            style={[styles.circleBtn, { backgroundColor: '#FFFFFF', borderRadius: radii.full, marginRight: spacing.sm }]}
+            style={[styles.circleBtn, { backgroundColor: theme.cardBackground, borderRadius: radii.full, marginRight: spacing.sm }]}
           >
             <Icon
               name="heart"
               size={20}
-              color={isFavorited ? '#EF4444' : theme.textSecondary}
+              color={isFavorited ? colors.red[500] : theme.textSecondary}
             />
           </TouchableOpacity>
 
@@ -76,7 +76,7 @@ export const DoctorDetailScreen: React.FC<DoctorDetailScreenProps> = ({
             activeOpacity={0.7}
             accessibilityRole="button"
             accessibilityLabel="Share Doctor"
-            style={[styles.circleBtn, { backgroundColor: '#FFFFFF', borderRadius: radii.full }]}
+            style={[styles.circleBtn, { backgroundColor: theme.cardBackground, borderRadius: radii.full }]}
           >
             <Icon name="share" size={20} color={theme.textSecondary} />
           </TouchableOpacity>
@@ -88,15 +88,15 @@ export const DoctorDetailScreen: React.FC<DoctorDetailScreenProps> = ({
         contentContainerStyle={[styles.scrollContent, { paddingHorizontal: spacing.lg, paddingBottom: 110 }]}
       >
         {/* Doctor Header Card */}
-        <View style={[styles.profileCard, { backgroundColor: '#FFFFFF', borderRadius: radii.xl, padding: spacing.lg }]}>
+        <View style={[styles.profileCard, { backgroundColor: theme.cardBackground, borderRadius: radii.xl, padding: spacing.lg }]}>
           <View style={styles.avatarWrap}>
             <Image
               source={resolveImageSource(doctor.photoUrl)}
               style={[styles.avatar, { borderRadius: radii.full }]}
               resizeMode="cover"
             />
-            <View style={[styles.verifiedBadge, { backgroundColor: '#10B981' }]}>
-              <Icon name="check" size={14} color="#FFFFFF" strokeWidth={3} />
+            <View style={[styles.verifiedBadge, { backgroundColor: colors.emerald[500] }]}>
+              <Icon name="check" size={14} color={colors.white} strokeWidth={3} />
             </View>
           </View>
 
@@ -136,7 +136,7 @@ export const DoctorDetailScreen: React.FC<DoctorDetailScreenProps> = ({
             style={[
               styles.qualification,
               {
-                color: '#64748B',
+                color: colors.slate[500],
                 fontSize: typography.sizes.xs,
                 marginTop: 2,
                 textAlign: 'center',
@@ -148,7 +148,7 @@ export const DoctorDetailScreen: React.FC<DoctorDetailScreenProps> = ({
 
           {/* Rating */}
           <View style={[styles.ratingRow, { marginTop: spacing.sm }]}>
-            <Icon name="star" size={16} color="#F59E0B" />
+            <Icon name="star" size={16} color={colors.amber[500]} />
             <Text
               allowFontScaling={true}
               style={[
@@ -179,7 +179,7 @@ export const DoctorDetailScreen: React.FC<DoctorDetailScreenProps> = ({
           </View>
 
           {/* Fee & Languages */}
-          <View style={[styles.divider, { backgroundColor: '#F1F5F9', marginVertical: spacing.md }]} />
+          <View style={[styles.divider, { backgroundColor: colors.slate[100], marginVertical: spacing.md }]} />
 
           <View style={styles.feeLanguagesRow}>
             <View>
@@ -218,7 +218,7 @@ export const DoctorDetailScreen: React.FC<DoctorDetailScreenProps> = ({
                   style={[
                     styles.langPill,
                     {
-                      backgroundColor: '#F1F5F9',
+                      backgroundColor: colors.slate[100],
                       borderRadius: radii.full,
                       paddingVertical: 4,
                       paddingHorizontal: spacing.sm,
@@ -229,7 +229,7 @@ export const DoctorDetailScreen: React.FC<DoctorDetailScreenProps> = ({
                   <Text
                     allowFontScaling={true}
                     style={{
-                      color: '#475569',
+                      color: colors.slate[600],
                       fontSize: 11,
                       fontWeight: '600',
                     }}
@@ -249,9 +249,9 @@ export const DoctorDetailScreen: React.FC<DoctorDetailScreenProps> = ({
           style={[
             styles.nextSlotCard,
             {
-              backgroundColor: '#E6F4EA',
+              backgroundColor: colors.emerald.pale,
               borderRadius: radii.lg,
-              borderColor: '#86EFAC',
+              borderColor: colors.emerald[300],
               borderWidth: 1,
               padding: spacing.md,
               marginTop: spacing.md,
@@ -259,14 +259,14 @@ export const DoctorDetailScreen: React.FC<DoctorDetailScreenProps> = ({
           ]}
         >
           <View style={styles.nextSlotLeft}>
-            <Icon name="calendar" size={20} color="#0D652D" />
+            <Icon name="calendar" size={20} color={colors.emerald.subtleText} />
             <View style={{ marginLeft: spacing.sm }}>
               <Text
                 allowFontScaling={true}
                 style={[
                   styles.nextSlotTitle,
                   {
-                    color: '#0D652D',
+                    color: colors.emerald.subtleText,
                     fontSize: typography.sizes.sm,
                     fontWeight: typography.weights.bold,
                   },
@@ -279,7 +279,7 @@ export const DoctorDetailScreen: React.FC<DoctorDetailScreenProps> = ({
                 style={[
                   styles.nextSlotTime,
                   {
-                    color: '#166534',
+                    color: colors.emerald[800],
                     fontSize: typography.sizes.xs,
                     marginTop: 2,
                   },
@@ -295,7 +295,7 @@ export const DoctorDetailScreen: React.FC<DoctorDetailScreenProps> = ({
             style={[
               styles.viewSlotsLink,
               {
-                color: '#0D652D',
+                color: colors.emerald.subtleText,
                 fontSize: typography.sizes.xs,
                 fontWeight: typography.weights.bold,
               },
@@ -306,7 +306,7 @@ export const DoctorDetailScreen: React.FC<DoctorDetailScreenProps> = ({
         </TouchableOpacity>
 
         {/* About Section */}
-        <View style={[styles.sectionBlock, { backgroundColor: '#FFFFFF', borderRadius: radii.lg, padding: spacing.lg, marginTop: spacing.md }]}>
+        <View style={[styles.sectionBlock, { backgroundColor: theme.cardBackground, borderRadius: radii.lg, padding: spacing.lg, marginTop: spacing.md }]}>
           <Text
             allowFontScaling={true}
             style={[
@@ -346,7 +346,7 @@ export const DoctorDetailScreen: React.FC<DoctorDetailScreenProps> = ({
         </View>
 
         {/* Clinic Location Card matching Screenshot 3 */}
-        <View style={[styles.sectionBlock, { backgroundColor: '#FFFFFF', borderRadius: radii.lg, padding: spacing.lg, marginTop: spacing.md }]}>
+        <View style={[styles.sectionBlock, { backgroundColor: theme.cardBackground, borderRadius: radii.lg, padding: spacing.lg, marginTop: spacing.md }]}>
           <Text
             allowFontScaling={true}
             style={[
@@ -364,8 +364,8 @@ export const DoctorDetailScreen: React.FC<DoctorDetailScreenProps> = ({
 
           <View style={styles.locationCard}>
             {/* Map Thumbnail Placeholder */}
-            <View style={[styles.mapThumb, { borderRadius: radii.md, backgroundColor: '#E2E8F0' }]}>
-              <Icon name="location" size={26} color="#DC2626" />
+            <View style={[styles.mapThumb, { borderRadius: radii.md, backgroundColor: colors.slate[200] }]}>
+              <Icon name="location" size={26} color={colors.red[600]} />
             </View>
 
             <View style={{ flex: 1, marginLeft: spacing.md }}>
@@ -398,7 +398,7 @@ export const DoctorDetailScreen: React.FC<DoctorDetailScreenProps> = ({
               <Text
                 allowFontScaling={true}
                 style={{
-                  color: '#64748B',
+                  color: colors.slate[500],
                   fontSize: 11,
                   marginTop: 2,
                 }}
@@ -420,8 +420,8 @@ export const DoctorDetailScreen: React.FC<DoctorDetailScreenProps> = ({
         style={[
           styles.bottomBar,
           {
-            backgroundColor: '#FFFFFF',
-            borderTopColor: '#E2E8F0',
+            backgroundColor: theme.cardBackground,
+            borderTopColor: theme.cardBorder,
             paddingHorizontal: spacing.lg,
             paddingVertical: spacing.md,
           },
@@ -434,7 +434,7 @@ export const DoctorDetailScreen: React.FC<DoctorDetailScreenProps> = ({
           style={[
             styles.chatBtn,
             {
-              backgroundColor: '#F1F5F9',
+              backgroundColor: colors.slate[100],
               borderRadius: radii.md,
               marginRight: spacing.md,
               minHeight: 48,
@@ -486,7 +486,7 @@ const styles = StyleSheet.create({
     height: 40,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#000',
+    shadowColor: colors.black,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.08,
     shadowRadius: 3,
@@ -499,7 +499,7 @@ const styles = StyleSheet.create({
   scrollContent: {},
   profileCard: {
     alignItems: 'center',
-    shadowColor: '#000',
+    shadowColor: colors.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
     shadowRadius: 6,
@@ -522,7 +522,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 2,
-    borderColor: '#FFFFFF',
+    borderColor: colors.white,
   },
   doctorName: {},
   doctorSpecialty: {},
@@ -562,7 +562,7 @@ const styles = StyleSheet.create({
   nextSlotTime: {},
   viewSlotsLink: {},
   sectionBlock: {
-    shadowColor: '#000',
+    shadowColor: colors.black,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.04,
     shadowRadius: 4,
@@ -590,7 +590,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderTopWidth: 1,
-    shadowColor: '#000',
+    shadowColor: colors.black,
     shadowOffset: { width: 0, height: -2 },
     shadowOpacity: 0.06,
     shadowRadius: 6,

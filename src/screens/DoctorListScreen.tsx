@@ -10,7 +10,7 @@ import {
   StatusBar,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useTheme } from '../theme';
+import { useTheme, colors } from '../theme';
 import { useI18n } from '../i18n';
 import { Icon } from '../components/common/Icon';
 import { Doctor, ServiceItem } from '../types';
@@ -86,7 +86,7 @@ export const DoctorListScreen: React.FC<DoctorListScreenProps> = ({
   }, [selectedSpecialty, searchQuery, sortBy]);
 
   return (
-    <View style={[styles.root, { backgroundColor: '#F8FAFC' }]}>
+    <View style={[styles.root, { backgroundColor: colors.slate[50] }]}>
       <StatusBar barStyle="dark-content" />
 
       {/* Top Header */}
@@ -139,7 +139,7 @@ export const DoctorListScreen: React.FC<DoctorListScreenProps> = ({
         {service && (
           <View style={[styles.serviceContextCard, { borderRadius: radii.md }]}>
             <View style={styles.serviceContextIconWrap}>
-              <Icon name="check-circle" size={18} color="#008653" />
+              <Icon name="check-circle" size={18} color={colors.emerald.brand} />
             </View>
             <View style={styles.serviceContextTextWrap}>
               <Text style={styles.serviceContextTitle}>
@@ -154,19 +154,19 @@ export const DoctorListScreen: React.FC<DoctorListScreenProps> = ({
 
         {/* Search Input */}
         <View style={[styles.searchBar, { borderRadius: radii.full, marginTop: spacing.sm }]}>
-          <Icon name="search" size={18} color="#94A3B8" />
+          <Icon name="search" size={18} color={colors.slate[400]} />
           <TextInput
             value={searchQuery}
             onChangeText={setSearchQuery}
             placeholder="Search by doctor name or specialty..."
-            placeholderTextColor="#94A3B8"
+            placeholderTextColor={colors.slate[400]}
             style={styles.searchInput}
             clearButtonMode="while-editing"
             autoCorrect={false}
           />
           {searchQuery.length > 0 && (
             <TouchableOpacity onPress={() => setSearchQuery('')} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
-              <Icon name="x" size={16} color="#94A3B8" />
+              <Icon name="x" size={16} color={colors.slate[400]} />
             </TouchableOpacity>
           )}
         </View>
@@ -189,8 +189,8 @@ export const DoctorListScreen: React.FC<DoctorListScreenProps> = ({
                 style={[
                   styles.specialtyChip,
                   {
-                    backgroundColor: isSelected ? '#008653' : '#FFFFFF',
-                    borderColor: isSelected ? '#008653' : '#E2E8F0',
+                    backgroundColor: isSelected ? colors.emerald.brand : colors.white,
+                    borderColor: isSelected ? colors.emerald.brand : colors.slate[200],
                     borderRadius: radii.full,
                   },
                 ]}
@@ -199,7 +199,7 @@ export const DoctorListScreen: React.FC<DoctorListScreenProps> = ({
                   style={[
                     styles.specialtyChipText,
                     {
-                      color: isSelected ? '#FFFFFF' : '#475569',
+                      color: isSelected ? colors.white : colors.slate[600],
                       fontWeight: isSelected ? '700' : '500',
                     },
                   ]}
@@ -251,7 +251,7 @@ export const DoctorListScreen: React.FC<DoctorListScreenProps> = ({
         {filteredDoctors.length === 0 ? (
           <View style={styles.emptyContainer}>
             <View style={styles.emptyIconCircle}>
-              <Icon name="search" size={32} color="#94A3B8" />
+              <Icon name="search" size={32} color={colors.slate[400]} />
             </View>
             <Text style={styles.emptyTitle}>No doctors found</Text>
             <Text style={styles.emptySub}>
@@ -283,7 +283,7 @@ export const DoctorListScreen: React.FC<DoctorListScreenProps> = ({
                     resizeMode="cover"
                   />
                   <View style={styles.verifiedBadge}>
-                    <Icon name="check" size={10} color="#FFFFFF" strokeWidth={3} />
+                    <Icon name="check" size={10} color={colors.white} strokeWidth={3} />
                   </View>
                 </View>
 
@@ -318,7 +318,7 @@ export const DoctorListScreen: React.FC<DoctorListScreenProps> = ({
               {/* Middle Row: Experience & Languages */}
               <View style={styles.detailsRow}>
                 <View style={styles.detailItem}>
-                  <Icon name="clock" size={14} color="#008653" />
+                  <Icon name="clock" size={14} color={colors.emerald.brand} />
                   <Text style={styles.detailItemText}>
                     {doctor.experienceYears ? `${doctor.experienceYears}+ yrs exp` : 'Experienced'}
                   </Text>
@@ -327,7 +327,7 @@ export const DoctorListScreen: React.FC<DoctorListScreenProps> = ({
                 <View style={styles.detailDot} />
 
                 <View style={styles.detailItem}>
-                  <Icon name="globe" size={14} color="#64748B" />
+                  <Icon name="globe" size={14} color={colors.slate[500]} />
                   <Text numberOfLines={1} style={styles.detailItemText}>
                     {doctor.languages.join(', ')}
                   </Text>
@@ -336,7 +336,7 @@ export const DoctorListScreen: React.FC<DoctorListScreenProps> = ({
 
               {/* Slot Availability Banner */}
               <View style={styles.slotBanner}>
-                <Icon name="calendar" size={13} color="#008653" />
+                <Icon name="calendar" size={13} color={colors.emerald.brand} />
                 <Text style={styles.slotBannerText}>
                   Next Available: <Text style={styles.slotHighlight}>{doctor.nextSlotTime}</Text>
                 </Text>
@@ -371,7 +371,7 @@ export const DoctorListScreen: React.FC<DoctorListScreenProps> = ({
                     accessibilityLabel={`Book appointment with ${doctor.name} for ₹${doctor.feeInr}`}
                   >
                     <Text style={styles.bookNowBtnText}>Book Slot</Text>
-                    <Icon name="arrow-right" size={12} color="#FFFFFF" strokeWidth={2.4} />
+                    <Icon name="arrow-right" size={12} color={colors.white} strokeWidth={2.4} />
                   </TouchableOpacity>
                 </View>
               </View>
@@ -388,9 +388,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.white,
     borderBottomWidth: 1,
-    borderBottomColor: '#F1F5F9',
+    borderBottomColor: colors.slate[100],
   },
   headerTopRow: {
     flexDirection: 'row',
@@ -402,9 +402,9 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.white,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: colors.slate[200],
     marginRight: 12,
   },
   headerTitles: {
@@ -420,11 +420,11 @@ const styles = StyleSheet.create({
   serviceContextCard: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#E6F4EA',
+    backgroundColor: colors.emerald.pale,
     padding: 10,
     marginTop: 10,
     borderLeftWidth: 3,
-    borderLeftColor: '#008653',
+    borderLeftColor: colors.emerald.brand,
   },
   serviceContextIconWrap: {
     marginRight: 8,
@@ -435,17 +435,17 @@ const styles = StyleSheet.create({
   serviceContextTitle: {
     fontSize: 12.5,
     fontWeight: '700',
-    color: '#064E3B',
+    color: colors.emerald[900],
   },
   serviceContextSub: {
     fontSize: 11,
-    color: '#047857',
+    color: colors.emerald[700],
     marginTop: 1,
   },
   searchBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F1F5F9',
+    backgroundColor: colors.slate[100],
     paddingHorizontal: 14,
     paddingVertical: 9,
   },
@@ -453,14 +453,14 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: 8,
     fontSize: 13.5,
-    color: '#0F172A',
+    color: colors.slate[900],
     padding: 0,
   },
   filterSection: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.white,
     paddingBottom: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#E2E8F0',
+    borderBottomColor: colors.slate[200],
   },
   specialtyScroll: {
     paddingVertical: 10,
@@ -481,7 +481,7 @@ const styles = StyleSheet.create({
   },
   sortLabel: {
     fontSize: 11.5,
-    color: '#94A3B8',
+    color: colors.slate[400],
     marginRight: 8,
     fontWeight: '600',
   },
@@ -493,21 +493,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 12,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: colors.slate[50],
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: colors.slate[200],
   },
   sortBtnActive: {
-    backgroundColor: '#ECFDF5',
-    borderColor: '#A7F3D0',
+    backgroundColor: colors.emerald[50],
+    borderColor: colors.emerald[200],
   },
   sortBtnText: {
     fontSize: 11,
-    color: '#64748B',
+    color: colors.slate[500],
     fontWeight: '500',
   },
   sortBtnTextActive: {
-    color: '#008653',
+    color: colors.emerald.brand,
     fontWeight: '700',
   },
   listContainer: {
@@ -515,11 +515,11 @@ const styles = StyleSheet.create({
     gap: 14,
   },
   doctorCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.white,
     padding: 16,
     borderWidth: 1,
-    borderColor: '#E2E8F0',
-    shadowColor: '#000',
+    borderColor: colors.slate[200],
+    shadowColor: colors.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.05,
     shadowRadius: 6,
@@ -536,7 +536,7 @@ const styles = StyleSheet.create({
     width: 64,
     height: 64,
     borderRadius: 32,
-    backgroundColor: '#F1F5F9',
+    backgroundColor: colors.slate[100],
   },
   verifiedBadge: {
     position: 'absolute',
@@ -545,9 +545,9 @@ const styles = StyleSheet.create({
     width: 18,
     height: 18,
     borderRadius: 9,
-    backgroundColor: '#10B981',
+    backgroundColor: colors.emerald[500],
     borderWidth: 2,
-    borderColor: '#FFFFFF',
+    borderColor: colors.white,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -563,12 +563,12 @@ const styles = StyleSheet.create({
   doctorName: {
     fontSize: 16,
     fontWeight: '700',
-    color: '#0F172A',
+    color: colors.slate[900],
     letterSpacing: -0.2,
   },
   doctorQualification: {
     fontSize: 12,
-    color: '#64748B',
+    color: colors.slate[500],
     marginTop: 2,
   },
   badgesRow: {
@@ -578,9 +578,9 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   specialtyBadge: {
-    backgroundColor: '#F0FDF4',
+    backgroundColor: colors.emerald.pale,
     borderWidth: 1,
-    borderColor: '#DCFCE7',
+    borderColor: colors.emerald[100],
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 6,
@@ -588,31 +588,31 @@ const styles = StyleSheet.create({
   specialtyBadgeText: {
     fontSize: 11,
     fontWeight: '600',
-    color: '#15803D',
+    color: colors.emerald[700],
   },
   ratingBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFBEB',
+    backgroundColor: colors.amber[50],
     borderWidth: 1,
-    borderColor: '#FEF3C7',
+    borderColor: colors.amber[100],
     paddingHorizontal: 7,
     paddingVertical: 3,
     borderRadius: 6,
   },
   ratingStar: {
-    color: '#F59E0B',
+    color: colors.amber[500],
     fontSize: 12,
     marginRight: 3,
   },
   ratingText: {
     fontSize: 11,
     fontWeight: '700',
-    color: '#92400E',
+    color: colors.amber[800],
   },
   reviewCount: {
     fontSize: 10,
-    color: '#B45309',
+    color: colors.amber[700],
     marginLeft: 2,
   },
   detailsRow: {
@@ -628,20 +628,20 @@ const styles = StyleSheet.create({
   },
   detailItemText: {
     fontSize: 12,
-    color: '#475569',
+    color: colors.slate[600],
   },
   detailDot: {
     width: 3,
     height: 3,
     borderRadius: 1.5,
-    backgroundColor: '#CBD5E1',
+    backgroundColor: colors.slate[300],
     marginHorizontal: 8,
   },
   slotBanner: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    backgroundColor: '#F8FAFC',
+    backgroundColor: colors.slate[50],
     borderRadius: 8,
     paddingHorizontal: 10,
     paddingVertical: 6,
@@ -649,15 +649,15 @@ const styles = StyleSheet.create({
   },
   slotBannerText: {
     fontSize: 12,
-    color: '#334155',
+    color: colors.slate[700],
   },
   slotHighlight: {
     fontWeight: '700',
-    color: '#008653',
+    color: colors.emerald.brand,
   },
   cardDivider: {
     height: 1,
-    backgroundColor: '#F1F5F9',
+    backgroundColor: colors.slate[100],
     marginVertical: 12,
   },
   cardBottomRow: {
@@ -668,7 +668,7 @@ const styles = StyleSheet.create({
   priceCol: {},
   priceLabel: {
     fontSize: 10.5,
-    color: '#94A3B8',
+    color: colors.slate[400],
     textTransform: 'uppercase',
     fontWeight: '600',
     letterSpacing: 0.3,
@@ -676,7 +676,7 @@ const styles = StyleSheet.create({
   priceValue: {
     fontSize: 18,
     fontWeight: '800',
-    color: '#0F172A',
+    color: colors.slate[900],
     marginTop: 1,
   },
   actionBtnsRow: {
@@ -689,30 +689,30 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: '#CBD5E1',
-    backgroundColor: '#FFFFFF',
+    borderColor: colors.slate[300],
+    backgroundColor: colors.white,
   },
   profileOutlineText: {
     fontSize: 12.5,
     fontWeight: '600',
-    color: '#475569',
+    color: colors.slate[600],
   },
   bookNowBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 5,
-    backgroundColor: '#008653',
+    backgroundColor: colors.emerald.brand,
     paddingHorizontal: 16,
     paddingVertical: 9,
     borderRadius: 20,
-    shadowColor: '#008653',
+    shadowColor: colors.emerald.brand,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
     elevation: 2,
   },
   bookNowBtnText: {
-    color: '#FFFFFF',
+    color: colors.white,
     fontSize: 13,
     fontWeight: '700',
   },
@@ -725,7 +725,7 @@ const styles = StyleSheet.create({
     width: 64,
     height: 64,
     borderRadius: 32,
-    backgroundColor: '#F1F5F9',
+    backgroundColor: colors.slate[100],
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 16,
@@ -733,24 +733,24 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 16,
     fontWeight: '700',
-    color: '#0F172A',
+    color: colors.slate[900],
     marginBottom: 6,
   },
   emptySub: {
     fontSize: 13,
-    color: '#64748B',
+    color: colors.slate[500],
     textAlign: 'center',
     lineHeight: 18,
     marginBottom: 16,
   },
   clearFilterBtn: {
-    backgroundColor: '#008653',
+    backgroundColor: colors.emerald.brand,
     paddingHorizontal: 18,
     paddingVertical: 9,
     borderRadius: 20,
   },
   clearFilterText: {
-    color: '#FFFFFF',
+    color: colors.white,
     fontSize: 13,
     fontWeight: '700',
   },

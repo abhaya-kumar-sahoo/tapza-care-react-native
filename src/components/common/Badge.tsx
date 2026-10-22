@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, ViewStyle, TextStyle } from 'react-native';
-import { useTheme } from '../../theme';
+import { useTheme, colors as palette } from '../../theme';
 
 export interface BadgeProps {
   label: string;
@@ -22,27 +22,27 @@ export const Badge: React.FC<BadgeProps> = ({
   const getColors = () => {
     switch (variant) {
       case 'success':
-        return { bg: '#E6F4EA', text: '#0D652D' };
+        return { bg: palette.emerald.pale, text: palette.emerald.subtleText };
       case 'warning':
-        return { bg: '#FEF3C7', text: '#B45309' };
+        return { bg: palette.amber[100], text: palette.amber[700] };
       case 'info':
-        return { bg: '#E0F2FE', text: '#0369A1' };
+        return { bg: palette.blue[100], text: palette.blue[700] };
       case 'accent':
         return { bg: `${theme.primary}18`, text: theme.primary };
       case 'neutral':
       default:
-        return { bg: '#F1F5F9', text: '#475569' };
+        return { bg: palette.slate[100], text: palette.slate[600] };
     }
   };
 
-  const colors = getColors();
+  const badgeColors = getColors();
 
   return (
     <View
       style={[
         styles.badge,
         {
-          backgroundColor: colors.bg,
+          backgroundColor: badgeColors.bg,
           borderRadius: radii.full,
           paddingVertical: 3,
           paddingHorizontal: spacing.sm,
@@ -56,7 +56,7 @@ export const Badge: React.FC<BadgeProps> = ({
         style={[
           styles.text,
           {
-            color: colors.text,
+            color: badgeColors.text,
             fontSize: typography.sizes.xs,
             fontWeight: typography.weights.semibold,
             marginLeft: icon ? 3 : 0,

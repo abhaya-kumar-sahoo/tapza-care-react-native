@@ -15,6 +15,8 @@ export interface ThemeConfig {
   textPrimary: string;
   textSecondary: string;
   accent: string;
+  cardBackground: string;
+  cardBorder: string;
   festival?: {
     name: string;
     greeting: string;

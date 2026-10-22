@@ -7,7 +7,7 @@ import {
   Alert,
 } from 'react-native';
 import LottieView from 'lottie-react-native';
-import { useTheme } from '../theme';
+import { useTheme, colors } from '../theme';
 import { useI18n } from '../i18n';
 import { Icon } from '../components/common/Icon';
 import { Button } from '../components/common/Button';
@@ -40,7 +40,7 @@ export const BookingSuccessScreen: React.FC<BookingSuccessScreenProps> = ({
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: '#FFFFFF' }]}>
+    <View style={[styles.container, { backgroundColor: theme.surface }]}>
       <ScrollView
         contentContainerStyle={[styles.scrollContent, { padding: spacing.xl }]}
         showsVerticalScrollIndicator={false}
@@ -98,9 +98,9 @@ export const BookingSuccessScreen: React.FC<BookingSuccessScreenProps> = ({
           style={[
             styles.card,
             {
-              backgroundColor: '#F8FAFC',
+              backgroundColor: colors.slate[50],
               borderRadius: radii.xl,
-              borderColor: '#E2E8F0',
+              borderColor: theme.cardBorder,
               borderWidth: 1,
               padding: spacing.lg,
               marginTop: spacing.lg,

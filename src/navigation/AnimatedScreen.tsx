@@ -13,6 +13,8 @@ import Animated, {
   runOnJS,
 } from 'react-native-reanimated';
 
+import { colors } from '../theme';
+
 export interface AnimatedScreenProps {
   children: (helpers: { requestClose: () => void }) => React.ReactNode;
   onDismiss: () => void;
@@ -125,11 +127,11 @@ export const AnimatedScreen: React.FC<AnimatedScreenProps> = ({
 
 const styles = StyleSheet.create({
   backdrop: {
-    backgroundColor: 'rgba(15, 23, 42, 0.25)',
+    backgroundColor: colors.alpha.black25,
   },
   screenContainer: {
-    backgroundColor: '#F8FAFC',
-    shadowColor: '#000',
+    backgroundColor: colors.slate[50],
+    shadowColor: colors.black,
     shadowOffset: { width: -3, height: 0 },
     shadowOpacity: 0.12,
     shadowRadius: 10,

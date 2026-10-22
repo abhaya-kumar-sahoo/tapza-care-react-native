@@ -1,24 +1,29 @@
 import { ThemeConfig } from '../types';
 import { Images } from '../assets/images';
+import { colors } from './colors';
 
 export const normalTheme: ThemeConfig = {
-  primary: '#007A55',
-  secondary: '#00A86B',
-  background: '#F5F7F6',
-  surface: '#FFFFFF',
-  textPrimary: '#1A202C',
-  textSecondary: '#718096',
-  accent: '#00B37E',
+  primary: colors.emerald.brand,
+  secondary: colors.emerald.brandSecondary,
+  background: colors.slate.canvas,
+  surface: colors.white,
+  cardBackground: colors.white,
+  cardBorder: colors.slate[200],
+  textPrimary: colors.slate.textDark,
+  textSecondary: colors.slate[500],
+  accent: colors.emerald.brandAccent,
 };
 
 export const diwaliTheme: ThemeConfig = {
-  primary: '#C83214',
-  secondary: '#FF8F00',
-  background: '#FFF8F0',
-  surface: '#FFFFFF',
-  textPrimary: '#2D1500',
-  textSecondary: '#7C5D48',
-  accent: '#FFB300',
+  primary: colors.red.diwaliPrimary,
+  secondary: colors.amber.orangeSecondary,
+  background: colors.red.creamWarm,
+  surface: colors.white,
+  cardBackground: colors.white,
+  cardBorder: colors.amber[200],
+  textPrimary: colors.amber.darkBrown,
+  textSecondary: colors.amber.warmBrownText,
+  accent: colors.amber.goldAccent,
   festival: {
     name: 'Diwali',
     greeting: 'Happy Diwali!',

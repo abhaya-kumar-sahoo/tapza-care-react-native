@@ -6,7 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import { useTheme } from '../theme';
+import { useTheme, colors } from '../theme';
 import { useI18n } from '../i18n';
 import { Icon } from '../components/common/Icon';
 import { SupportedLanguage } from '../types';
@@ -20,11 +20,11 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
   onOpenAdmin,
   onOpenReminders,
 }) => {
-  const { theme, spacing, radii, typography } = useTheme();
+  const { theme, spacing, radii, typography, isFestival } = useTheme();
   const { language, setLanguage, t } = useI18n();
 
   return (
-    <View style={[styles.container, { backgroundColor: '#F8FAFC' }]}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
       {/* Header */}
       <View style={[styles.header, { paddingHorizontal: spacing.lg, paddingVertical: spacing.md }]}>
         <Text
@@ -51,15 +51,23 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
           style={[
             styles.userCard,
             {
-              backgroundColor: '#FFFFFF',
+              backgroundColor: theme.cardBackground,
               borderRadius: radii.xl,
               padding: spacing.lg,
-              borderColor: '#E2E8F0',
+              borderColor: theme.cardBorder,
               borderWidth: 1,
             },
           ]}
         >
-          <View style={[styles.userAvatar, { backgroundColor: `${theme.primary}15`, borderRadius: radii.full }]}>
+          <View
+            style={[
+              styles.userAvatar,
+              {
+                backgroundColor: isFestival ? colors.red[50] : colors.emerald[50],
+                borderRadius: radii.full,
+              },
+            ]}
+          >
             <Icon name="user" size={36} color={theme.primary} />
           </View>
           <View style={{ flex: 1, marginLeft: spacing.md }}>
@@ -94,11 +102,11 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
           style={[
             styles.cardBlock,
             {
-              backgroundColor: '#FFFFFF',
+              backgroundColor: theme.cardBackground,
               borderRadius: radii.lg,
               padding: spacing.md,
               marginTop: spacing.md,
-              borderColor: '#E2E8F0',
+              borderColor: theme.cardBorder,
               borderWidth: 1,
             },
           ]}
@@ -127,7 +135,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                 style={[
                   styles.langBtn,
                   {
-                    backgroundColor: language === lang ? theme.primary : '#F1F5F9',
+                    backgroundColor: language === lang ? theme.primary : colors.slate[100],
                     borderRadius: radii.md,
                     paddingVertical: 8,
                     paddingHorizontal: spacing.md,
@@ -136,7 +144,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
               >
                 <Text
                   style={{
-                    color: language === lang ? '#FFFFFF' : '#334155',
+                    color: language === lang ? colors.white : colors.slate[700],
                     fontSize: 13,
                     fontWeight: '600',
                   }}
@@ -153,11 +161,11 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
           style={[
             styles.cardBlock,
             {
-              backgroundColor: '#FFFFFF',
+              backgroundColor: theme.cardBackground,
               borderRadius: radii.lg,
               padding: spacing.md,
               marginTop: spacing.md,
-              borderColor: '#E2E8F0',
+              borderColor: theme.cardBorder,
               borderWidth: 1,
             },
           ]}
@@ -174,10 +182,10 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
             >
               Medicine Reminders Schedule
             </Text>
-            <Icon name="chevron-right" size={16} color="#94A3B8" />
+            <Icon name="chevron-right" size={16} color={colors.slate[400]} />
           </TouchableOpacity>
 
-          <View style={[styles.menuDivider, { backgroundColor: '#F1F5F9' }]} />
+          <View style={[styles.menuDivider, { backgroundColor: colors.slate[100] }]} />
 
           <TouchableOpacity
             onPress={onOpenAdmin}
@@ -191,16 +199,16 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
             >
               Admin & Chaos Testing Controls
             </Text>
-            <Icon name="chevron-right" size={16} color="#94A3B8" />
+            <Icon name="chevron-right" size={16} color={colors.slate[400]} />
           </TouchableOpacity>
         </View>
 
         {/* Clinic info footer */}
         <View style={{ alignItems: 'center', marginTop: spacing.xl }}>
-          <Text style={{ color: '#94A3B8', fontSize: 12 }}>
+          <Text style={{ color: colors.slate[400], fontSize: 12 }}>
             Tapza Care Patient App v1.0.0
           </Text>
-          <Text style={{ color: '#CBD5E1', fontSize: 11, marginTop: 2 }}>
+          <Text style={{ color: colors.slate[300], fontSize: 11, marginTop: 2 }}>
             Built for Tapza Clinic, Banjara Hills, Hyderabad
           </Text>
         </View>

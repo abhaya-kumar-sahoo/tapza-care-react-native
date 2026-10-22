@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from 'react-native';
-import { useTheme } from '../../theme';
+import { useTheme, colors } from '../../theme';
 import { useI18n } from '../../i18n';
 import { Icon } from '../common/Icon';
 import { Badge } from '../common/Badge';
@@ -77,14 +77,14 @@ export const ServiceGrid: React.FC<ServiceGridProps> = ({
             style={[
               styles.card,
               {
-                backgroundColor: '#FFFFFF',
+                backgroundColor: theme.cardBackground,
                 borderRadius: radii.lg,
-                borderColor: '#E2E8F0',
+                borderColor: theme.cardBorder,
                 borderWidth: 1,
                 padding: spacing.sm,
                 marginRight: spacing.md,
                 width: 148,
-                shadowColor: '#000',
+                shadowColor: colors.black,
                 shadowOffset: { width: 0, height: 2 },
                 shadowOpacity: 0.04,
                 shadowRadius: 5,
@@ -238,7 +238,7 @@ const styles = StyleSheet.create({
     height: 74,
     overflow: 'hidden',
     position: 'relative',
-    backgroundColor: '#F1F5F9',
+    backgroundColor: colors.slate[100],
   },
   serviceImage: {
     width: '100%',

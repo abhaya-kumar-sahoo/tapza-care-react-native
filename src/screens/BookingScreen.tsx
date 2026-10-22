@@ -14,7 +14,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { GestureDetector, Gesture } from 'react-native-gesture-handler';
-import { useTheme } from '../theme';
+import { useTheme, colors } from '../theme';
 import { useI18n } from '../i18n';
 import { Icon } from '../components/common/Icon';
 import { Button } from '../components/common/Button';
@@ -169,7 +169,7 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({
   const eveningSlots = slots.filter(s => s.period === 'evening');
 
   return (
-    <View style={[styles.container, { backgroundColor: '#F8FAFC' }]}>
+    <View style={[styles.container, { backgroundColor: colors.slate[50] }]}>
       {/* Header */}
       <View style={[styles.navBar, { paddingHorizontal: spacing.lg, paddingVertical: spacing.md }]}>
         <TouchableOpacity
@@ -177,7 +177,7 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({
           activeOpacity={0.7}
           accessibilityRole="button"
           accessibilityLabel="Back"
-          style={[styles.circleBtn, { backgroundColor: '#FFFFFF', borderRadius: radii.full }]}
+          style={[styles.circleBtn, { backgroundColor: theme.cardBackground, borderRadius: radii.full }]}
         >
           <Icon name="arrow-left" size={20} color={theme.textPrimary} />
         </TouchableOpacity>
@@ -216,21 +216,21 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({
             style={{
               flexDirection: 'row',
               alignItems: 'center',
-              backgroundColor: '#E6F4EA',
+              backgroundColor: colors.emerald.pale,
               paddingHorizontal: spacing.md,
               paddingVertical: 10,
               marginHorizontal: spacing.lg,
               marginTop: spacing.xs,
               borderRadius: radii.md,
               borderLeftWidth: 3,
-              borderLeftColor: '#008653',
+              borderLeftColor: colors.emerald[700],
             }}
           >
             <View style={{ flex: 1 }}>
-              <Text style={{ fontSize: 13, fontWeight: '700', color: '#064E3B' }}>
+              <Text style={{ fontSize: 13, fontWeight: '700', color: colors.emerald[900] }}>
                 Service: {service.name}
               </Text>
-              <Text style={{ fontSize: 11.5, color: '#047857', marginTop: 2 }}>
+              <Text style={{ fontSize: 11.5, color: colors.emerald[700], marginTop: 2 }}>
                 ₹{service.priceInr} • {service.duration || '30 mins'}
               </Text>
             </View>
@@ -238,7 +238,7 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({
         )}
 
         {/* Doctor Mini Card matching Screenshot 4 */}
-        <View style={[styles.doctorMiniCard, { backgroundColor: '#FFFFFF', borderRadius: radii.lg, padding: spacing.md, marginHorizontal: spacing.lg, marginTop: service ? spacing.sm : spacing.xs }]}>
+        <View style={[styles.doctorMiniCard, { backgroundColor: theme.cardBackground, borderRadius: radii.lg, padding: spacing.md, marginHorizontal: spacing.lg, marginTop: service ? spacing.sm : spacing.xs }]}>
           <Image
             source={resolveImageSource(doctor.photoUrl)}
             style={[styles.miniAvatar, { borderRadius: radii.full }]}
@@ -315,8 +315,8 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({
                   style={[
                     styles.dateChip,
                     {
-                      backgroundColor: isSelected ? theme.primary : '#FFFFFF',
-                      borderColor: isSelected ? theme.primary : '#E2E8F0',
+                      backgroundColor: isSelected ? theme.primary : theme.cardBackground,
+                      borderColor: isSelected ? theme.primary : theme.cardBorder,
                       borderRadius: radii.md,
                       paddingVertical: spacing.md,
                       paddingHorizontal: spacing.md,
@@ -326,7 +326,7 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({
                   <Text
                     allowFontScaling={true}
                     style={{
-                      color: isSelected ? '#FFFFFF' : theme.textSecondary,
+                      color: isSelected ? colors.white : theme.textSecondary,
                       fontSize: 12,
                       fontWeight: '500',
                       textAlign: 'center',
@@ -337,7 +337,7 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({
                   <Text
                     allowFontScaling={true}
                     style={{
-                      color: isSelected ? '#FFFFFF' : theme.textPrimary,
+                      color: isSelected ? colors.white : theme.textPrimary,
                       fontSize: 18,
                       fontWeight: '700',
                       marginTop: 4,
@@ -391,8 +391,8 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({
                       style={[
                         styles.slotPill,
                         {
-                          backgroundColor: isSelected ? theme.primary : slot.available ? '#FFFFFF' : '#F1F5F9',
-                          borderColor: isSelected ? theme.primary : '#E2E8F0',
+                          backgroundColor: isSelected ? theme.primary : slot.available ? theme.cardBackground : colors.slate[100],
+                          borderColor: isSelected ? theme.primary : theme.cardBorder,
                           borderRadius: radii.sm,
                         },
                       ]}
@@ -400,7 +400,7 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({
                       <Text
                         allowFontScaling={true}
                         style={{
-                          color: isSelected ? '#FFFFFF' : slot.available ? theme.textPrimary : '#94A3B8',
+                          color: isSelected ? colors.white : slot.available ? theme.textPrimary : colors.slate[400],
                           fontSize: 13,
                           fontWeight: isSelected ? '700' : '500',
                         }}
@@ -428,8 +428,8 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({
                       style={[
                         styles.slotPill,
                         {
-                          backgroundColor: isSelected ? theme.primary : slot.available ? '#FFFFFF' : '#F1F5F9',
-                          borderColor: isSelected ? theme.primary : '#E2E8F0',
+                          backgroundColor: isSelected ? theme.primary : slot.available ? theme.cardBackground : colors.slate[100],
+                          borderColor: isSelected ? theme.primary : theme.cardBorder,
                           borderRadius: radii.sm,
                         },
                       ]}
@@ -437,7 +437,7 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({
                       <Text
                         allowFontScaling={true}
                         style={{
-                          color: isSelected ? '#FFFFFF' : slot.available ? theme.textPrimary : '#94A3B8',
+                          color: isSelected ? colors.white : slot.available ? theme.textPrimary : colors.slate[400],
                           fontSize: 13,
                           fontWeight: isSelected ? '700' : '500',
                         }}
@@ -465,8 +465,8 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({
                       style={[
                         styles.slotPill,
                         {
-                          backgroundColor: isSelected ? theme.primary : slot.available ? '#FFFFFF' : '#F1F5F9',
-                          borderColor: isSelected ? theme.primary : '#E2E8F0',
+                          backgroundColor: isSelected ? theme.primary : slot.available ? theme.cardBackground : colors.slate[100],
+                          borderColor: isSelected ? theme.primary : theme.cardBorder,
                           borderRadius: radii.sm,
                         },
                       ]}
@@ -474,7 +474,7 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({
                       <Text
                         allowFontScaling={true}
                         style={{
-                          color: isSelected ? '#FFFFFF' : slot.available ? theme.textPrimary : '#94A3B8',
+                          color: isSelected ? colors.white : slot.available ? theme.textPrimary : colors.slate[400],
                           fontSize: 13,
                           fontWeight: isSelected ? '700' : '500',
                         }}
@@ -496,11 +496,11 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({
           style={[
             styles.bottomSheet,
             {
-              backgroundColor: '#FFFFFF',
+              backgroundColor: theme.cardBackground,
               borderTopLeftRadius: radii.xl,
               borderTopRightRadius: radii.xl,
               padding: spacing.lg,
-              shadowColor: '#000',
+              shadowColor: colors.black,
               shadowOffset: { width: 0, height: -4 },
               shadowOpacity: 0.08,
               shadowRadius: 10,
@@ -511,7 +511,7 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({
         >
           {/* Drag handle */}
           <View style={styles.dragHandleWrap}>
-            <View style={[styles.dragHandle, { backgroundColor: '#CBD5E1', borderRadius: radii.full }]} />
+            <View style={[styles.dragHandle, { backgroundColor: colors.slate[300], borderRadius: radii.full }]} />
           </View>
 
         <Text
@@ -531,8 +531,8 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({
 
         {/* Date / Time summary item */}
         <View style={styles.summaryRow}>
-          <View style={[styles.summaryIconBox, { backgroundColor: '#FEF3C7', borderRadius: radii.sm }]}>
-            <Icon name="calendar" size={18} color="#D97706" />
+          <View style={[styles.summaryIconBox, { backgroundColor: colors.amber[100], borderRadius: radii.sm }]}>
+            <Icon name="calendar" size={18} color={colors.amber[600]} />
           </View>
           <View style={{ flex: 1, marginLeft: spacing.sm }}>
             <Text
@@ -566,8 +566,8 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({
 
         {/* Clinic & Fee summary item */}
         <View style={[styles.summaryRow, { marginTop: spacing.sm }]}>
-          <View style={[styles.summaryIconBox, { backgroundColor: '#E0F2FE', borderRadius: radii.sm }]}>
-            <Icon name="location" size={18} color="#0284C7" />
+          <View style={[styles.summaryIconBox, { backgroundColor: colors.blue[100], borderRadius: radii.sm }]}>
+            <Icon name="location" size={18} color={colors.blue[600]} />
           </View>
           <View style={{ flex: 1, marginLeft: spacing.sm }}>
             <Text
@@ -634,7 +634,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#E2E8F0',
+    borderColor: colors.slate[200],
   },
   miniAvatar: {
     width: 52,

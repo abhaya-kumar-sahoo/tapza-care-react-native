@@ -14,7 +14,7 @@ import Animated, {
   Extrapolation,
 } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useTheme } from '../../theme';
+import { useTheme, colors } from '../../theme';
 import { useI18n } from '../../i18n';
 import { Icon } from '../common/Icon';
 import { HeroBannerItem } from '../../types';
@@ -87,13 +87,13 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
       {/* Top Bar: Brand, Location, Admin / Notifications */}
       <View style={[styles.topBar, { paddingHorizontal: spacing.lg, paddingTop: Math.max(insets.top, 12) + spacing.xs }]}>
         <View style={styles.brandRow}>
-          <Icon name="logo-shield" size={26} color={isFestival ? '#FBBF24' : theme.primary} strokeWidth={2.2} />
+          <Icon name="logo-shield" size={26} color={isFestival ? colors.amber[400] : theme.primary} strokeWidth={2.2} />
           <Text
             allowFontScaling={true}
             style={[
               styles.brandText,
               {
-                color: isFestival ? '#FFFFFF' : theme.primary,
+                color: isFestival ? colors.white : theme.primary,
                 fontSize: typography.sizes.lg,
                 fontWeight: typography.weights.bold,
                 marginLeft: spacing.xs,
@@ -113,20 +113,20 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
           style={[
             styles.locationPill,
             {
-              backgroundColor: isFestival ? 'rgba(255,255,255,0.2)' : 'rgba(0,122,85,0.08)',
+              backgroundColor: isFestival ? colors.alpha.white20 : colors.alpha.emeraldSubtle,
               borderRadius: radii.full,
               paddingVertical: 5,
               paddingHorizontal: spacing.sm,
             },
           ]}
         >
-          <Icon name="location" size={14} color={isFestival ? '#FDE68A' : theme.primary} />
+          <Icon name="location" size={14} color={isFestival ? colors.amber[200] : theme.primary} />
           <Text
             allowFontScaling={true}
             style={[
               styles.locationText,
               {
-                color: isFestival ? '#FFFFFF' : theme.textPrimary,
+                color: isFestival ? colors.white : theme.textPrimary,
                 fontSize: typography.sizes.xs,
                 fontWeight: typography.weights.medium,
                 marginHorizontal: 3,
@@ -135,7 +135,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
           >
             {t.locationDefault}
           </Text>
-          <Icon name="chevron-down" size={12} color={isFestival ? '#FFFFFF' : theme.textSecondary} />
+          <Icon name="chevron-down" size={12} color={isFestival ? colors.white : theme.textSecondary} />
         </TouchableOpacity>
 
         {/* Action icons: Dev Admin badge & Notification bell */}
@@ -148,13 +148,13 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
             style={[
               styles.iconBtn,
               {
-                backgroundColor: isFestival ? 'rgba(255,255,255,0.25)' : 'rgba(0,122,85,0.1)',
+                backgroundColor: isFestival ? colors.alpha.white25 : colors.alpha.emeraldSubtle,
                 borderRadius: radii.full,
                 marginRight: spacing.xs,
               },
             ]}
           >
-            <Icon name="settings" size={18} color={isFestival ? '#FFFFFF' : theme.primary} />
+            <Icon name="settings" size={18} color={isFestival ? colors.white : theme.primary} />
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -165,13 +165,13 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
             style={[
               styles.iconBtn,
               {
-                backgroundColor: isFestival ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.05)',
+                backgroundColor: isFestival ? colors.alpha.white25 : colors.alpha.black06,
                 borderRadius: radii.full,
               },
             ]}
           >
-            <Icon name="bell" size={18} color={isFestival ? '#FFFFFF' : theme.textPrimary} />
-            <View style={[styles.unreadDot, { backgroundColor: isFestival ? '#FBBF24' : '#10B981' }]} />
+            <Icon name="bell" size={18} color={isFestival ? colors.white : theme.textPrimary} />
+            <View style={[styles.unreadDot, { backgroundColor: isFestival ? colors.amber[400] : colors.emerald[500] }]} />
           </TouchableOpacity>
         </View>
       </View>
@@ -184,7 +184,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
             style={[
               styles.greetingSmall,
               {
-                color: isFestival ? '#FDE68A' : theme.textSecondary,
+                color: isFestival ? colors.amber[200] : theme.textSecondary,
                 fontSize: typography.sizes.md,
                 fontWeight: typography.weights.medium,
               },
@@ -197,7 +197,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
             style={[
               styles.greetingName,
               {
-                color: isFestival ? '#FFFFFF' : theme.textPrimary,
+                color: isFestival ? colors.white : theme.textPrimary,
                 fontSize: typography.sizes.xxl,
                 fontWeight: typography.weights.extrabold,
                 marginVertical: 2,
@@ -211,7 +211,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
             style={[
               styles.subGreeting,
               {
-                color: isFestival ? '#FEE2E2' : theme.textSecondary,
+                color: isFestival ? colors.red[100] : theme.textSecondary,
                 fontSize: typography.sizes.sm,
               },
             ]}
@@ -224,10 +224,10 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
         <View style={styles.illustrationWrap}>
           {isFestival ? (
             <View style={styles.diyaGlowWrap}>
-              <Icon name="diya" size={48} color="#F59E0B" />
+              <Icon name="diya" size={48} color={colors.amber[500]} />
             </View>
           ) : (
-            <View style={[styles.avatarCircle, { borderColor: theme.primary, backgroundColor: '#E6F4EA' }]}>
+            <View style={[styles.avatarCircle, { borderColor: theme.primary, backgroundColor: colors.emerald.pale }]}>
               <Icon name="stethoscope" size={34} color={theme.primary} />
             </View>
           )}
@@ -244,11 +244,11 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
           style={[
             styles.searchBar,
             {
-              backgroundColor: '#FFFFFF',
+              backgroundColor: colors.white,
               borderRadius: radii.full,
               minHeight: 48,
               paddingHorizontal: spacing.lg,
-              shadowColor: '#000',
+              shadowColor: colors.black,
               shadowOffset: { width: 0, height: 2 },
               shadowOpacity: 0.06,
               shadowRadius: 8,
@@ -256,14 +256,14 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
             },
           ]}
         >
-          <Icon name="search" size={20} color="#94A3B8" />
+          <Icon name="search" size={20} color={colors.slate[400]} />
           <Text
             allowFontScaling={true}
             numberOfLines={1}
             style={[
               styles.searchPlaceholder,
               {
-                color: '#94A3B8',
+                color: colors.slate[400],
                 fontSize: typography.sizes.sm,
                 marginLeft: spacing.sm,
                 flex: 1,
@@ -328,7 +328,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
               <Icon
                 name="arrow-right"
                 size={13}
-                color={isFestival ? '#78350F' : '#FFFFFF'}
+                color={isFestival ? colors.amber[900] : colors.white}
                 strokeWidth={2.4}
               />
             </View>
@@ -337,7 +337,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({
           {/* Floating Plus Badge on Doctor (normal day only) */}
           {!isFestival && (
             <View style={styles.floatingPlusBadge} pointerEvents="none">
-              <Icon name="plus" size={16} color="#008653" strokeWidth={3.4} />
+              <Icon name="plus" size={16} color={colors.emerald.deep} strokeWidth={3.4} />
             </View>
           )}
         </TouchableOpacity>
@@ -423,13 +423,13 @@ const styles = StyleSheet.create({
   searchPlaceholder: {},
   promoContainer: {},
   promoCard: {
-    backgroundColor: '#D1F4ED',
+    backgroundColor: colors.emerald.mint,
     borderRadius: 24,
     minHeight: 196,
     flexDirection: 'row',
     alignItems: 'stretch',
     overflow: 'hidden',
-    shadowColor: '#008653',
+    shadowColor: colors.emerald.deep,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     shadowRadius: 10,
@@ -445,25 +445,25 @@ const styles = StyleSheet.create({
     zIndex: 2,
   },
   careBadge: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.white,
     borderRadius: 16,
     paddingHorizontal: 11,
     paddingVertical: 5,
     alignSelf: 'flex-start',
-    shadowColor: '#000',
+    shadowColor: colors.black,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
     shadowRadius: 2,
     elevation: 1,
   },
   careBadgeText: {
-    color: '#0F172A',
+    color: colors.slate[900],
     fontSize: 11.5,
     fontWeight: '700',
     letterSpacing: 0.2,
   },
   consultTitle: {
-    color: '#092518',
+    color: colors.emerald.dark,
     fontSize: 21,
     fontWeight: '800',
     lineHeight: 25,
@@ -471,7 +471,7 @@ const styles = StyleSheet.create({
     letterSpacing: -0.4,
   },
   consultSubtext: {
-    color: '#254A39',
+    color: colors.emerald.subtleText,
     fontSize: 12.5,
     fontWeight: '400',
     lineHeight: 16.5,
@@ -479,7 +479,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   bookNowButton: {
-    backgroundColor: '#008653',
+    backgroundColor: colors.emerald.deep,
     borderRadius: 24,
     paddingHorizontal: 16,
     paddingVertical: 9,
@@ -487,14 +487,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    shadowColor: '#008653',
+    shadowColor: colors.emerald.deep,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 2,
   },
   bookNowText: {
-    color: '#FFFFFF',
+    color: colors.white,
     fontSize: 13,
     fontWeight: '700',
     marginRight: 2,
@@ -515,10 +515,10 @@ const styles = StyleSheet.create({
     width: 38,
     height: 38,
     borderRadius: 19,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: colors.white,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#000',
+    shadowColor: colors.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.12,
     shadowRadius: 4,
@@ -526,8 +526,8 @@ const styles = StyleSheet.create({
     zIndex: 2,
   },
   promoCardDiwali: {
-    backgroundColor: '#881337',
-    shadowColor: '#4C0519',
+    backgroundColor: colors.red.crimson,
+    shadowColor: colors.red.burgundy,
   },
   promoTextColDiwali: {
     width: '60%',
@@ -536,41 +536,41 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   diwaliCareBadge: {
-    backgroundColor: 'rgba(251, 191, 36, 0.2)',
-    borderColor: '#F59E0B',
+    backgroundColor: colors.alpha.goldPillBg,
+    borderColor: colors.amber[500],
     borderWidth: 1.2,
     borderRadius: 16,
     paddingHorizontal: 10,
     paddingVertical: 3.5,
   },
   diwaliCareBadgeText: {
-    color: '#FDE68A',
+    color: colors.amber[200],
     fontWeight: '800',
     fontSize: 10.5,
     letterSpacing: 0.6,
   },
   diwaliConsultTitle: {
-    color: '#FFFFFF',
+    color: colors.white,
     fontSize: 22,
     fontWeight: '800',
     letterSpacing: -0.3,
     marginTop: 6,
   },
   diwaliConsultSubtext: {
-    color: '#FECDD3',
+    color: colors.red.roseSoft,
     fontSize: 12.5,
     marginTop: 4,
     marginBottom: 12,
   },
   diwaliBookNowButton: {
-    backgroundColor: '#F59E0B',
-    shadowColor: '#D97706',
+    backgroundColor: colors.amber[500],
+    shadowColor: colors.amber[600],
     borderRadius: 22,
     paddingHorizontal: 16,
     paddingVertical: 8,
   },
   diwaliBookNowText: {
-    color: '#78350F',
+    color: colors.amber[900],
     fontWeight: '800',
     fontSize: 13,
   },

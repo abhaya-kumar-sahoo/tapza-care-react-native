@@ -1,5 +1,6 @@
 import React from 'react';
 import Svg, { Path, Circle, Rect, G } from 'react-native-svg';
+import { colors } from '../../theme';
 
 export interface IconProps {
   name: string;
@@ -11,7 +12,7 @@ export interface IconProps {
 export const Icon: React.FC<IconProps> = ({
   name,
   size = 22,
-  color = '#1A202C',
+  color = colors.slate[800],
   strokeWidth = 2,
 }) => {
   switch (name) {
@@ -434,18 +435,18 @@ export const Icon: React.FC<IconProps> = ({
           {/* Diya Base */}
           <Path
             d="M3 14c0 4.4 4 8 9 8s9-3.6 9-8H3z"
-            fill={color === '#FFFFFF' ? '#F59E0B' : color}
-            stroke="#D97706"
+            fill={color === colors.white ? colors.amber[500] : color}
+            stroke={colors.amber[600]}
             strokeWidth={1.5}
           />
           {/* Flame */}
           <Path
             d="M12 2c-1.5 2.5-3 5-3 7 0 1.66 1.34 3 3 3s3-1.34 3-3c0-2-1.5-4.5-3-7z"
-            fill="#FBBF24"
+            fill={colors.amber[400]}
           />
           <Path
             d="M12 5c-.7 1.2-1.5 2.5-1.5 3.5 0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5c0-1-.8-2.3-1.5-3.5z"
-            fill="#EF4444"
+            fill={colors.red[500]}
           />
         </Svg>
       );

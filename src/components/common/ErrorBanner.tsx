@@ -22,55 +22,55 @@ export const ErrorBanner: React.FC<ErrorBannerProps> = ({
   iconName,
   style,
 }) => {
-  const { radii, spacing, typography } = useTheme();
+  const { radii, spacing, typography, colors: palette } = useTheme();
 
   const getTheme = () => {
     switch (variant) {
       case 'error':
         return {
-          bg: '#FEF2F2',
-          border: '#FECACA',
-          shadow: '#DC2626',
-          iconBg: '#FEE2E2',
-          iconBorder: 'rgba(220, 38, 38, 0.25)',
-          iconColor: '#DC2626',
+          bg: palette.red[50],
+          border: palette.red[200],
+          shadow: palette.red[600],
+          iconBg: palette.red[100],
+          iconBorder: palette.alpha.redSubtle,
+          iconColor: palette.red[600],
           defaultIcon: 'alert-triangle',
-          titleColor: '#991B1B',
-          textColor: '#B91C1C',
-          btnBg: '#EF4444',
-          btnText: '#FFFFFF',
-          btnShadow: '#DC2626',
+          titleColor: palette.red[800],
+          textColor: palette.red[700],
+          btnBg: palette.red[500],
+          btnText: palette.white,
+          btnShadow: palette.red[600],
         };
       case 'info':
         return {
-          bg: '#F0FDF4',
-          border: '#BBF7D0',
-          shadow: '#16A34A',
-          iconBg: '#DCFCE7',
-          iconBorder: 'rgba(22, 163, 74, 0.25)',
-          iconColor: '#16A34A',
+          bg: palette.emerald[50],
+          border: palette.emerald[200],
+          shadow: palette.emerald[600],
+          iconBg: palette.emerald[100],
+          iconBorder: palette.alpha.greenSubtle,
+          iconColor: palette.emerald[600],
           defaultIcon: 'check',
-          titleColor: '#166534',
-          textColor: '#15803D',
-          btnBg: '#10B981',
-          btnText: '#FFFFFF',
-          btnShadow: '#059669',
+          titleColor: palette.emerald[800],
+          textColor: palette.emerald[700],
+          btnBg: palette.emerald[500],
+          btnText: palette.white,
+          btnShadow: palette.emerald[600],
         };
       case 'warning':
       default:
         return {
-          bg: '#FFFDF5',
-          border: '#FDE047',
-          shadow: '#78350F',
-          iconBg: '#FEF3C7',
-          iconBorder: 'rgba(217, 119, 6, 0.22)',
-          iconColor: '#D97706',
+          bg: palette.amber.warmIvory,
+          border: palette.amber.warmYellow,
+          shadow: palette.amber[900],
+          iconBg: palette.amber[100],
+          iconBorder: palette.alpha.goldPillBorder,
+          iconColor: palette.amber[600],
           defaultIcon: 'wifi-off',
-          titleColor: '#78350F',
-          textColor: '#92400E',
-          btnBg: '#F59E0B',
-          btnText: '#2D1500',
-          btnShadow: '#D97706',
+          titleColor: palette.amber[900],
+          textColor: palette.amber[800],
+          btnBg: palette.amber[500],
+          btnText: palette.amber.darkBrown,
+          btnShadow: palette.amber[600],
         };
     }
   };

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useTheme } from '../theme';
+import { useTheme, colors } from '../theme';
 import { useI18n } from '../i18n';
 import { Icon } from '../components/common/Icon';
 import { ScreenType, Doctor, ServiceItem, Prescription, Booking } from '../types';
@@ -115,10 +115,10 @@ export const AppNavigator: React.FC = () => {
         style={[
           styles.tabBar,
           {
-            backgroundColor: '#FFFFFF',
-            borderTopColor: '#E2E8F0',
+            backgroundColor: theme.cardBackground,
+            borderTopColor: theme.cardBorder,
             borderTopWidth: 1,
-            shadowColor: '#000',
+            shadowColor: colors.black,
             shadowOffset: { width: 0, height: -2 },
             shadowOpacity: 0.04,
             shadowRadius: 5,
@@ -129,7 +129,7 @@ export const AppNavigator: React.FC = () => {
         {tabs.map(tab => {
           const isActive = activeTab === tab.id;
           const activeColor = theme.primary;
-          const inactiveColor = '#94A3B8';
+          const inactiveColor = colors.slate[400];
 
           return (
             <TouchableOpacity

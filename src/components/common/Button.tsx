@@ -8,7 +8,7 @@ import {
   TextStyle,
   Animated,
 } from 'react-native';
-import { useTheme } from '../../theme';
+import { useTheme, colors } from '../../theme';
 
 export interface ButtonProps {
   title: string;
@@ -36,7 +36,7 @@ export const Button: React.FC<ButtonProps> = ({
   const { theme, minTouchTarget, radii, spacing, typography } = useTheme();
 
   const getBackgroundColor = () => {
-    if (disabled) return '#E2E8F0';
+    if (disabled) return colors.slate[200];
     switch (variant) {
       case 'primary':
         return theme.primary;
@@ -47,32 +47,32 @@ export const Button: React.FC<ButtonProps> = ({
       case 'surface':
         return theme.surface;
       case 'danger':
-        return '#EF4444';
+        return colors.red[500];
       default:
         return theme.primary;
     }
   };
 
   const getTextColor = () => {
-    if (disabled) return '#94A3B8';
+    if (disabled) return colors.slate[400];
     switch (variant) {
       case 'primary':
       case 'secondary':
       case 'danger':
-        return '#FFFFFF';
+        return colors.white;
       case 'outline':
         return theme.primary;
       case 'surface':
         return theme.textPrimary;
       default:
-        return '#FFFFFF';
+        return colors.white;
     }
   };
 
   const getBorderColor = () => {
-    if (disabled) return '#CBD5E1';
+    if (disabled) return colors.slate[300];
     if (variant === 'outline') return theme.primary;
-    if (variant === 'surface') return '#E2E8F0';
+    if (variant === 'surface') return theme.cardBorder;
     return 'transparent';
   };
 

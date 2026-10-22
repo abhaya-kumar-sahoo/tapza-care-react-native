@@ -1,9 +1,15 @@
 import React, { createContext, useContext, useState, useMemo, useCallback } from 'react';
 import { ThemeConfig } from '../types';
 import { normalTheme, spacing, radii, typography, minTouchTarget } from './tokens';
+import { colors, ColorPalette } from './colors';
+
+export { colors };
+export type { ColorPalette };
+export * from './tokens';
 
 interface ThemeContextType {
   theme: ThemeConfig;
+  colors: ColorPalette;
   updateTheme: (newTheme: ThemeConfig) => void;
   spacing: typeof spacing;
   radii: typeof radii;
@@ -14,6 +20,7 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType>({
   theme: normalTheme,
+  colors,
   updateTheme: () => {},
   spacing,
   radii,
@@ -45,9 +52,16 @@ export const ThemeProvider: React.FC<{
     });
   }, []);
 
+  const resolvedTheme: ThemeConfig = useMemo(() => ({
+    ...theme,
+    cardBackground: theme.cardBackground || colors.white,
+    cardBorder: theme.cardBorder || (isFestival ? colors.amber[200] : colors.slate[200]),
+  }), [theme, isFestival]);
+
   const value = useMemo(
     () => ({
-      theme,
+      theme: resolvedTheme,
+      colors,
       updateTheme,
       spacing,
       radii,
@@ -55,7 +69,7 @@ export const ThemeProvider: React.FC<{
       minTouchTarget,
       isFestival,
     }),
-    [theme, updateTheme, isFestival]
+    [resolvedTheme, updateTheme, isFestival]
   );
 
   return (

@@ -8,14 +8,16 @@ import Animated, {
   withDelay,
 } from 'react-native-reanimated';
 
+import { colors } from '../../theme';
+
 const CONFETTI_COLORS = [
-  '#10B981',
-  '#3B82F6',
-  '#F59E0B',
-  '#EC4899',
-  '#8B5CF6',
-  '#06B6D4',
-  '#F97316',
+  colors.emerald[500],
+  colors.blue[500],
+  colors.amber[500],
+  colors.rose[500],
+  colors.purple[500],
+  colors.cyan[500],
+  colors.orange[500],
 ];
 
 interface Particle {

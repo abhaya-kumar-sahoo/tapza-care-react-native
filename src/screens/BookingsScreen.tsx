@@ -6,7 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import { useTheme } from '../theme';
+import { useTheme, colors } from '../theme';
 import { useI18n } from '../i18n';
 import { Icon } from '../components/common/Icon';
 import { Badge } from '../components/common/Badge';
@@ -52,7 +52,7 @@ export const BookingsScreen: React.FC<BookingsScreenProps> = ({ onNewBooking }) 
   }, []);
 
   return (
-    <View style={[styles.container, { backgroundColor: '#F8FAFC' }]}>
+    <View style={[styles.container, { backgroundColor: colors.slate[50] }]}>
       <View style={[styles.header, { paddingHorizontal: spacing.lg, paddingVertical: spacing.md }]}>
         <Text
           allowFontScaling={true}
@@ -75,7 +75,7 @@ export const BookingsScreen: React.FC<BookingsScreenProps> = ({ onNewBooking }) 
       >
         {bookings.length === 0 ? (
           <View style={styles.emptyWrap}>
-            <Icon name="calendar" size={48} color="#94A3B8" />
+            <Icon name="calendar" size={48} color={colors.slate[400]} />
             <Text style={{ color: theme.textSecondary, marginTop: spacing.md, fontSize: 14 }}>
               No upcoming appointments
             </Text>
@@ -93,12 +93,12 @@ export const BookingsScreen: React.FC<BookingsScreenProps> = ({ onNewBooking }) 
               style={[
                 styles.bookingCard,
                 {
-                  backgroundColor: '#FFFFFF',
+                  backgroundColor: theme.cardBackground,
                   borderRadius: radii.xl,
-                  borderColor: '#E2E8F0',
+                  borderColor: theme.cardBorder,
                   borderWidth: 1,
                   padding: spacing.lg,
-                  shadowColor: '#000',
+                  shadowColor: colors.black,
                   shadowOffset: { width: 0, height: 2 },
                   shadowOpacity: 0.04,
                   shadowRadius: 6,
@@ -107,8 +107,8 @@ export const BookingsScreen: React.FC<BookingsScreenProps> = ({ onNewBooking }) 
               ]}
             >
               <View style={styles.cardTop}>
-                <View style={[styles.iconBox, { backgroundColor: '#E6F4EA', borderRadius: radii.md }]}>
-                  <Icon name="calendar" size={22} color="#0D652D" />
+                <View style={[styles.iconBox, { backgroundColor: colors.emerald.pale, borderRadius: radii.md }]}>
+                  <Icon name="calendar" size={22} color={colors.emerald.subtleText} />
                 </View>
                 <View style={{ flex: 1, marginLeft: spacing.md }}>
                   <Text
@@ -138,7 +138,7 @@ export const BookingsScreen: React.FC<BookingsScreenProps> = ({ onNewBooking }) 
                 <Badge label="Confirmed" variant="success" />
               </View>
 
-              <View style={[styles.divider, { backgroundColor: '#F1F5F9', marginVertical: spacing.md }]} />
+              <View style={[styles.divider, { backgroundColor: colors.slate[100], marginVertical: spacing.md }]} />
 
               <View style={styles.metaRow}>
                 <Icon name="clock" size={16} color={theme.primary} />
