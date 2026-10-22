@@ -12,6 +12,14 @@ export const Images = {
   diwaliBanner: require('./DiwaliBanner.webp'),
   healthBanner: require('./health-banner.webp'),
   doctorConsultBanner: require('./DoctorConsultBanner.webp'),
+
+  // Doctor Profile Avatars
+  doc1: require('./doctors/doc1.webp'),
+  doc2: require('./doctors/doc2.webp'),
+  doc3: require('./doctors/doc3.webp'),
+  doc4: require('./doctors/doc4.webp'),
+  doc5: require('./doctors/doc5.webp'),
+  doc6: require('./doctors/doc6.webp'),
 } as const;
 
 export type ImageKey = keyof typeof Images;
@@ -61,3 +69,42 @@ export const DermatologyImage = Images.dermatology;
 export const DiwaliBannerImage = Images.diwaliBanner;
 export const HealthBannerImage = Images.healthBanner;
 export const DoctorConsultBannerImage = Images.doctorConsultBanner;
+
+// Doctor profile image bundle
+export const DoctorImages = {
+  doc1: Images.doc1,
+  doc2: Images.doc2,
+  doc3: Images.doc3,
+  doc4: Images.doc4,
+  doc5: Images.doc5,
+  doc6: Images.doc6,
+} as const;
+
+export const Doc1Image = Images.doc1;
+export const Doc2Image = Images.doc2;
+export const Doc3Image = Images.doc3;
+export const Doc4Image = Images.doc4;
+export const Doc5Image = Images.doc5;
+export const Doc6Image = Images.doc6;
+
+/**
+ * Returns a high-res doctor profile image with automatic ID/index fallback
+ */
+export const getDoctorProfileImage = (
+  doctor?: { id?: string; photoUrl?: unknown } | null,
+  fallbackIndex = 0
+): ImageSourcePropType => {
+  if (doctor?.photoUrl) {
+    return resolveImageSource(doctor.photoUrl as any);
+  }
+  const profiles = [Images.doc1, Images.doc2, Images.doc3, Images.doc4, Images.doc5, Images.doc6];
+  if (doctor?.id) {
+    if (doctor.id.includes('priya') || doctor.id.includes('1')) return Images.doc1;
+    if (doctor.id.includes('arjun') || doctor.id.includes('2')) return Images.doc2;
+    if (doctor.id.includes('nikhil') || doctor.id.includes('3')) return Images.doc3;
+    if (doctor.id.includes('meera') || doctor.id.includes('4')) return Images.doc4;
+    if (doctor.id.includes('rajesh') || doctor.id.includes('5')) return Images.doc5;
+    if (doctor.id.includes('sneha') || doctor.id.includes('6')) return Images.doc6;
+  }
+  return profiles[fallbackIndex % profiles.length];
+};

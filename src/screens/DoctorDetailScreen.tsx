@@ -14,7 +14,7 @@ import { useI18n } from '../i18n';
 import { Icon } from '../components/common/Icon';
 import { Button } from '../components/common/Button';
 import { Doctor } from '../types';
-import { resolveImageSource } from '../assets/images';
+import { resolveImageSource, getDoctorProfileImage } from '../assets/images';
 
 export interface DoctorDetailScreenProps {
   doctor: Doctor;
@@ -93,7 +93,7 @@ export const DoctorDetailScreen: React.FC<DoctorDetailScreenProps> = ({
         <View style={[styles.profileCard, { backgroundColor: theme.cardBackground, borderRadius: radii.xl, padding: spacing.lg }]}>
           <View style={styles.avatarWrap}>
             <Image
-              source={resolveImageSource(doctor.photoUrl)}
+              source={getDoctorProfileImage(doctor)}
               style={[styles.avatar, { borderRadius: radii.full }]}
               resizeMode="cover"
             />

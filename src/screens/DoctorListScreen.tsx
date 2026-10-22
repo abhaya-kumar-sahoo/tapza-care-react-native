@@ -14,7 +14,7 @@ import { useI18n } from '../i18n';
 import { Icon } from '../components/common/Icon';
 import { Doctor, ServiceItem } from '../types';
 import { mockDoctors } from '../api/mockData';
-import { resolveImageSource } from '../assets/images';
+import { resolveImageSource, getDoctorProfileImage } from '../assets/images';
 
 export interface DoctorListScreenProps {
   service?: ServiceItem;
@@ -265,7 +265,7 @@ export const DoctorListScreen: React.FC<DoctorListScreenProps> = ({
             </TouchableOpacity>
           </View>
         ) : (
-          filteredDoctors.map(doctor => (
+          filteredDoctors.map((doctor, index) => (
             <View key={doctor.id} style={[styles.doctorCard, { borderRadius: radii.lg }]}>
               {/* Top Row: Avatar & Primary Info */}
               <TouchableOpacity
@@ -275,7 +275,7 @@ export const DoctorListScreen: React.FC<DoctorListScreenProps> = ({
               >
                 <View style={styles.avatarWrapper}>
                   <Image
-                    source={resolveImageSource(doctor.photoUrl)}
+                    source={getDoctorProfileImage(doctor, index)}
                     style={styles.doctorAvatar}
                     resizeMode="cover"
                   />

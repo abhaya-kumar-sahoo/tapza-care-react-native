@@ -10,9 +10,8 @@ import {
 import { useTheme, colors } from '../../theme';
 import { useI18n } from '../../i18n';
 import { Icon } from '../common/Icon';
-import { Badge } from '../common/Badge';
 import { Doctor } from '../../types';
-import { resolveImageSource } from '../../assets/images';
+import { resolveImageSource, getDoctorProfileImage } from '../../assets/images';
 
 export interface DoctorCarouselProps {
   title?: string;
@@ -74,7 +73,7 @@ export const DoctorCarousel: React.FC<DoctorCarouselProps> = ({
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={[styles.scrollList, { paddingHorizontal: spacing.lg }]}
       >
-        {doctors.map(doctor => (
+        {doctors.map((doctor, index) => (
           <TouchableOpacity
             key={doctor.id}
             activeOpacity={0.88}
@@ -102,7 +101,7 @@ export const DoctorCarousel: React.FC<DoctorCarouselProps> = ({
             {/* Doctor Photo */}
             <View style={styles.photoContainer}>
               <Image
-                source={resolveImageSource(doctor.photoUrl)}
+                source={getDoctorProfileImage(doctor, index)}
                 style={[styles.avatar, { borderRadius: radii.full }]}
                 resizeMode="cover"
               />
