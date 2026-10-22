@@ -15,10 +15,10 @@ import { BookingSuccessScreen } from '../screens/BookingSuccessScreen';
 import { PrescriptionDetailScreen } from '../screens/PrescriptionDetailScreen';
 import { MedicineRemindersScreen } from '../screens/MedicineRemindersScreen';
 import { DevAdminModal } from '../components/admin/DevAdminModal';
-import { mockDoctors, mockPrescriptions } from '../api/mockData';
+import { AnimatedScreen } from './AnimatedScreen';
+import { mockDoctors } from '../api/mockData';
 
-type ModalRoute =
-  | { type: 'none' }
+export type ModalRoute =
   | { type: 'doctor_detail'; doctor: Doctor }
   | { type: 'booking'; doctor?: Doctor; service?: ServiceItem }
   | { type: 'booking_success'; booking: Booking }
@@ -30,101 +30,24 @@ export const AppNavigator: React.FC = () => {
   const { t } = useI18n();
 
   const [activeTab, setActiveTab] = useState<ScreenType>('home');
-  const [modalRoute, setModalRoute] = useState<ModalRoute>({ type: 'none' });
+  const [stack, setStack] = useState<ModalRoute[]>([]);
   const [isAdminVisible, setIsAdminVisible] = useState(false);
   const [configVersion, setConfigVersion] = useState(1);
 
-  // Render modal screens if active
-  if (modalRoute.type === 'doctor_detail') {
-    return (
-      <DoctorDetailScreen
-        doctor={modalRoute.doctor}
-        onBack={() => setModalRoute({ type: 'none' })}
-        onBookAppointment={doc => setModalRoute({ type: 'booking', doctor: doc })}
-      />
-    );
-  }
+  const pushRoute = (route: ModalRoute) => {
+    setStack(prev => [...prev, route]);
+  };
 
-  if (modalRoute.type === 'booking') {
-    return (
-      <BookingScreen
-        initialDoctor={modalRoute.doctor || mockDoctors[0]}
-        onBack={() => setModalRoute({ type: 'none' })}
-        onBookingSuccess={booking => setModalRoute({ type: 'booking_success', booking })}
-      />
-    );
-  }
+  const popRoute = () => {
+    setStack(prev => (prev.length > 0 ? prev.slice(0, prev.length - 1) : prev));
+  };
 
-  if (modalRoute.type === 'booking_success') {
-    return (
-      <BookingSuccessScreen
-        booking={modalRoute.booking}
-        onDone={() => {
-          setModalRoute({ type: 'none' });
-          setActiveTab('bookings');
-        }}
-      />
-    );
-  }
+  const replaceTopRoute = (route: ModalRoute) => {
+    setStack(prev => (prev.length > 0 ? [...prev.slice(0, prev.length - 1), route] : [route]));
+  };
 
-  if (modalRoute.type === 'prescription_detail') {
-    return (
-      <PrescriptionDetailScreen
-        prescription={modalRoute.prescription}
-        onBack={() => setModalRoute({ type: 'none' })}
-        onOpenReminders={() => setModalRoute({ type: 'reminders' })}
-      />
-    );
-  }
-
-  if (modalRoute.type === 'reminders') {
-    return (
-      <MedicineRemindersScreen
-        onBack={() => setModalRoute({ type: 'none' })}
-        onOpenSettings={() => setIsAdminVisible(true)}
-      />
-    );
-  }
-
-  // Bottom Tabs content
-  const renderTabContent = () => {
-    switch (activeTab) {
-      case 'home':
-        return (
-          <HomeScreen
-            key={`home_cfg_${configVersion}`}
-            onNavigateToDoctor={doctor => setModalRoute({ type: 'doctor_detail', doctor })}
-            onNavigateToBooking={(doctor, service) => setModalRoute({ type: 'booking', doctor, service })}
-            onNavigateToPrescriptions={() => setActiveTab('prescriptions')}
-            onNavigateToReminders={() => setModalRoute({ type: 'reminders' })}
-            onOpenAdmin={() => setIsAdminVisible(true)}
-          />
-        );
-      case 'bookings':
-        return (
-          <BookingsScreen
-            onNewBooking={() => setModalRoute({ type: 'booking', doctor: mockDoctors[0] })}
-          />
-        );
-      case 'prescriptions':
-        return (
-          <PrescriptionsScreen
-            onBack={() => setActiveTab('home')}
-            onSelectPrescription={prescription =>
-              setModalRoute({ type: 'prescription_detail', prescription })
-            }
-          />
-        );
-      case 'profile':
-        return (
-          <ProfileScreen
-            onOpenAdmin={() => setIsAdminVisible(true)}
-            onOpenReminders={() => setModalRoute({ type: 'reminders' })}
-          />
-        );
-      default:
-        return null;
-    }
+  const clearStack = () => {
+    setStack([]);
   };
 
   const tabs: { id: ScreenType; label: string; icon: string }[] = [
@@ -136,9 +59,47 @@ export const AppNavigator: React.FC = () => {
 
   return (
     <SafeAreaView style={[styles.root, { backgroundColor: theme.background }]}>
-      <View style={styles.main}>{renderTabContent()}</View>
+      {/* 
+        Persistent Tab Hierarchy:
+        All tabs remain mounted in the tree so HomeScreen never unmounts,
+        never juggles, never refetches data, and preserves scroll position.
+      */}
+      <View style={styles.main}>
+        <View style={[styles.tabPane, activeTab === 'home' ? styles.visiblePane : styles.hiddenPane]}>
+          <HomeScreen
+            key={`home_cfg_${configVersion}`}
+            onNavigateToDoctor={doctor => pushRoute({ type: 'doctor_detail', doctor })}
+            onNavigateToBooking={(doctor, service) => pushRoute({ type: 'booking', doctor, service })}
+            onNavigateToPrescriptions={() => setActiveTab('prescriptions')}
+            onNavigateToReminders={() => pushRoute({ type: 'reminders' })}
+            onOpenAdmin={() => setIsAdminVisible(true)}
+          />
+        </View>
 
-      {/* Bottom Tab Bar matching screenshots */}
+        <View style={[styles.tabPane, activeTab === 'bookings' ? styles.visiblePane : styles.hiddenPane]}>
+          <BookingsScreen
+            onNewBooking={() => pushRoute({ type: 'booking', doctor: mockDoctors[0] })}
+          />
+        </View>
+
+        <View style={[styles.tabPane, activeTab === 'prescriptions' ? styles.visiblePane : styles.hiddenPane]}>
+          <PrescriptionsScreen
+            onBack={() => setActiveTab('home')}
+            onSelectPrescription={prescription =>
+              pushRoute({ type: 'prescription_detail', prescription })
+            }
+          />
+        </View>
+
+        <View style={[styles.tabPane, activeTab === 'profile' ? styles.visiblePane : styles.hiddenPane]}>
+          <ProfileScreen
+            onOpenAdmin={() => setIsAdminVisible(true)}
+            onOpenReminders={() => pushRoute({ type: 'reminders' })}
+          />
+        </View>
+      </View>
+
+      {/* Bottom Tab Bar */}
       <View
         style={[
           styles.tabBar,
@@ -194,6 +155,74 @@ export const AppNavigator: React.FC = () => {
         })}
       </View>
 
+      {/* 
+        Animated Modal Stack Layer:
+        Renders detail screens with 60fps native slide-in and slide-out animations.
+      */}
+      {Array.isArray(stack) && stack.map((route, index) => {
+        const isTop = index === stack.length - 1;
+        return (
+          <AnimatedScreen
+            key={`modal_route_${index}_${route.type}`}
+            isTop={isTop}
+            direction="horizontal"
+            onDismiss={() => {
+              setStack(prev => prev.filter((_, i) => i !== index));
+            }}
+          >
+            {({ requestClose }) => {
+              switch (route.type) {
+                case 'doctor_detail':
+                  return (
+                    <DoctorDetailScreen
+                      doctor={route.doctor}
+                      onBack={requestClose}
+                      onBookAppointment={doc => pushRoute({ type: 'booking', doctor: doc })}
+                    />
+                  );
+                case 'booking':
+                  return (
+                    <BookingScreen
+                      initialDoctor={route.doctor || mockDoctors[0]}
+                      onBack={requestClose}
+                      onBookingSuccess={booking =>
+                        replaceTopRoute({ type: 'booking_success', booking })
+                      }
+                    />
+                  );
+                case 'booking_success':
+                  return (
+                    <BookingSuccessScreen
+                      booking={route.booking}
+                      onDone={() => {
+                        clearStack();
+                        setActiveTab('bookings');
+                      }}
+                    />
+                  );
+                case 'prescription_detail':
+                  return (
+                    <PrescriptionDetailScreen
+                      prescription={route.prescription}
+                      onBack={requestClose}
+                      onOpenReminders={() => pushRoute({ type: 'reminders' })}
+                    />
+                  );
+                case 'reminders':
+                  return (
+                    <MedicineRemindersScreen
+                      onBack={requestClose}
+                      onOpenSettings={() => setIsAdminVisible(true)}
+                    />
+                  );
+                default:
+                  return null;
+              }
+            }}
+          </AnimatedScreen>
+        );
+      })}
+
       {/* In-app Admin modal */}
       <DevAdminModal
         visible={isAdminVisible}
@@ -210,6 +239,15 @@ const styles = StyleSheet.create({
   },
   main: {
     flex: 1,
+  },
+  tabPane: {
+    flex: 1,
+  },
+  visiblePane: {
+    display: 'flex',
+  },
+  hiddenPane: {
+    display: 'none',
   },
   tabBar: {
     flexDirection: 'row',

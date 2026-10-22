@@ -127,6 +127,16 @@ export const normalLayoutConfig: LayoutConfig = {
       ],
     },
     {
+      id: 'sec_doctors_normal',
+      type: 'doctor_carousel',
+      background: {
+        kind: 'color',
+        value: '#F8FAFC',
+      },
+      title: 'Top doctors near you',
+      items: [],
+    },
+    {
       id: 'sec_unknown_future_feature',
       type: 'ai_drone_medicine_delivery',
       background: {
