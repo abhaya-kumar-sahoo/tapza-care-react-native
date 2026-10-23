@@ -158,7 +158,17 @@ export const BookingScreen: React.FC<BookingScreenProps> = ({
       // 3. Rollback optimistic update on 409 or network failure
       console.warn('Booking conflict or failure:', err);
       const is409 = err?.status === 409 || err?.message?.includes('409') || err?.message?.includes('booked');
-      setErrorMessage(is409 ? t.slotTakenError : 'Failed to confirm appointment. Please try again.');
+      const errorText = is409
+        ? t.slotTakenError
+        : err?.message || 'Failed to confirm appointment. Please try again.';
+      setErrorMessage(errorText);
+
+      Alert.alert(
+        is409 ? 'Slot Unavailable (409)' : 'Booking Failed',
+        errorText,
+        [{ text: 'OK' }]
+      );
+
       // Refresh slots so taken slot shows disabled
       fetchSlots(selectedDate.fullDate);
     } finally {

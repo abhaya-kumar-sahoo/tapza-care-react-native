@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   View,
   Text,
@@ -13,8 +13,9 @@ import { useTheme, colors } from '../theme';
 import { useI18n } from '../i18n';
 import { Icon } from '../components/common/Icon';
 import { Doctor, ServiceItem } from '../types';
-import { mockDoctors } from '../api/mockData';
+import { MockApiClient } from '../api/mockClient';
 import { resolveImageSource, getDoctorProfileImage } from '../assets/images';
+import { mockDoctors } from '../api/mockData';
 
 export interface DoctorListScreenProps {
   service?: ServiceItem;
@@ -37,21 +38,34 @@ export const DoctorListScreen: React.FC<DoctorListScreenProps> = ({
   const { theme, spacing, radii, typography, minTouchTarget } = useTheme();
   const { t } = useI18n();
 
+  const initialDoctors = MockApiClient.getResilienceConfig().forceEmptyDoctors
+    ? []
+    : mockDoctors;
+  const [doctorsList, setDoctorsList] = useState<Doctor[]>(initialDoctors);
+  const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedSpecialty, setSelectedSpecialty] = useState<string>(
     initialSpecialty || 'All'
   );
   const [sortBy, setSortBy] = useState<SortOption>('recommended');
 
+  useEffect(() => {
+    setLoading(true);
+    MockApiClient.getDoctors()
+      .then(docs => setDoctorsList(docs))
+      .catch(() => setDoctorsList([]))
+      .finally(() => setLoading(false));
+  }, []);
+
   // Extract all unique specialties for chips
   const specialties = useMemo(() => {
-    const specs = Array.from(new Set(mockDoctors.map(d => d.specialty)));
+    const specs = Array.from(new Set(doctorsList.map(d => d.specialty)));
     return ['All', ...specs];
-  }, []);
+  }, [doctorsList]);
 
   // Filter & sort doctors
   const filteredDoctors = useMemo(() => {
-    let list = [...mockDoctors];
+    let list = [...doctorsList];
 
     // Filter by specialty
     if (selectedSpecialty !== 'All') {
