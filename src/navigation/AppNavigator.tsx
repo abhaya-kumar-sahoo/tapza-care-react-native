@@ -60,6 +60,7 @@ const MainTabs: React.FC<MainTabsProps> = ({
         headerShown: false,
         tabBarActiveTintColor: theme.primary,
         tabBarInactiveTintColor: colors.slate[400],
+        animation: "shift",
         tabBarStyle: {
           backgroundColor: theme.cardBackground,
           borderTopColor: theme.cardBorder,
@@ -110,7 +111,7 @@ const MainTabs: React.FC<MainTabsProps> = ({
           ),
         }}
       >
-        {() => (
+        {({ navigation: tabNav }) => (
           <HomeScreen
             configVersion={configVersion}
             onNavigateToDoctor={doctor =>
@@ -126,9 +127,9 @@ const MainTabs: React.FC<MainTabsProps> = ({
                 navigation.navigate('DoctorList', { service });
               }
             }}
-            onNavigateToPrescriptions={() =>
-              navigation.navigate('PrescriptionsTab')
-            }
+            onNavigateToPrescriptions={() => {
+              tabNav.navigate('PrescriptionsTab');
+            }}
             onNavigateToReminders={() =>
               navigation.navigate('MedicineReminders')
             }
@@ -200,9 +201,9 @@ const MainTabs: React.FC<MainTabsProps> = ({
           ),
         }}
       >
-        {() => (
+        {({ navigation: tabNav }) => (
           <PrescriptionsScreen
-            onBack={() => navigation.navigate('HomeTab')}
+            onBack={() => tabNav.navigate('HomeTab')}
             onSelectPrescription={prescription =>
               navigation.navigate('PrescriptionDetail', { prescription })
             }
@@ -238,13 +239,13 @@ const MainTabs: React.FC<MainTabsProps> = ({
           ),
         }}
       >
-        {() => (
+        {({ navigation: tabNav }) => (
           <ProfileScreen
             onOpenAdmin={onOpenAdmin}
             onOpenReminders={() => navigation.navigate('MedicineReminders')}
-            onNavigateToBookings={() => navigation.navigate('BookingsTab')}
+            onNavigateToBookings={() => tabNav.navigate('BookingsTab')}
             onNavigateToPrescriptions={() =>
-              navigation.navigate('PrescriptionsTab')
+              tabNav.navigate('PrescriptionsTab')
             }
           />
         )}
@@ -279,7 +280,7 @@ export const AppNavigator: React.FC = () => {
         <Stack.Navigator
           screenOptions={{
             headerShown: false,
-            animation: 'none',
+            animation: 'slide_from_right',
           }}
         >
           <Stack.Screen name="MainTabs">
