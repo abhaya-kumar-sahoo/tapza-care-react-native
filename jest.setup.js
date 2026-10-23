@@ -1,3 +1,7 @@
+if (typeof window !== 'undefined' && typeof window.dispatchEvent !== 'function') {
+  window.dispatchEvent = () => true;
+}
+
 const mockStorage = {};
 
 jest.mock('@react-native-async-storage/async-storage', () => ({
@@ -20,13 +24,20 @@ jest.mock('@react-native-async-storage/async-storage', () => ({
 }));
 
 jest.mock('react-native-safe-area-context', () => {
+  const React = require('react');
   const inset = { top: 0, right: 0, bottom: 0, left: 0 };
+  const frame = { x: 0, y: 0, width: 390, height: 844 };
+  const InsetsContext = React.createContext(inset);
+  const FrameContext = React.createContext(frame);
+
   return {
     SafeAreaProvider: ({ children }) => children,
     SafeAreaConsumer: ({ children }) => children(inset),
     SafeAreaView: ({ children, style }) => children,
+    SafeAreaInsetsContext: InsetsContext,
+    SafeAreaFrameContext: FrameContext,
     useSafeAreaInsets: () => inset,
-    useSafeAreaFrame: () => ({ x: 0, y: 0, width: 390, height: 844 }),
+    useSafeAreaFrame: () => frame,
   };
 });
 
