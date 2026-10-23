@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   Pressable,
   Modal,
-  Linking,
 } from 'react-native';
 import Animated, {
   useSharedValue,
@@ -17,7 +16,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme, colors } from '../theme';
 import { useI18n } from '../i18n';
 import { Icon } from '../components/common/Icon';
-import { SupportedLanguage } from '../types';
+import { ThemeConfig } from '../types';
+import { ColorPalette } from '../theme/colors';
 
 export interface ProfileScreenProps {
   onOpenAdmin: () => void;
@@ -76,9 +76,14 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
     scrollY.value = event.contentOffset.y;
   });
 
+  const styles = useMemo(
+    () => createStyles(theme, colors, spacing, radii, typography, isFestival),
+    [theme, spacing, radii, typography, isFestival]
+  );
+
   return (
-    <View style={[styles.container, { backgroundColor: '#F8FAF9' }]}>
-      {/* Soft mint green ambient glow matching screenshot */}
+    <View style={[styles.container, { backgroundColor: colors.slate.canvas }]}>
+      {/* Soft mint green ambient glow matching reference design */}
       <View style={styles.ambientGlow} pointerEvents="none" />
 
       <Animated.ScrollView
@@ -93,18 +98,18 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
       >
         {/* Top Header Row with Title and Settings Gear Button */}
         <View style={styles.headerRow}>
-          <View style={{ flex: 1 }}>
+          <View style={styles.headerTextWrap}>
             <Text
               allowFontScaling={true}
               style={styles.headerTitle}
             >
-              Profile
+              {t.profileTitle}
             </Text>
             <Text
               allowFontScaling={true}
               style={styles.headerSubtitle}
             >
-              Manage your account and preferences
+              {t.profileSubtitle}
             </Text>
           </View>
 
@@ -114,7 +119,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
             style={styles.gearButton}
             accessibilityLabel="Settings and Admin"
           >
-            <Icon name="settings" size={20} color="#0F172A" />
+            <Icon name="settings" size={20} color={theme.textPrimary} />
           </AnimatedPressableRow>
         </View>
 
@@ -124,14 +129,16 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
           <Pressable
             onPress={() => setActiveModal('edit_profile')}
             style={styles.profileUserRow}
+            accessibilityRole="button"
+            accessibilityLabel="Edit profile"
           >
             {/* Avatar with Edit Badge */}
             <View style={styles.avatarContainer}>
               <View style={styles.avatarCircle}>
-                <Icon name="user" size={32} color="#007A55" strokeWidth={2.2} />
+                <Icon name="user" size={32} color={theme.primary} strokeWidth={2.2} />
               </View>
               <View style={styles.editBadge}>
-                <Icon name="pencil" size={10} color="#FFFFFF" strokeWidth={2.4} />
+                <Icon name="pencil" size={10} color={colors.white} strokeWidth={2.4} />
               </View>
             </View>
 
@@ -144,7 +151,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
                 +91 98765 43210
               </Text>
               <View style={styles.locationRow}>
-                <Icon name="location" size={13} color="#007A55" strokeWidth={2.2} />
+                <Icon name="location" size={13} color={theme.primary} strokeWidth={2.2} />
                 <Text allowFontScaling={true} style={styles.locationText}>
                   Banjara Hills, Hyderabad
                 </Text>
@@ -152,46 +159,46 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
             </View>
 
             {/* Right chevron */}
-            <Icon name="chevron-right" size={18} color="#94A3B8" strokeWidth={2} />
+            <Icon name="chevron-right" size={18} color={colors.slate[400]} strokeWidth={2} />
           </Pressable>
 
           {/* 3 Demographic Stat Chips */}
           <View style={styles.statsRow}>
             {/* Age Chip */}
-            <View style={[styles.statChip, { backgroundColor: '#F0FDF4' }]}>
-              <Icon name="calendar" size={18} color="#059669" strokeWidth={2} />
+            <View style={[styles.statChip, { backgroundColor: colors.emerald[50] }]}>
+              <Icon name="calendar" size={18} color={colors.emerald[600]} strokeWidth={2} />
               <View style={styles.statTextWrap}>
                 <Text allowFontScaling={true} style={styles.statValue}>
-                  27 years
+                  {t.yearsAge(27)}
                 </Text>
                 <Text allowFontScaling={true} style={styles.statLabel}>
-                  Age
+                  {t.ageLabel}
                 </Text>
               </View>
             </View>
 
             {/* Gender Chip */}
-            <View style={[styles.statChip, { backgroundColor: '#EFF6FF' }]}>
-              <Icon name="user" size={18} color="#2563EB" strokeWidth={2} />
+            <View style={[styles.statChip, { backgroundColor: colors.blue[50] }]}>
+              <Icon name="user" size={18} color={colors.blue[600]} strokeWidth={2} />
               <View style={styles.statTextWrap}>
                 <Text allowFontScaling={true} style={styles.statValue}>
-                  Male
+                  {t.genderMale}
                 </Text>
                 <Text allowFontScaling={true} style={styles.statLabel}>
-                  Gender
+                  {t.genderLabel}
                 </Text>
               </View>
             </View>
 
-            {/* Health ID Chip */}
-            <View style={[styles.statChip, { backgroundColor: '#F0FDF4' }]}>
-              <Icon name="shield-check" size={18} color="#059669" strokeWidth={2} />
+            {/* Blood Group / Health ID Chip */}
+            <View style={[styles.statChip, { backgroundColor: colors.emerald[50] }]}>
+              <Icon name="shield-check" size={18} color={colors.emerald[600]} strokeWidth={2} />
               <View style={styles.statTextWrap}>
                 <Text allowFontScaling={true} style={styles.statValue}>
                   A+
                 </Text>
                 <Text allowFontScaling={true} style={styles.statLabel}>
-                  Health ID
+                  {t.healthIdLabel}
                 </Text>
               </View>
             </View>
@@ -201,13 +208,22 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
         {/* Language Selection Card */}
         <View style={styles.languageCard}>
           <View style={styles.languageLeft}>
-            <Icon name="globe" size={22} color="#007A55" strokeWidth={2} />
-            <View style={{ marginLeft: 10 }}>
-              <Text allowFontScaling={true} style={styles.languageTitle}>
-                Language / भाषा / భాష
+            <Icon name="globe" size={20} color={theme.primary} strokeWidth={2} />
+            <View style={styles.languageTextWrap}>
+              <Text
+                allowFontScaling={true}
+                numberOfLines={1}
+                style={styles.languageTitle}
+              >
+                {t.languageCardTitle}
               </Text>
-              <Text allowFontScaling={true} style={styles.languageSubtitle}>
-                Choose your preferred language
+              <Text
+                allowFontScaling={true}
+                numberOfLines={1}
+                ellipsizeMode="tail"
+                style={styles.languageSubtitle}
+              >
+                {t.chooseLanguageSubtitle}
               </Text>
             </View>
           </View>
@@ -216,10 +232,13 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
           <View style={styles.languagePillsWrap}>
             <Pressable
               onPress={() => setLanguage('en')}
+              hitSlop={{ top: 6, bottom: 6, left: 4, right: 4 }}
               style={[
                 styles.langPill,
                 language === 'en' && styles.langPillActive,
               ]}
+              accessibilityRole="button"
+              accessibilityLabel="Switch language to English"
             >
               <Text
                 style={[
@@ -233,10 +252,13 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
 
             <Pressable
               onPress={() => setLanguage('hi')}
+              hitSlop={{ top: 6, bottom: 6, left: 4, right: 4 }}
               style={[
                 styles.langPill,
                 language === 'hi' && styles.langPillActive,
               ]}
+              accessibilityRole="button"
+              accessibilityLabel="Switch language to Hindi"
             >
               <Text
                 style={[
@@ -250,10 +272,13 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
 
             <Pressable
               onPress={() => setLanguage('te')}
+              hitSlop={{ top: 6, bottom: 6, left: 4, right: 4 }}
               style={[
                 styles.langPill,
                 language === 'te' && styles.langPillActive,
               ]}
+              accessibilityRole="button"
+              accessibilityLabel="Switch language to Telugu"
             >
               <Text
                 style={[
@@ -269,7 +294,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
 
         {/* Section 1: Health & App Settings */}
         <Text allowFontScaling={true} style={styles.sectionHeading}>
-          Health & App Settings
+          {t.healthAppSettings}
         </Text>
 
         <View style={styles.settingsGroupCard}>
@@ -278,18 +303,18 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
             onPress={onOpenReminders}
             style={styles.menuRow}
           >
-            <View style={[styles.menuIconWrap, { backgroundColor: '#FFE4E6' }]}>
-              <Icon name="bell" size={18} color="#E11D48" strokeWidth={2} />
+            <View style={[styles.menuIconWrap, { backgroundColor: colors.rose[100] }]}>
+              <Icon name="bell" size={18} color={colors.rose[600]} strokeWidth={2} />
             </View>
             <View style={styles.menuTextWrap}>
               <Text allowFontScaling={true} style={styles.menuTitle}>
-                Medicine Reminders Schedule
+                {t.remindersScheduleTitle}
               </Text>
               <Text allowFontScaling={true} style={styles.menuSubtitle}>
-                Manage your medicine reminders
+                {t.remindersScheduleSub}
               </Text>
             </View>
-            <Icon name="chevron-right" size={16} color="#94A3B8" strokeWidth={2} />
+            <Icon name="chevron-right" size={16} color={colors.slate[400]} strokeWidth={2} />
           </AnimatedPressableRow>
 
           <View style={styles.menuDivider} />
@@ -299,18 +324,18 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
             onPress={onNavigateToBookings}
             style={styles.menuRow}
           >
-            <View style={[styles.menuIconWrap, { backgroundColor: '#DCFCE7' }]}>
-              <Icon name="calendar" size={18} color="#059669" strokeWidth={2} />
+            <View style={[styles.menuIconWrap, { backgroundColor: colors.emerald[100] }]}>
+              <Icon name="calendar" size={18} color={colors.emerald[600]} strokeWidth={2} />
             </View>
             <View style={styles.menuTextWrap}>
               <Text allowFontScaling={true} style={styles.menuTitle}>
-                My Appointments
+                {t.myAppointmentsTitle}
               </Text>
               <Text allowFontScaling={true} style={styles.menuSubtitle}>
-                View and manage your bookings
+                {t.myAppointmentsSub}
               </Text>
             </View>
-            <Icon name="chevron-right" size={16} color="#94A3B8" strokeWidth={2} />
+            <Icon name="chevron-right" size={16} color={colors.slate[400]} strokeWidth={2} />
           </AnimatedPressableRow>
 
           <View style={styles.menuDivider} />
@@ -320,18 +345,18 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
             onPress={onNavigateToPrescriptions}
             style={styles.menuRow}
           >
-            <View style={[styles.menuIconWrap, { backgroundColor: '#DBEAFE' }]}>
-              <Icon name="file-text" size={18} color="#2563EB" strokeWidth={2} />
+            <View style={[styles.menuIconWrap, { backgroundColor: colors.blue[100] }]}>
+              <Icon name="file-text" size={18} color={colors.blue[600]} strokeWidth={2} />
             </View>
             <View style={styles.menuTextWrap}>
               <Text allowFontScaling={true} style={styles.menuTitle}>
-                Prescriptions
+                {t.prescriptionsTitle}
               </Text>
               <Text allowFontScaling={true} style={styles.menuSubtitle}>
-                View your prescriptions and reports
+                {t.prescriptionsSub}
               </Text>
             </View>
-            <Icon name="chevron-right" size={16} color="#94A3B8" strokeWidth={2} />
+            <Icon name="chevron-right" size={16} color={colors.slate[400]} strokeWidth={2} />
           </AnimatedPressableRow>
 
           <View style={styles.menuDivider} />
@@ -341,18 +366,18 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
             onPress={() => setActiveModal('health_records')}
             style={styles.menuRow}
           >
-            <View style={[styles.menuIconWrap, { backgroundColor: '#FFE4E6' }]}>
-              <Icon name="heart" size={18} color="#E11D48" strokeWidth={2} />
+            <View style={[styles.menuIconWrap, { backgroundColor: colors.rose[100] }]}>
+              <Icon name="heart" size={18} color={colors.rose[600]} strokeWidth={2} />
             </View>
             <View style={styles.menuTextWrap}>
               <Text allowFontScaling={true} style={styles.menuTitle}>
-                Health Records
+                {t.healthRecordsTitle}
               </Text>
               <Text allowFontScaling={true} style={styles.menuSubtitle}>
-                Manage your health information
+                {t.healthRecordsSub}
               </Text>
             </View>
-            <Icon name="chevron-right" size={16} color="#94A3B8" strokeWidth={2} />
+            <Icon name="chevron-right" size={16} color={colors.slate[400]} strokeWidth={2} />
           </AnimatedPressableRow>
 
           <View style={styles.menuDivider} />
@@ -362,24 +387,24 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
             onPress={() => setActiveModal('family_members')}
             style={styles.menuRow}
           >
-            <View style={[styles.menuIconWrap, { backgroundColor: '#F3E8FF' }]}>
-              <Icon name="users" size={18} color="#9333EA" strokeWidth={2} />
+            <View style={[styles.menuIconWrap, { backgroundColor: colors.purple[100] }]}>
+              <Icon name="users" size={18} color={colors.purple[600]} strokeWidth={2} />
             </View>
             <View style={styles.menuTextWrap}>
               <Text allowFontScaling={true} style={styles.menuTitle}>
-                Family Members
+                {t.familyMembersTitle}
               </Text>
               <Text allowFontScaling={true} style={styles.menuSubtitle}>
-                Manage your family profiles
+                {t.familyMembersSub}
               </Text>
             </View>
-            <Icon name="chevron-right" size={16} color="#94A3B8" strokeWidth={2} />
+            <Icon name="chevron-right" size={16} color={colors.slate[400]} strokeWidth={2} />
           </AnimatedPressableRow>
         </View>
 
         {/* Section 2: Other */}
         <Text allowFontScaling={true} style={styles.sectionHeading}>
-          Other
+          {t.otherSectionTitle}
         </Text>
 
         <View style={styles.settingsGroupCard}>
@@ -388,18 +413,18 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
             onPress={onOpenAdmin}
             style={styles.menuRow}
           >
-            <View style={[styles.menuIconWrap, { backgroundColor: '#DCFCE7' }]}>
-              <Icon name="settings" size={18} color="#059669" strokeWidth={2} />
+            <View style={[styles.menuIconWrap, { backgroundColor: colors.emerald[100] }]}>
+              <Icon name="settings" size={18} color={colors.emerald[600]} strokeWidth={2} />
             </View>
             <View style={styles.menuTextWrap}>
               <Text allowFontScaling={true} style={styles.menuTitle}>
-                Admin & Chaos Testing Controls
+                {t.adminControlsTitle}
               </Text>
               <Text allowFontScaling={true} style={styles.menuSubtitle}>
-                App testing and development tools
+                {t.adminControlsSub}
               </Text>
             </View>
-            <Icon name="chevron-right" size={16} color="#94A3B8" strokeWidth={2} />
+            <Icon name="chevron-right" size={16} color={colors.slate[400]} strokeWidth={2} />
           </AnimatedPressableRow>
 
           <View style={styles.menuDivider} />
@@ -409,18 +434,18 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
             onPress={() => setActiveModal('privacy')}
             style={styles.menuRow}
           >
-            <View style={[styles.menuIconWrap, { backgroundColor: '#FFEDD5' }]}>
-              <Icon name="shield-check" size={18} color="#EA580C" strokeWidth={2} />
+            <View style={[styles.menuIconWrap, { backgroundColor: colors.orange[100] }]}>
+              <Icon name="shield-check" size={18} color={colors.orange[600]} strokeWidth={2} />
             </View>
             <View style={styles.menuTextWrap}>
               <Text allowFontScaling={true} style={styles.menuTitle}>
-                Privacy & Security
+                {t.privacySecurityTitle}
               </Text>
               <Text allowFontScaling={true} style={styles.menuSubtitle}>
-                Manage your data and privacy
+                {t.privacySecuritySub}
               </Text>
             </View>
-            <Icon name="chevron-right" size={16} color="#94A3B8" strokeWidth={2} />
+            <Icon name="chevron-right" size={16} color={colors.slate[400]} strokeWidth={2} />
           </AnimatedPressableRow>
 
           <View style={styles.menuDivider} />
@@ -430,18 +455,18 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
             onPress={() => setActiveModal('help')}
             style={styles.menuRow}
           >
-            <View style={[styles.menuIconWrap, { backgroundColor: '#E0F2FE' }]}>
-              <Icon name="help-circle" size={18} color="#0284C7" strokeWidth={2} />
+            <View style={[styles.menuIconWrap, { backgroundColor: colors.blue.skyLight }]}>
+              <Icon name="help-circle" size={18} color={colors.cyan[600]} strokeWidth={2} />
             </View>
             <View style={styles.menuTextWrap}>
               <Text allowFontScaling={true} style={styles.menuTitle}>
-                Help & Support
+                {t.helpSupportTitle}
               </Text>
               <Text allowFontScaling={true} style={styles.menuSubtitle}>
-                FAQs, contact support
+                {t.helpSupportSub}
               </Text>
             </View>
-            <Icon name="chevron-right" size={16} color="#94A3B8" strokeWidth={2} />
+            <Icon name="chevron-right" size={16} color={colors.slate[400]} strokeWidth={2} />
           </AnimatedPressableRow>
 
           <View style={styles.menuDivider} />
@@ -451,18 +476,18 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
             onPress={() => setActiveModal('about')}
             style={styles.menuRow}
           >
-            <View style={[styles.menuIconWrap, { backgroundColor: '#F3E8FF' }]}>
-              <Icon name="info" size={18} color="#7C3AED" strokeWidth={2} />
+            <View style={[styles.menuIconWrap, { backgroundColor: colors.purple[100] }]}>
+              <Icon name="info" size={18} color={colors.purple[600]} strokeWidth={2} />
             </View>
             <View style={styles.menuTextWrap}>
               <Text allowFontScaling={true} style={styles.menuTitle}>
-                About Tapza Care
+                {t.aboutTapzaTitle}
               </Text>
               <Text allowFontScaling={true} style={styles.menuSubtitle}>
-                Version 1.0.0 • Built for Tapza Clinic, Banjara Hills, Hyderabad
+                {t.aboutTapzaSub}
               </Text>
             </View>
-            <Icon name="chevron-right" size={16} color="#94A3B8" strokeWidth={2} />
+            <Icon name="chevron-right" size={16} color={colors.slate[400]} strokeWidth={2} />
           </AnimatedPressableRow>
         </View>
       </Animated.ScrollView>
@@ -478,81 +503,81 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
           <View style={styles.modalCard}>
             {activeModal === 'health_records' && (
               <>
-                <Text style={styles.modalTitle}>Health Records</Text>
+                <Text style={styles.modalTitle}>{t.healthRecordsTitle}</Text>
                 <Text style={styles.modalDesc}>
-                  Your laboratory reports, blood investigations, and clinic diagnostic notes are safely synced with Tapza Clinic's EMR.
+                  {t.healthRecordsModalDesc}
                 </Text>
                 <View style={styles.modalStatBox}>
-                  <Text style={styles.modalStatText}>• 2 Lab Reports (Complete Blood Count, Lipid Profile)</Text>
-                  <Text style={styles.modalStatText}>• 1 Vitals Assessment from Dr. Rajesh Varma</Text>
+                  <Text style={styles.modalStatText}>{t.healthRecordsModalPoint1}</Text>
+                  <Text style={styles.modalStatText}>{t.healthRecordsModalPoint2}</Text>
                 </View>
               </>
             )}
 
             {activeModal === 'family_members' && (
               <>
-                <Text style={styles.modalTitle}>Family Profiles</Text>
+                <Text style={styles.modalTitle}>{t.familyProfilesModalTitle}</Text>
                 <Text style={styles.modalDesc}>
-                  Profiles linked to +91 98765 43210:
+                  {t.familyProfilesModalDesc}
                 </Text>
                 <View style={styles.modalStatBox}>
-                  <Text style={styles.modalStatText}>1. Abhaya (Self) • 27 Y • Male • UHID: TC-849201</Text>
-                  <Text style={styles.modalStatText}>2. Ramesh Sahoo (Father) • 64 Y • Male</Text>
-                  <Text style={styles.modalStatText}>3. Sunita Sahoo (Mother) • 58 Y • Female</Text>
+                  <Text style={styles.modalStatText}>{t.familyProfile1}</Text>
+                  <Text style={styles.modalStatText}>{t.familyProfile2}</Text>
+                  <Text style={styles.modalStatText}>{t.familyProfile3}</Text>
                 </View>
               </>
             )}
 
             {activeModal === 'privacy' && (
               <>
-                <Text style={styles.modalTitle}>Privacy & Security</Text>
+                <Text style={styles.modalTitle}>{t.privacySecurityTitle}</Text>
                 <Text style={styles.modalDesc}>
-                  Your health information is encrypted end-to-end and compliant with the Ayushman Bharat Digital Mission (ABDM) guidelines.
+                  {t.privacyModalDesc}
                 </Text>
                 <View style={styles.modalStatBox}>
-                  <Text style={styles.modalStatText}>• 256-bit AES Medical Record Encryption</Text>
-                  <Text style={styles.modalStatText}>• WhatsApp Prescription Delivery via Official Meta API</Text>
+                  <Text style={styles.modalStatText}>{t.privacyModalPoint1}</Text>
+                  <Text style={styles.modalStatText}>{t.privacyModalPoint2}</Text>
                 </View>
               </>
             )}
 
             {activeModal === 'help' && (
               <>
-                <Text style={styles.modalTitle}>Tapza Clinic Help & Support</Text>
+                <Text style={styles.modalTitle}>{t.helpModalTitle}</Text>
                 <Text style={styles.modalDesc}>
-                  Need assistance with your booking or prescription?
+                  {t.helpModalDesc}
                 </Text>
                 <View style={styles.modalStatBox}>
-                  <Text style={styles.modalStatText}>📞 Reception: 040-2345-6789</Text>
-                  <Text style={styles.modalStatText}>🏥 Banjara Hills Clinic: Open 8:00 AM - 9:30 PM</Text>
-                  <Text style={styles.modalStatText}>✉️ care@tapzaclinic.com</Text>
+                  <Text style={styles.modalStatText}>{t.helpModalReception}</Text>
+                  <Text style={styles.modalStatText}>{t.helpModalClinic}</Text>
+                  <Text style={styles.modalStatText}>{t.helpModalEmail}</Text>
                 </View>
               </>
             )}
 
             {activeModal === 'about' && (
               <>
-                <Text style={styles.modalTitle}>Tapza Care</Text>
+                <Text style={styles.modalTitle}>{t.aboutModalTitle}</Text>
                 <Text style={styles.modalDesc}>
-                  Version 1.0.0 (Build 48)
+                  {t.aboutModalDesc}
                 </Text>
                 <View style={styles.modalStatBox}>
-                  <Text style={styles.modalStatText}>Built for Tapza Clinic, Banjara Hills, Hyderabad.</Text>
-                  <Text style={styles.modalStatText}>© 2026 Tapza Technologies Inc.</Text>
+                  <Text style={styles.modalStatText}>{t.aboutModalClinic}</Text>
+                  <Text style={styles.modalStatText}>{t.aboutModalCopyright}</Text>
                 </View>
               </>
             )}
 
             {activeModal === 'edit_profile' && (
               <>
-                <Text style={styles.modalTitle}>Patient Profile</Text>
+                <Text style={styles.modalTitle}>{t.patientProfileModalTitle}</Text>
                 <Text style={styles.modalDesc}>
-                  Patient UHID: TC-849201 • Ayushman Bharat Health Account (ABHA) linked.
+                  {t.patientProfileModalDesc}
                 </Text>
                 <View style={styles.modalStatBox}>
-                  <Text style={styles.modalStatText}>Name: Abhaya</Text>
-                  <Text style={styles.modalStatText}>Phone: +91 98765 43210</Text>
-                  <Text style={styles.modalStatText}>Location: Banjara Hills, Hyderabad</Text>
+                  <Text style={styles.modalStatText}>{t.patientProfileName}</Text>
+                  <Text style={styles.modalStatText}>{t.patientProfilePhone}</Text>
+                  <Text style={styles.modalStatText}>{t.patientProfileLocation}</Text>
                 </View>
               </>
             )}
@@ -561,7 +586,7 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
               onPress={() => setActiveModal(null)}
               style={styles.modalCloseButton}
             >
-              <Text style={styles.modalCloseButtonText}>Close</Text>
+              <Text style={styles.modalCloseButtonText}>{t.closeBtn}</Text>
             </Pressable>
           </View>
         </View>
@@ -570,300 +595,330 @@ export const ProfileScreen: React.FC<ProfileScreenProps> = ({
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  ambientGlow: {
-    position: 'absolute',
-    top: -60,
-    right: -40,
-    width: 250,
-    height: 250,
-    borderRadius: 125,
-    backgroundColor: '#E8F5E9',
-    opacity: 0.85,
-  },
-  headerRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-    marginBottom: 16,
-  },
-  headerTitle: {
-    fontSize: 26,
-    fontWeight: '800',
-    color: '#0F172A',
-    letterSpacing: -0.5,
-  },
-  headerSubtitle: {
-    fontSize: 13,
-    color: '#64748B',
-    marginTop: 3,
-    fontWeight: '400',
-  },
-  gearButton: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
-    backgroundColor: '#FFFFFF',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: '#F1F5F9',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.04,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  profileCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 20,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: '#F1F5F9',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.03,
-    shadowRadius: 8,
-    elevation: 2,
-  },
-  profileUserRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  avatarContainer: {
-    position: 'relative',
-  },
-  avatarCircle: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    backgroundColor: '#E8F5EE',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  editBadge: {
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    backgroundColor: '#007A55',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 2,
-    borderColor: '#FFFFFF',
-  },
-  profileTextContainer: {
-    flex: 1,
-    marginLeft: 14,
-  },
-  userName: {
-    fontSize: 18,
-    fontWeight: '800',
-    color: '#0F172A',
-  },
-  userPhone: {
-    fontSize: 13,
-    color: '#64748B',
-    marginTop: 2,
-  },
-  locationRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 3,
-  },
-  locationText: {
-    fontSize: 12,
-    color: '#64748B',
-    marginLeft: 4,
-  },
-  statsRow: {
-    flexDirection: 'row',
-    gap: 8,
-    marginTop: 16,
-  },
-  statChip: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 8,
-    borderRadius: 14,
-    gap: 6,
-  },
-  statTextWrap: {
-    flex: 1,
-  },
-  statValue: {
-    fontSize: 13,
-    fontWeight: '800',
-    color: '#0F172A',
-  },
-  statLabel: {
-    fontSize: 11,
-    color: '#64748B',
-    marginTop: 1,
-  },
-  languageCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    padding: 14,
-    marginTop: 12,
-    borderWidth: 1,
-    borderColor: '#F1F5F9',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.02,
-    shadowRadius: 5,
-    elevation: 1,
-  },
-  languageLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
-  },
-  languageTitle: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: '#0F172A',
-  },
-  languageSubtitle: {
-    fontSize: 11,
-    color: '#64748B',
-    marginTop: 1,
-  },
-  languagePillsWrap: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-  },
-  langPill: {
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 16,
-  },
-  langPillActive: {
-    backgroundColor: '#007A55',
-  },
-  langPillText: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#64748B',
-  },
-  langPillTextActive: {
-    color: '#FFFFFF',
-    fontWeight: '700',
-  },
-  sectionHeading: {
-    fontSize: 16,
-    fontWeight: '800',
-    color: '#0F172A',
-    marginTop: 20,
-    marginBottom: 10,
-  },
-  settingsGroupCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 18,
-    borderWidth: 1,
-    borderColor: '#F1F5F9',
-    overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.02,
-    shadowRadius: 6,
-    elevation: 1,
-  },
-  menuRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 13,
-    paddingHorizontal: 14,
-  },
-  menuIconWrap: {
-    width: 36,
-    height: 36,
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  menuTextWrap: {
-    flex: 1,
-    marginLeft: 12,
-  },
-  menuTitle: {
-    fontSize: 13,
-    fontWeight: '700',
-    color: '#0F172A',
-  },
-  menuSubtitle: {
-    fontSize: 11,
-    color: '#64748B',
-    marginTop: 2,
-  },
-  menuDivider: {
-    height: 1,
-    backgroundColor: '#F8FAFC',
-    marginLeft: 62,
-  },
-  modalBackdrop: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.45)',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 24,
-  },
-  modalCard: {
-    width: '100%',
-    maxWidth: 360,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 20,
-    padding: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.12,
-    shadowRadius: 14,
-    elevation: 8,
-  },
-  modalTitle: {
-    fontSize: 17,
-    fontWeight: '800',
-    color: '#0F172A',
-    marginBottom: 8,
-  },
-  modalDesc: {
-    fontSize: 13,
-    color: '#475569',
-    lineHeight: 18,
-    marginBottom: 12,
-  },
-  modalStatBox: {
-    backgroundColor: '#F8FAFC',
-    borderRadius: 12,
-    padding: 12,
-    marginBottom: 16,
-    gap: 6,
-  },
-  modalStatText: {
-    fontSize: 12,
-    color: '#334155',
-    lineHeight: 16,
-  },
-  modalCloseButton: {
-    backgroundColor: '#007A55',
-    borderRadius: 12,
-    paddingVertical: 12,
-    alignItems: 'center',
-  },
-  modalCloseButtonText: {
-    color: '#FFFFFF',
-    fontSize: 14,
-    fontWeight: '700',
-  },
-});
+const createStyles = (
+  theme: ThemeConfig,
+  colorPalette: ColorPalette,
+  spacing: any,
+  radii: any,
+  typography: any,
+  isFestival: boolean
+) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+    },
+    ambientGlow: {
+      position: 'absolute',
+      top: -60,
+      right: -40,
+      width: 250,
+      height: 250,
+      borderRadius: radii.full,
+      backgroundColor: isFestival ? colorPalette.amber[100] : colorPalette.emerald.pale,
+      opacity: 0.85,
+    },
+    headerRow: {
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      justifyContent: 'space-between',
+      marginBottom: spacing.lg,
+    },
+    headerTextWrap: {
+      flex: 1,
+      minWidth: 0,
+      marginRight: spacing.sm,
+    },
+    headerTitle: {
+      fontSize: typography.sizes.xxl + 2,
+      fontWeight: typography.weights.extrabold,
+      color: theme.textPrimary,
+      letterSpacing: -0.5,
+    },
+    headerSubtitle: {
+      fontSize: typography.sizes.sm,
+      color: theme.textSecondary,
+      marginTop: 3,
+      fontWeight: typography.weights.regular,
+    },
+    gearButton: {
+      width: 42,
+      height: 42,
+      borderRadius: radii.full,
+      backgroundColor: theme.surface,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderWidth: 1,
+      borderColor: isFestival ? colorPalette.amber[200] : colorPalette.slate[100],
+      shadowColor: colorPalette.black,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.04,
+      shadowRadius: 4,
+      elevation: 2,
+    },
+    profileCard: {
+      backgroundColor: theme.cardBackground,
+      borderRadius: radii.xl,
+      padding: spacing.lg,
+      borderWidth: 1,
+      borderColor: isFestival ? colorPalette.amber[200] : colorPalette.slate[100],
+      shadowColor: colorPalette.black,
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.03,
+      shadowRadius: 8,
+      elevation: 2,
+    },
+    profileUserRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    avatarContainer: {
+      position: 'relative',
+    },
+    avatarCircle: {
+      width: 64,
+      height: 64,
+      borderRadius: radii.full,
+      backgroundColor: isFestival ? colorPalette.amber[100] : colorPalette.emerald[50],
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    editBadge: {
+      position: 'absolute',
+      bottom: 0,
+      right: 0,
+      width: 20,
+      height: 20,
+      borderRadius: radii.full,
+      backgroundColor: theme.primary,
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderWidth: 2,
+      borderColor: colorPalette.white,
+    },
+    profileTextContainer: {
+      flex: 1,
+      minWidth: 0,
+      marginLeft: spacing.md + 2,
+    },
+    userName: {
+      fontSize: typography.sizes.lg + 1,
+      fontWeight: typography.weights.extrabold,
+      color: theme.textPrimary,
+    },
+    userPhone: {
+      fontSize: typography.sizes.sm,
+      color: theme.textSecondary,
+      marginTop: 2,
+    },
+    locationRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginTop: 3,
+    },
+    locationText: {
+      fontSize: typography.sizes.xs + 1,
+      color: theme.textSecondary,
+      marginLeft: spacing.xs,
+    },
+    statsRow: {
+      flexDirection: 'row',
+      gap: spacing.sm,
+      marginTop: spacing.lg,
+    },
+    statChip: {
+      flex: 1,
+      minWidth: 0,
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingVertical: 10,
+      paddingHorizontal: spacing.sm,
+      borderRadius: radii.md,
+      gap: 6,
+    },
+    statTextWrap: {
+      flex: 1,
+      minWidth: 0,
+    },
+    statValue: {
+      fontSize: typography.sizes.sm,
+      fontWeight: typography.weights.extrabold,
+      color: theme.textPrimary,
+    },
+    statLabel: {
+      fontSize: typography.sizes.xs,
+      color: theme.textSecondary,
+      marginTop: 1,
+    },
+    languageCard: {
+      backgroundColor: theme.cardBackground,
+      borderRadius: radii.xl,
+      paddingHorizontal: spacing.md,
+      paddingVertical: spacing.md,
+      marginTop: spacing.md,
+      borderWidth: 1,
+      borderColor: isFestival ? colorPalette.amber[200] : colorPalette.slate[100],
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      shadowColor: colorPalette.black,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.02,
+      shadowRadius: 5,
+      elevation: 1,
+    },
+    languageLeft: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      flex: 1,
+      minWidth: 0,
+      marginRight: spacing.sm,
+    },
+    languageTextWrap: {
+      flex: 1,
+      marginLeft: spacing.sm,
+      minWidth: 0,
+      justifyContent: 'center',
+    },
+    languageTitle: {
+      fontSize: typography.sizes.sm,
+      fontWeight: typography.weights.bold,
+      color: theme.textPrimary,
+    },
+    languageSubtitle: {
+      fontSize: typography.sizes.xs,
+      color: theme.textSecondary,
+      marginTop: 1,
+    },
+    languagePillsWrap: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: spacing.xs,
+      flexShrink: 0,
+    },
+    langPill: {
+      paddingVertical: 6,
+      paddingHorizontal: 10,
+      borderRadius: radii.full,
+      backgroundColor: colorPalette.slate[100],
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    langPillActive: {
+      backgroundColor: theme.primary,
+    },
+    langPillText: {
+      fontSize: typography.sizes.xs,
+      fontWeight: typography.weights.semibold,
+      color: theme.textSecondary,
+    },
+    langPillTextActive: {
+      color: colorPalette.white,
+      fontWeight: typography.weights.bold,
+    },
+    sectionHeading: {
+      fontSize: typography.sizes.md + 1,
+      fontWeight: typography.weights.extrabold,
+      color: theme.textPrimary,
+      marginTop: spacing.xl,
+      marginBottom: spacing.sm + 2,
+    },
+    settingsGroupCard: {
+      backgroundColor: theme.cardBackground,
+      borderRadius: radii.lg,
+      borderWidth: 1,
+      borderColor: isFestival ? colorPalette.amber[200] : colorPalette.slate[100],
+      overflow: 'hidden',
+      shadowColor: colorPalette.black,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.02,
+      shadowRadius: 6,
+      elevation: 1,
+    },
+    menuRow: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingVertical: 13,
+      paddingHorizontal: spacing.md + 2,
+    },
+    menuIconWrap: {
+      width: 36,
+      height: 36,
+      borderRadius: radii.md - 2,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    menuTextWrap: {
+      flex: 1,
+      minWidth: 0,
+      marginLeft: spacing.md,
+    },
+    menuTitle: {
+      fontSize: typography.sizes.sm,
+      fontWeight: typography.weights.bold,
+      color: theme.textPrimary,
+    },
+    menuSubtitle: {
+      fontSize: typography.sizes.xs,
+      color: theme.textSecondary,
+      marginTop: 2,
+    },
+    menuDivider: {
+      height: 1,
+      backgroundColor: colorPalette.slate[50],
+      marginLeft: 62,
+    },
+    modalBackdrop: {
+      flex: 1,
+      backgroundColor: colorPalette.alpha.black50,
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: spacing.xxl,
+    },
+    modalCard: {
+      width: '100%',
+      maxWidth: 360,
+      backgroundColor: theme.cardBackground,
+      borderRadius: radii.xl,
+      padding: spacing.xl,
+      shadowColor: colorPalette.black,
+      shadowOffset: { width: 0, height: 6 },
+      shadowOpacity: 0.12,
+      shadowRadius: 14,
+      elevation: 8,
+    },
+    modalTitle: {
+      fontSize: typography.sizes.lg,
+      fontWeight: typography.weights.extrabold,
+      color: theme.textPrimary,
+      marginBottom: spacing.sm,
+    },
+    modalDesc: {
+      fontSize: typography.sizes.sm,
+      color: theme.textSecondary,
+      lineHeight: 18,
+      marginBottom: spacing.md,
+    },
+    modalStatBox: {
+      backgroundColor: colorPalette.slate[50],
+      borderRadius: radii.sm + 2,
+      padding: spacing.md,
+      marginBottom: spacing.lg,
+      gap: 6,
+    },
+    modalStatText: {
+      fontSize: typography.sizes.xs + 1,
+      color: colorPalette.slate[700],
+      lineHeight: 16,
+    },
+    modalCloseButton: {
+      backgroundColor: theme.primary,
+      borderRadius: radii.sm + 2,
+      paddingVertical: spacing.md,
+      alignItems: 'center',
+    },
+    modalCloseButtonText: {
+      color: colorPalette.white,
+      fontSize: typography.sizes.sm + 1,
+      fontWeight: typography.weights.bold,
+    },
+  });

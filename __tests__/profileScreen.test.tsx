@@ -94,4 +94,36 @@ describe('ProfileScreen', () => {
     expect(json).toContain('About Tapza Care');
     expect(json).toContain('Version 1.0.0 • Built for Tapza Clinic, Banjara Hills, Hyderabad');
   });
+
+  test('switches language dynamically to Hindi and Telugu when language pills are pressed', async () => {
+    const renderer = await renderComponent();
+
+    // Find and press Hindi pill
+    const hindiPill = renderer.root.findByProps({
+      accessibilityLabel: 'Switch language to Hindi',
+    });
+    await ReactTestRenderer.act(async () => {
+      hindiPill.props.onPress();
+    });
+
+    let json = JSON.stringify(renderer.toJSON());
+    expect(json).toContain('स्वास्थ्य एवं ऐप सेटिंग्स');
+    expect(json).toContain('दवा रिमाइंडर शेड्यूल');
+    expect(json).toContain('मेरी अपॉइंटमेंट्स');
+    expect(json).toContain('अपनी पसंदीदा भाषा चुनें');
+
+    // Find and press Telugu pill
+    const teluguPill = renderer.root.findByProps({
+      accessibilityLabel: 'Switch language to Telugu',
+    });
+    await ReactTestRenderer.act(async () => {
+      teluguPill.props.onPress();
+    });
+
+    json = JSON.stringify(renderer.toJSON());
+    expect(json).toContain('ఆరోగ్యం & యాప్ సెట్టింగ్స్');
+    expect(json).toContain('మందుల రిమైండర్ల షెడ్యూల్');
+    expect(json).toContain('నా అపాయింట్‌మెంట్లు');
+    expect(json).toContain('మీకు నచ్చిన భాషను ఎంచుకోండి');
+  });
 });
