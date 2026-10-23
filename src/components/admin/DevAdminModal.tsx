@@ -291,41 +291,7 @@ export const DevAdminModal: React.FC<DevAdminModalProps> = ({
               />
             </View>
 
-            {/* 5. Live JSON Config Editor */}
-            <TouchableOpacity
-              onPress={() => setIsJsonExpanded(!isJsonExpanded)}
-              style={[styles.accordionHeader, { marginTop: spacing.md }]}
-            >
-              <Text style={{ fontWeight: '700', color: theme.primary }}>
-                {isJsonExpanded ? '▼ Hide Live Config Editor' : '► Open Live JSON Config Editor'}
-              </Text>
-            </TouchableOpacity>
 
-            {isJsonExpanded && (
-              <View style={{ marginTop: spacing.sm }}>
-                <TextInput
-                  value={jsonText}
-                  onChangeText={setJsonText}
-                  placeholder="Paste or edit LayoutConfig JSON here..."
-                  multiline
-                  numberOfLines={8}
-                  style={[
-                    styles.jsonInput,
-                    {
-                      borderColor: colors.slate[300],
-                      borderRadius: radii.md,
-                      padding: spacing.md,
-                    },
-                  ]}
-                />
-                <Button
-                  title="Apply Live JSON Config"
-                  onPress={handleApplyCustomJson}
-                  size="sm"
-                  style={{ marginTop: spacing.sm }}
-                />
-              </View>
-            )}
 
             {/* Reset Button */}
             <View style={{ marginTop: spacing.lg, marginBottom: spacing.xl }}>
