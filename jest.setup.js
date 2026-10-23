@@ -63,7 +63,7 @@ jest.mock('react-native-reanimated', () => {
     },
     useSharedValue: (init) => ({ value: init }),
     useAnimatedStyle: (fn) => fn(),
-    useAnimatedScrollHandler: (handlers) => (typeof handlers === 'function' ? handlers : (handlers.onScroll || (() => {}))),
+    useAnimatedScrollHandler: (handlers) => (typeof handlers === 'function' ? handlers : (handlers.onScroll || (() => { }))),
     interpolate: (val, input, output) => output[1] ?? output[0],
     Extrapolation: {
       CLAMP: 'clamp',
